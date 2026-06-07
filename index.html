@@ -234,6 +234,21 @@ tr:hover td{background:rgba(255,255,255,.015)}
 </head>
 <body>
 
+<script>
+// Instant session check — hide login screen immediately if session exists
+(function(){
+  try{
+    const sess=JSON.parse(localStorage.getItem("iti_kiloi_session")||"null");
+    if(sess&&sess.username){
+      // Hide login screen instantly, show loading state
+      document.addEventListener("DOMContentLoaded",function(){
+        const ls=document.getElementById("loginScreen");
+        if(ls) ls.style.display="none";
+      });
+    }
+  }catch(e){}
+})();
+</script>
 <div id="offlineBanner">📵 Offline mode — App running on cached data</div>
 
 <div id="installBanner">
@@ -945,7 +960,12 @@ function restoreSession(){
   const sess = lsGet("iti_kiloi_session");
   if(!sess || !sess.username) return;
   const u = sess.username;
-  if(!users[u]) return; // user deleted
+  // users is now loaded from Firebase before this is called
+  if(!users[u]){
+    // user may have been deleted — clear stale session
+    try{localStorage.removeItem("iti_kiloi_session");}catch(e){}
+    return;
+  }
   currentUser = {username:u, ...users[u]};
   window.currentUser = currentUser;
   document.getElementById("loginScreen").style.display="none";
@@ -1218,7 +1238,7 @@ function chkAllVisible(cb){
 
 function doLogout(){
   logActivity("LOGOUT", `${currentUser.name} logged out`);
-  lsSet("iti_kiloi_session", null);
+  try{localStorage.removeItem("iti_kiloi_session");}catch(e){}
   currentUser=null; selectedRole=null;
   document.getElementById("app").style.display="none";
   document.getElementById("loginScreen").style.display="flex";
@@ -1439,16 +1459,16 @@ function bulkDelete(){
   if(!confirm(`⚠️ ${selectedIds.size} students delete karna chahte hain? Yeh wapis nahi aa sakte!`)) return;
   const names = students.filter(s=>selectedIds.has(s.id)).map(s=>s.name).join(", ");
   logActivity("DELETE_STUDENT", `Bulk deleted ${selectedIds.size} students: ${names.slice(0,100)}`);
+  const deletedCount = selectedIds.size;
   students = students.filter(s=>!selectedIds.has(s.id));
   selectedIds.clear();
   persistAll();
+  selectMode = false;
   updateBulkCount();
   renderStudents(true);
-  showToast(`✅ ${selectedIds.size||"Selected"} students deleted!`);
-  // Exit select mode after bulk delete
-  selectMode = false;
   document.getElementById("bulkBar").style.display = "none";
   document.getElementById("btnSelectMode").textContent = "☑️ Select";
+  showToast("✅ " + deletedCount + " students deleted!");
 }
 
 function renderStudents(resetPage){
