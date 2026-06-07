@@ -384,7 +384,18 @@ tr:hover td{background:rgba(255,255,255,.015)}
       <div class="page" id="page-students">
         <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:20px">
           <div class="ph" style="margin-bottom:0"><h1>🎓 Students</h1><p>Data synced with Firebase ☁️</p></div>
-          <button class="btn btn-primary" onclick="openAddModal()">➕ Add Student</button>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn btn-secondary" id="btnSelectMode" onclick="toggleSelectMode()">☑️ Select</button>
+            <button class="btn btn-primary" onclick="openAddModal()">➕ Add Student</button>
+          </div>
+        </div>
+        <!-- Bulk action bar -->
+        <div id="bulkBar" style="display:none;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.3);border-radius:10px;padding:10px 16px;margin-bottom:14px;align-items:center;gap:12px;flex-wrap:wrap">
+          <span id="bulkCount" style="font-size:13px;font-weight:700;color:var(--red)">0 selected</span>
+          <button class="btn btn-secondary btn-sm" onclick="selectAllVisible()">✅ Select All</button>
+          <button class="btn btn-secondary btn-sm" onclick="deselectAll()">⬜ Deselect All</button>
+          <button class="btn btn-sm" style="background:rgba(239,68,68,.2);color:var(--red);border:1px solid rgba(239,68,68,.4)" onclick="bulkDelete()">🗑️ Delete Selected</button>
+          <button class="btn btn-secondary btn-sm" onclick="toggleSelectMode()">✕ Cancel</button>
         </div>
         <div class="card">
           <div class="filter-row">
@@ -399,7 +410,7 @@ tr:hover td{background:rgba(255,255,255,.015)}
           </div>
           <div class="tbl-wrap">
             <table>
-              <thead><tr><th>#</th><th>Name</th><th>Reg. No.</th><th>Mobile</th><th>Trade</th><th>Session</th><th>Status</th><th>Email ID</th><th>Actions</th></tr></thead>
+              <thead><tr id="stuThead"><th>#</th><th>Name</th><th>Reg. No.</th><th>Mobile</th><th>Trade</th><th>Session</th><th>Status</th><th>Email ID</th><th>Actions</th></tr></thead>
               <tbody id="stuBody"></tbody>
             </table>
           </div>
@@ -930,6 +941,23 @@ function persistAll(){
 // ═══════════════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════════════
+function restoreSession(){
+  const sess = lsGet("iti_kiloi_session");
+  if(!sess || !sess.username) return;
+  const u = sess.username;
+  if(!users[u]) return; // user deleted
+  currentUser = {username:u, ...users[u]};
+  window.currentUser = currentUser;
+  document.getElementById("loginScreen").style.display="none";
+  document.getElementById("app").style.display="block";
+  document.getElementById("sbAvatar").textContent=u[0].toUpperCase();
+  document.getElementById("sbName").textContent=users[u].name;
+  document.getElementById("sbRole").textContent=users[u].role==="admin"?"Administrator":"Staff Member";
+  buildNav();
+  showPage("dashboard");
+  console.log("✅ Session restored for:", u);
+}
+
 window.addEventListener("load",()=>{
   // Expose render functions globally
 
@@ -958,10 +986,12 @@ window.addEventListener("load",()=>{
       renderAfterLoad();
       setupRealtimeListeners();
       console.log("✅ Data loaded from Firebase! Students:",students.length);
+      restoreSession();
     }).catch(e=>{
       console.error("Firebase load error:",e);
       loadFromLocalStorage();
       renderAfterLoad();
+      restoreSession();
     });
   }
 
@@ -1168,12 +1198,27 @@ function doLogin(){
     buildNav();showPage("dashboard");
     document.getElementById("lErr").style.display="none";
     document.getElementById("lErr").textContent="❌ Invalid username or password!";
+    // Persist session
+    lsSet("iti_kiloi_session", {username:u});
   } else document.getElementById("lErr").style.display="block";
 }
 document.addEventListener("keydown",e=>{if(e.key==="Enter"&&!currentUser) doLogin();});
 
+function chkAllVisible(cb){
+  document.querySelectorAll("#stuBody tr[id^='row_']").forEach(row=>{
+    const id = parseInt(row.id.replace("row_",""));
+    if(!isNaN(id)){
+      if(cb.checked) selectedIds.add(id);
+      else selectedIds.delete(id);
+    }
+  });
+  updateBulkCount();
+  renderStudents(false);
+}
+
 function doLogout(){
   logActivity("LOGOUT", `${currentUser.name} logged out`);
+  lsSet("iti_kiloi_session", null);
   currentUser=null; selectedRole=null;
   document.getElementById("app").style.display="none";
   document.getElementById("loginScreen").style.display="flex";
@@ -1341,6 +1386,71 @@ function populateFilters(){
 
 let stuPage=1;const STU_PER_PAGE=50;
 
+// ── Bulk select state ──
+let selectMode = false;
+let selectedIds = new Set();
+
+function toggleSelectMode(){
+  const isAdmin=(window.currentUser||currentUser)?.role==="admin";
+  if(!isAdmin){ showToast("Only admin can bulk delete!","err"); return; }
+  selectMode = !selectMode;
+  selectedIds.clear();
+  const bar = document.getElementById("bulkBar");
+  bar.style.display = selectMode ? "flex" : "none";
+  document.getElementById("btnSelectMode").textContent = selectMode ? "✕ Cancel Select" : "☑️ Select";
+  updateBulkCount();
+  renderStudents(false);
+}
+
+function updateBulkCount(){
+  const el = document.getElementById("bulkCount");
+  if(el) el.textContent = selectedIds.size + " selected";
+}
+
+function toggleStudentSelect(id){
+  if(selectedIds.has(id)) selectedIds.delete(id);
+  else selectedIds.add(id);
+  updateBulkCount();
+  // Update just the checkbox visually
+  const cb = document.getElementById("chk_"+id);
+  if(cb) cb.checked = selectedIds.has(id);
+  const row = document.getElementById("row_"+id);
+  if(row) row.style.background = selectedIds.has(id) ? "rgba(239,68,68,.07)" : "";
+}
+
+function selectAllVisible(){
+  // Select all currently filtered+paged students
+  document.querySelectorAll("#stuBody tr[id^='row_']").forEach(row=>{
+    const id = parseInt(row.id.replace("row_",""));
+    if(!isNaN(id)) selectedIds.add(id);
+  });
+  updateBulkCount();
+  renderStudents(false);
+}
+
+function deselectAll(){
+  selectedIds.clear();
+  updateBulkCount();
+  renderStudents(false);
+}
+
+function bulkDelete(){
+  if(selectedIds.size === 0){ showToast("Koi student select nahi kiya!","err"); return; }
+  if(!confirm(`⚠️ ${selectedIds.size} students delete karna chahte hain? Yeh wapis nahi aa sakte!`)) return;
+  const names = students.filter(s=>selectedIds.has(s.id)).map(s=>s.name).join(", ");
+  logActivity("DELETE_STUDENT", `Bulk deleted ${selectedIds.size} students: ${names.slice(0,100)}`);
+  students = students.filter(s=>!selectedIds.has(s.id));
+  selectedIds.clear();
+  persistAll();
+  updateBulkCount();
+  renderStudents(true);
+  showToast(`✅ ${selectedIds.size||"Selected"} students deleted!`);
+  // Exit select mode after bulk delete
+  selectMode = false;
+  document.getElementById("bulkBar").style.display = "none";
+  document.getElementById("btnSelectMode").textContent = "☑️ Select";
+}
+
 function renderStudents(resetPage){
   if(resetPage) stuPage=1;
   const q=document.getElementById("searchInp").value.toLowerCase();
@@ -1357,20 +1467,36 @@ function renderStudents(resetPage){
   const isAdmin=(window.currentUser||currentUser)?.role==="admin";
   const maskRoll=r=>isAdmin?r:(r?r.slice(0,3)+"***":"-");
   const maskEmail=e=>isAdmin?e:(e?e[0]+"***@***":"-");
-  document.getElementById("stuBody").innerHTML=paged.length?paged.map((s,i)=>`
-    <tr>
+
+  // Update table header: add checkbox column in select mode
+  const thead = document.getElementById("stuThead");
+  if(thead){
+    if(selectMode && isAdmin){
+      thead.innerHTML = `<th style="width:36px"><input type="checkbox" id="chkAll" onclick="chkAllVisible(this)" style="width:15px;height:15px;cursor:pointer"></th><th>#</th><th>Name</th><th>Reg. No.</th><th>Mobile</th><th>Trade</th><th>Session</th><th>Status</th><th>Email ID</th><th>Actions</th>`;
+    } else {
+      thead.innerHTML = `<th>#</th><th>Name</th><th>Reg. No.</th><th>Mobile</th><th>Trade</th><th>Session</th><th>Status</th><th>Email ID</th><th>Actions</th>`;
+    }
+  }
+
+  document.getElementById("stuBody").innerHTML=paged.length?paged.map((s,i)=>{
+    const checked = selectedIds.has(s.id);
+    const rowBg = checked ? "background:rgba(239,68,68,.07);" : "";
+    const chkCell = (selectMode && isAdmin) ? `<td><input type="checkbox" id="chk_${s.id}" ${checked?"checked":""} onclick="toggleStudentSelect(${s.id})" style="width:15px;height:15px;cursor:pointer"></td>` : "";
+    return `<tr id="row_${s.id}" style="${rowBg}cursor:${selectMode?"pointer":"default"}" ${selectMode?`onclick="toggleStudentSelect(${s.id})"`:""}>
+      ${chkCell}
       <td style="color:var(--muted)">${(stuPage-1)*STU_PER_PAGE+i+1}</td>
       <td><b>${s.name}</b></td>
       <td style="font-size:12px;color:var(--muted)">${maskRoll(s.roll)}</td>
       <td>${s.mobile||"—"}</td><td>${s.trade}</td><td>${s.session}</td>
       <td><span class="badge b-${s.status.toLowerCase().replace(" ","-")}">${s.status}</span></td>
       <td style="color:var(--muted)">${maskEmail(s.email)}</td>
-      <td><div style="display:flex;gap:5px">
+      <td onclick="event.stopPropagation()"><div style="display:flex;gap:5px">
         <button class="btn-icon bi-view" onclick="viewStudent(${s.id})">👁️</button>
-        <button class="btn-icon bi-edit" onclick="editStudent(${s.id})">✏️</button>
-        ${isAdmin?`<button class="btn-icon bi-del" onclick="delStudent(${s.id})">🗑️</button>`:""}
+        ${!selectMode?`<button class="btn-icon bi-edit" onclick="editStudent(${s.id})">✏️</button>`:""}
+        ${isAdmin&&!selectMode?`<button class="btn-icon bi-del" onclick="delStudent(${s.id})">🗑️</button>`:""}
       </div></td>
-    </tr>`).join(""):`<tr><td class="empty-td" colspan="9">No students found</td></tr>`;
+    </tr>`;
+  }).join(""):`<tr><td class="empty-td" colspan="${selectMode?10:9}">No students found</td></tr>`;
 
   // Pagination
   let pg='';
