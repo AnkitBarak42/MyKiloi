@@ -163,6 +163,20 @@ tr:hover td{background:rgba(255,255,255,.015)}
 .filter-row input{flex:1;min-width:140px}
 .cnt-label{font-size:11px;color:var(--muted);margin-left:auto;white-space:nowrap}
 
+/* ── MULTI-SELECT DROPDOWN ── */
+.msel{position:relative}
+.msel-btn{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;padding:7px 10px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;cursor:pointer;white-space:nowrap;min-width:130px;box-sizing:border-box}
+.msel-btn:hover{border-color:var(--accent)}
+.msel-label{overflow:hidden;text-overflow:ellipsis}
+.msel-arrow{font-size:10px;color:var(--muted);transition:transform .15s;flex-shrink:0}
+.msel.open .msel-arrow{transform:rotate(180deg)}
+.msel-panel{display:none;position:absolute;top:calc(100% + 4px);left:0;min-width:190px;max-height:260px;overflow-y:auto;background:var(--card);border:1px solid var(--border);border-radius:9px;padding:6px;z-index:60;box-shadow:0 12px 30px rgba(0,0,0,.45)}
+.msel.open .msel-panel{display:block}
+.msel-opt{display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:6px;font-size:13px;color:var(--text);cursor:pointer}
+.msel-opt:hover{background:var(--bg2)}
+.msel-opt input{width:14px;height:14px;cursor:pointer;accent-color:var(--accent);flex-shrink:0}
+.msel-sep{height:1px;background:var(--border);margin:4px 2px}
+
 /* ── PROGRESS ── */
 .prog-bar{height:6px;background:var(--border);border-radius:3px;overflow:hidden;margin-top:4px}
 .prog-fill{height:100%;border-radius:3px;transition:width .6s ease}
@@ -419,12 +433,18 @@ tr:hover td{background:rgba(255,255,255,.015)}
         <div class="card">
           <div class="filter-row">
             <input id="searchInp" placeholder="🔍 Name, Mobile, Reg. No..." oninput="renderStudents(true)">
-            <select id="fTrade" onchange="renderStudents(true)"><option value="">All Trades</option></select>
-            <select id="fStatus" onchange="renderStudents(true)">
-              <option value="">All Status</option>
-              <option>Placed</option><option>Apprenticeship</option><option>Self Employed</option><option>Studying</option><option>Unemployed</option>
-            </select>
-            <select id="fSession" onchange="renderStudents(true)"><option value="">All Sessions</option></select>
+            <div class="msel" id="fTrade">
+              <button type="button" class="msel-btn" onclick="msToggle('fTrade',event)"><span class="msel-label">All Trades</span><span class="msel-arrow">▾</span></button>
+              <div class="msel-panel" id="fTrade_panel"></div>
+            </div>
+            <div class="msel" id="fStatus">
+              <button type="button" class="msel-btn" onclick="msToggle('fStatus',event)"><span class="msel-label">All Status</span><span class="msel-arrow">▾</span></button>
+              <div class="msel-panel" id="fStatus_panel"></div>
+            </div>
+            <div class="msel" id="fSession">
+              <button type="button" class="msel-btn" onclick="msToggle('fSession',event)"><span class="msel-label">All Sessions</span><span class="msel-arrow">▾</span></button>
+              <div class="msel-panel" id="fSession_panel"></div>
+            </div>
             <span class="cnt-label" id="cntLabel"></span>
           </div>
           <div class="tbl-wrap">
@@ -472,9 +492,18 @@ tr:hover td{background:rgba(255,255,255,.015)}
           <div class="print-card" style="grid-column:span 2">
             <h4>🔍 Custom Filter Print</h4>
             <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px">
-              <select id="pTrade" style="padding:8px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;outline:none"><option value="">All Trades</option></select>
-              <select id="pStatus" style="padding:8px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;outline:none"><option value="">All Status</option><option>Placed</option><option>Apprenticeship</option><option>Self Employed</option><option>Studying</option><option>Unemployed</option></select>
-              <select id="pSession" style="padding:8px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;outline:none"><option value="">All Sessions</option></select>
+              <div class="msel" id="pTrade">
+                <button type="button" class="msel-btn" onclick="msToggle('pTrade',event)"><span class="msel-label">All Trades</span><span class="msel-arrow">▾</span></button>
+                <div class="msel-panel" id="pTrade_panel"></div>
+              </div>
+              <div class="msel" id="pStatus">
+                <button type="button" class="msel-btn" onclick="msToggle('pStatus',event)"><span class="msel-label">All Status</span><span class="msel-arrow">▾</span></button>
+                <div class="msel-panel" id="pStatus_panel"></div>
+              </div>
+              <div class="msel" id="pSession">
+                <button type="button" class="msel-btn" onclick="msToggle('pSession',event)"><span class="msel-label">All Sessions</span><span class="msel-arrow">▾</span></button>
+                <div class="msel-panel" id="pSession_panel"></div>
+              </div>
             </div>
             <button class="btn btn-primary" onclick="doPrint('custom')">🖨️ Custom Print</button>
           </div>
@@ -1282,13 +1311,11 @@ function showPage(name){
     populateFilters();
     // Apply pending filter from dashboard click
     if(window._pendingStatusFilter!==null && window._pendingStatusFilter!==undefined){
-      const el=document.getElementById("fStatus");
-      if(el) el.value=window._pendingStatusFilter;
+      msSetSelected('fStatus', window._pendingStatusFilter?[window._pendingStatusFilter]:[]);
       window._pendingStatusFilter=null;
     }
     if(window._pendingTradeFilter!==null && window._pendingTradeFilter!==undefined){
-      const el=document.getElementById("fTrade");
-      if(el) el.value=window._pendingTradeFilter;
+      msSetSelected('fTrade', window._pendingTradeFilter?[window._pendingTradeFilter]:[]);
       window._pendingTradeFilter=null;
     }
     // Wait for Firebase data if not loaded yet
@@ -1386,13 +1413,91 @@ function renderDashboard(){
 }
 
 // ═══════════════════════════════════════════════
+// MULTI-SELECT DROPDOWN (Trade / Status / Session filters)
+// ═══════════════════════════════════════════════
+const msState={};
+function msInit(id,allLabel,onChange){
+  if(!msState[id]) msState[id]={selected:new Set(),options:[],allLabel:allLabel||"All",onChange:onChange||null};
+  else if(onChange) msState[id].onChange=onChange;
+}
+function msSetOptions(id,options,allLabel){
+  if(!msState[id]) msInit(id,allLabel);
+  const st=msState[id];
+  if(allLabel) st.allLabel=allLabel;
+  st.options=(options||[]).filter(o=>o!==undefined&&o!==null&&o!=="");
+  const valid=new Set(st.options);
+  [...st.selected].forEach(v=>{ if(!valid.has(v)) st.selected.delete(v); });
+  msRenderPanel(id);
+  msUpdateBtnLabel(id);
+}
+function msRenderPanel(id){
+  const st=msState[id];const panel=document.getElementById(id+"_panel");
+  if(!panel||!st) return;
+  const allChecked=st.selected.size===0;
+  let html=`<label class="msel-opt"><input type="checkbox" ${allChecked?"checked":""} onchange="msToggleAll('${id}')"><span>${st.allLabel}</span></label>`;
+  if(st.options.length) html+=`<div class="msel-sep"></div>`;
+  html+=st.options.map(o=>{
+    const checked=st.selected.has(o);
+    const esc=String(o).replace(/\\/g,"\\\\").replace(/'/g,"\\'");
+    return `<label class="msel-opt"><input type="checkbox" ${checked?"checked":""} onchange="msToggleOne('${id}','${esc}')"><span>${o}</span></label>`;
+  }).join("");
+  panel.innerHTML=html;
+}
+function msUpdateBtnLabel(id){
+  const st=msState[id];const lbl=document.querySelector(`#${id} .msel-label`);
+  if(!lbl||!st) return;
+  if(st.selected.size===0) lbl.textContent=st.allLabel;
+  else if(st.selected.size===1) lbl.textContent=[...st.selected][0];
+  else lbl.textContent=st.selected.size+" selected";
+}
+function msToggleAll(id){
+  msState[id].selected.clear();
+  msRenderPanel(id);msUpdateBtnLabel(id);
+  if(msState[id].onChange) msState[id].onChange();
+}
+function msToggleOne(id,val){
+  const st=msState[id];
+  if(st.selected.has(val)) st.selected.delete(val); else st.selected.add(val);
+  msRenderPanel(id);msUpdateBtnLabel(id);
+  if(st.onChange) st.onChange();
+}
+function msToggle(id,ev){
+  if(ev) ev.stopPropagation();
+  document.querySelectorAll(".msel.open").forEach(el=>{ if(el.id!==id) el.classList.remove("open"); });
+  const el=document.getElementById(id);
+  if(el) el.classList.toggle("open");
+}
+document.addEventListener("click",e=>{
+  if(!e.target.closest(".msel")) document.querySelectorAll(".msel.open").forEach(el=>el.classList.remove("open"));
+});
+function msMatches(id,value){
+  const st=msState[id];
+  if(!st||st.selected.size===0) return true;
+  return st.selected.has(value);
+}
+function msSetSelected(id,values){
+  const st=msState[id]; if(!st) return;
+  st.selected=new Set((values||[]).filter(v=>v));
+  msRenderPanel(id);msUpdateBtnLabel(id);
+}
+function msGetSelected(id){
+  const st=msState[id]; return st? [...st.selected] : [];
+}
+
+// ═══════════════════════════════════════════════
 // STUDENTS
 // ═══════════════════════════════════════════════
 function populateFilters(){
   const tr=[...new Set(students.map(s=>s.trade))].sort();
   const se=[...new Set(students.map(s=>s.session))].sort();
-  document.getElementById("fTrade").innerHTML='<option value="">All Trades</option>'+tr.map(t=>`<option>${t}</option>`).join("");
-  document.getElementById("fSession").innerHTML='<option value="">All Sessions</option>'+se.map(s=>`<option>${s}</option>`).join("");
+  const baseStatuses=["Placed","Apprenticeship","Self Employed","Studying","Unemployed"];
+  const extraStatuses=[...new Set(students.map(s=>s.status))].filter(s=>s&&!baseStatuses.includes(s));
+  msInit('fTrade',"All Trades",()=>renderStudents(true));
+  msInit('fStatus',"All Status",()=>renderStudents(true));
+  msInit('fSession',"All Sessions",()=>renderStudents(true));
+  msSetOptions('fTrade',tr);
+  msSetOptions('fStatus',[...baseStatuses,...extraStatuses]);
+  msSetOptions('fSession',se);
   // Also fill trade in student form
   document.getElementById("fTrade2").innerHTML=trades.map(t=>`<option>${t}</option>`).join("");
 }
@@ -1459,10 +1564,9 @@ function bulkDelete(){
 function renderStudents(resetPage){
   if(resetPage) stuPage=1;
   const q=document.getElementById("searchInp").value.toLowerCase();
-  const tr=document.getElementById("fTrade").value,st=document.getElementById("fStatus").value,se=document.getElementById("fSession").value;
   const fil=students.filter(s=>
     (!q||s.name.toLowerCase().includes(q)||s.mobile.includes(q)||s.roll.toLowerCase().includes(q))
-    &&(!tr||s.trade===tr)&&(!st||s.status===st)&&(!se||s.session===se)
+    &&msMatches('fTrade',s.trade)&&msMatches('fStatus',s.status)&&msMatches('fSession',s.session)
   );
   const total=fil.length;
   const totalPages=Math.max(1,Math.ceil(total/STU_PER_PAGE));
@@ -1710,8 +1814,14 @@ function renderReports(){
 const printCSS=`*{margin:0;padding:0;box-sizing:border-box}body{font-family:Arial,sans-serif;padding:24px;color:#111;font-size:12px}.hdr{text-align:center;border-bottom:2px solid #f59e0b;padding-bottom:12px;margin-bottom:16px}.hdr h1{font-size:18px;font-weight:900;letter-spacing:1px}.hdr h2{font-size:13px;color:#555;margin-top:3px}.hdr p{font-size:11px;color:#888;margin-top:2px}table{width:100%;border-collapse:collapse;font-size:11px}th{background:#f59e0b;color:#000;padding:7px 9px;text-align:left;font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:.4px}td{padding:6px 9px;border-bottom:1px solid #e5e7eb}tr:nth-child(even) td{background:#fafafa}.foot{margin-top:40px;display:flex;justify-content:space-between}.sig{text-align:center;border-top:1px solid #999;padding-top:5px;width:150px;font-size:11px;color:#555}.sbox{display:inline-block;background:#f3f4f6;border:1px solid #e5e7eb;border-radius:8px;padding:10px 16px;margin:4px;text-align:center}.sval{font-size:22px;font-weight:900;color:#f59e0b}.slbl{font-size:10px;color:#666;text-transform:uppercase}`;
 
 function populatePrintSelects(){
-  document.getElementById("pTrade").innerHTML='<option value="">All Trades</option>'+trades.map(t=>`<option>${t}</option>`).join("");
-  document.getElementById("pSession").innerHTML='<option value="">All Sessions</option>'+SESSIONS.map(s=>`<option>${s}</option>`).join("");
+  const baseStatuses=["Placed","Apprenticeship","Self Employed","Studying","Unemployed"];
+  const extraStatuses=[...new Set(students.map(s=>s.status))].filter(s=>s&&!baseStatuses.includes(s));
+  msInit('pTrade',"All Trades");
+  msInit('pStatus',"All Status");
+  msInit('pSession',"All Sessions");
+  msSetOptions('pTrade',trades);
+  msSetOptions('pStatus',[...baseStatuses,...extraStatuses]);
+  msSetOptions('pSession',SESSIONS.slice());
 }
 
 function printTable(data,title){
@@ -1735,10 +1845,13 @@ function doPrint(type){
   if(type==="placed") return printTable(students.filter(s=>s.status==="Placed"),"Placed Students");
   if(type==="apprenticeship") return printTable(students.filter(s=>s.status==="Apprenticeship"),"Apprenticeship Students");
   if(type==="custom"){
-    const t=document.getElementById("pTrade").value,st=document.getElementById("pStatus").value,se=document.getElementById("pSession").value;
+    const t=msGetSelected('pTrade'),st=msGetSelected('pStatus'),se=msGetSelected('pSession');
     let d=[...students];
-    if(t) d=d.filter(x=>x.trade===t);if(st) d=d.filter(x=>x.status===st);if(se) d=d.filter(x=>x.session===se);
-    return printTable(d,`Filtered Report${t?" — "+t:""}${st?" — "+st:""}${se?" — "+se:""}`);
+    if(t.length) d=d.filter(x=>t.includes(x.trade));
+    if(st.length) d=d.filter(x=>st.includes(x.status));
+    if(se.length) d=d.filter(x=>se.includes(x.session));
+    const parts=[t,st,se].filter(a=>a.length).map(a=>a.join(", "));
+    return printTable(d,`Filtered Report${parts.length?" — "+parts.join(" | "):""}`);
   }
   if(type==="summary"){
     const s=getStats();
