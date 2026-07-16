@@ -2,7 +2,7 @@
   "name": "ITI Kiloi Placement System",
   "short_name": "ITI Kiloi",
   "description": "ITI Kiloi Placement Management System",
-  "start_url": "/",
+  "start_url": "./",
   "display": "standalone",
   "background_color": "#070b12",
   "theme_color": "#f59e0b",
