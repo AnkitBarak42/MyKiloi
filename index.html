@@ -474,7 +474,12 @@ tr:hover td{background:rgba(255,255,255,.015)}
             <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px">
               <select id="pTrade" style="padding:8px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;outline:none"><option value="">All Trades</option></select>
               <select id="pStatus" style="padding:8px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;outline:none"><option value="">All Status</option><option>Placed</option><option>Apprenticeship</option><option>Self Employed</option><option>Studying</option><option>Unemployed</option></select>
-              <select id="pSession" style="padding:8px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;outline:none"><option value="">All Sessions</option></select>
+              <div id="pSessionWrap" style="position:relative">
+                <button type="button" id="pSessionBtn" onclick="togglePSessionDropdown()" style="width:100%;text-align:left;padding:8px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;outline:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between">
+                  <span id="pSessionLabel">All Sessions</span><span style="font-size:11px;color:var(--muted)">▾</span>
+                </button>
+                <div id="pSessionMenu" style="display:none;position:absolute;z-index:50;top:calc(100% + 4px);left:0;right:0;background:var(--bg2);border:1px solid var(--border);border-radius:8px;max-height:230px;overflow-y:auto;padding:6px;box-shadow:0 8px 24px rgba(0,0,0,.3)"></div>
+              </div>
             </div>
             <button class="btn btn-primary" onclick="doPrint('custom')">🖨️ Custom Print</button>
           </div>
@@ -1703,11 +1708,65 @@ function renderReports(){
 // ═══════════════════════════════════════════════
 const printCSS=`*{margin:0;padding:0;box-sizing:border-box}body{font-family:Arial,sans-serif;padding:24px;color:#111;font-size:12px}.hdr{text-align:center;border-bottom:2px solid #f59e0b;padding-bottom:12px;margin-bottom:16px}.hdr h1{font-size:18px;font-weight:900;letter-spacing:1px}.hdr h2{font-size:13px;color:#555;margin-top:3px}.hdr p{font-size:11px;color:#888;margin-top:2px}table{width:100%;border-collapse:collapse;font-size:11px}th{background:#f59e0b;color:#000;padding:7px 9px;text-align:left;font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:.4px}td{padding:6px 9px;border-bottom:1px solid #e5e7eb}tr:nth-child(even) td{background:#fafafa}.foot{margin-top:40px;display:flex;justify-content:space-between}.sig{text-align:center;border-top:1px solid #999;padding-top:5px;width:150px;font-size:11px;color:#555}.sbox{display:inline-block;background:#f3f4f6;border:1px solid #e5e7eb;border-radius:8px;padding:10px 16px;margin:4px;text-align:center}.sval{font-size:22px;font-weight:900;color:#f59e0b}.slbl{font-size:10px;color:#666;text-transform:uppercase}`;
 
+let pSessionSelected=[]; // empty array = "All Sessions"
+
 function populatePrintSelects(){
   document.getElementById("pTrade").innerHTML='<option value="">All Trades</option>'+trades.map(t=>`<option>${t}</option>`).join("");
-  const allSessions=[...new Set([...SESSIONS,...students.map(s=>s.session)])].filter(Boolean).sort();
-  document.getElementById("pSession").innerHTML='<option value="">All Sessions</option>'+allSessions.map(s=>`<option>${s}</option>`).join("");
+  pSessionSelected=[];
+  buildPSessionMenu();
+  updatePSessionLabel();
 }
+
+function buildPSessionMenu(){
+  const menu=document.getElementById("pSessionMenu");
+  if(!menu) return;
+  const allSessions=[...new Set([...SESSIONS,...students.map(s=>s.session)])].filter(Boolean).sort();
+  const allChecked=pSessionSelected.length===0;
+  menu.innerHTML=`<label style="display:flex;align-items:center;gap:8px;padding:7px 8px;cursor:pointer;font-weight:700;border-bottom:1px solid var(--border);margin-bottom:4px;font-size:13px">
+      <input type="checkbox" id="pSessAllChk" ${allChecked?"checked":""} onchange="togglePSessAll()" style="width:15px;height:15px;cursor:pointer;accent-color:var(--red)"> All Sessions
+    </label>`+
+    allSessions.map(s=>`<label style="display:flex;align-items:center;gap:8px;padding:7px 8px;cursor:pointer;font-size:13px">
+      <input type="checkbox" value="${s}" ${pSessionSelected.includes(s)?"checked":""} onchange="togglePSessOne(this)" style="width:15px;height:15px;cursor:pointer;accent-color:var(--red)"> ${s}
+    </label>`).join("")||`<div style="padding:8px;color:var(--muted);font-size:12px">No sessions found</div>`;
+}
+
+function togglePSessionDropdown(){
+  const m=document.getElementById("pSessionMenu");
+  if(!m) return;
+  if(m.style.display==="none"){ buildPSessionMenu(); m.style.display="block"; }
+  else m.style.display="none";
+}
+
+function togglePSessAll(){
+  pSessionSelected=[];
+  buildPSessionMenu();
+  updatePSessionLabel();
+}
+
+function togglePSessOne(cb){
+  const v=cb.value;
+  if(cb.checked){ if(!pSessionSelected.includes(v)) pSessionSelected.push(v); }
+  else { pSessionSelected=pSessionSelected.filter(x=>x!==v); }
+  const allChk=document.getElementById("pSessAllChk");
+  if(allChk) allChk.checked=pSessionSelected.length===0;
+  updatePSessionLabel();
+}
+
+function updatePSessionLabel(){
+  const lbl=document.getElementById("pSessionLabel");
+  if(!lbl) return;
+  if(pSessionSelected.length===0) lbl.textContent="All Sessions";
+  else if(pSessionSelected.length===1) lbl.textContent=pSessionSelected[0];
+  else lbl.textContent=pSessionSelected.length+" Sessions Selected";
+}
+
+document.addEventListener("click",function(e){
+  const wrap=document.getElementById("pSessionWrap");
+  const menu=document.getElementById("pSessionMenu");
+  if(wrap && menu && menu.style.display==="block" && !wrap.contains(e.target)){
+    menu.style.display="none";
+  }
+});
 
 function printTable(data,title){
   const w=window.open("","_blank","width=900,height=700");
@@ -1730,10 +1789,12 @@ function doPrint(type){
   if(type==="placed") return printTable(students.filter(s=>s.status==="Placed"),"Placed Students");
   if(type==="apprenticeship") return printTable(students.filter(s=>s.status==="Apprenticeship"),"Apprenticeship Students");
   if(type==="custom"){
-    const t=document.getElementById("pTrade").value,st=document.getElementById("pStatus").value,se=document.getElementById("pSession").value;
+    const t=document.getElementById("pTrade").value,st=document.getElementById("pStatus").value;
     let d=[...students];
-    if(t) d=d.filter(x=>x.trade===t);if(st) d=d.filter(x=>x.status===st);if(se) d=d.filter(x=>x.session===se);
-    return printTable(d,`Filtered Report${t?" — "+t:""}${st?" — "+st:""}${se?" — "+se:""}`);
+    if(t) d=d.filter(x=>x.trade===t);if(st) d=d.filter(x=>x.status===st);
+    if(pSessionSelected.length) d=d.filter(x=>pSessionSelected.includes(x.session));
+    const seLabel=pSessionSelected.length===1?pSessionSelected[0]:(pSessionSelected.length>1?pSessionSelected.length+" Sessions":"");
+    return printTable(d,`Filtered Report${t?" — "+t:""}${st?" — "+st:""}${seLabel?" — "+seLabel:""}`);
   }
   if(type==="summary"){
     const s=getStats();
