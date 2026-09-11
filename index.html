@@ -233,6 +233,65 @@ tr:hover td{background:rgba(255,255,255,.015)}
   .modal{padding:18px}
 }
 
+/* ── LANDING PAGE ── */
+#landingPage{background:linear-gradient(170deg,#0f172a 0%,#1e293b 100%);min-height:100vh;color:#e2e8f0;position:relative;overflow:hidden}
+.lp-nav{position:fixed;top:0;left:0;right:0;height:64px;z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:0 40px;transition:background .3s,box-shadow .3s,backdrop-filter .3s}
+.lp-nav.scrolled{backdrop-filter:blur(12px);background:rgba(15,23,42,.95);box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.lp-nav-brand{display:flex;align-items:center;gap:12px;cursor:pointer}
+.lp-nav-logo{background:#fff;width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#0f172a;letter-spacing:.5px;flex-shrink:0}
+.lp-nav-title{color:#fff;font-size:15px;font-weight:700;white-space:nowrap}
+.lp-nav-links{display:flex;align-items:center;gap:8px}
+.lp-nav-links a{color:#cbd5e1;border-radius:6px;transition:color .3s,background .3s;white-space:nowrap;padding:8px 16px;font-size:13px;font-weight:500;text-decoration:none;cursor:pointer}
+.lp-nav-links a:hover{color:#fff;background:rgba(255,255,255,.08)}
+.lp-btn-login-nav{color:#fff;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);padding:8px 20px;font-weight:600;border-radius:6px;cursor:pointer;font-size:13px;transition:all .3s}
+.lp-btn-login-nav:hover{background:rgba(255,255,255,.2)}
+.lp-nav-toggle{display:none;color:#fff;background:none;padding:4px;font-size:22px;border:none;cursor:pointer}
+.lp-hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:100px 24px 60px;position:relative}
+.lp-hero::before{content:"";position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.08),transparent)}
+.lp-badge{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:100px;display:inline-flex;align-items:center;gap:8px;margin-bottom:32px;padding:8px 20px}
+.lp-badge-dot{background:#22c55e;border-radius:50%;width:8px;height:8px;box-shadow:0 0 0 3px rgba(34,197,94,.15)}
+.lp-badge span{color:#cbd5e1;letter-spacing:.5px;font-size:13px;font-weight:600}
+.lp-hero-title{color:#fff;font-size:52px;font-weight:800;line-height:1.2;margin-bottom:12px;position:relative;z-index:1}
+.lp-hero-title span{color:#fbbf24}
+.lp-hero-sub{color:#94a3b8;font-size:20px;font-weight:500;line-height:1.7;max-width:600px;margin-bottom:40px;position:relative;z-index:1}
+.lp-hero-actions{display:flex;gap:16px;position:relative;z-index:1;flex-wrap:wrap;justify-content:center}
+.lp-btn-amber{background:linear-gradient(135deg,#f59e0b,#d97706);color:#000;border-radius:10px;padding:14px 32px;font-size:15px;font-weight:700;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:all .3s}
+.lp-btn-amber:hover{background:linear-gradient(135deg,#fbbf24,#f59e0b);box-shadow:0 4px 12px rgba(245,158,11,.3)}
+.lp-btn-ghost{color:#e2e8f0;border-radius:10px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);padding:14px 32px;font-size:15px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:all .3s}
+.lp-btn-ghost:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.25)}
+.lp-stats{background:#fff;border-bottom:1px solid #e5e7eb;padding:0 24px}
+.lp-stats-row{max-width:1000px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr)}
+.lp-stat-item{display:flex;flex-direction:column;align-items:center;padding:28px 16px;position:relative}
+.lp-stat-item:not(:last-child)::after{content:"";position:absolute;top:50%;right:0;transform:translateY(-50%);width:1px;height:40px;background:#e5e7eb}
+.lp-stat-num{font-size:28px;font-weight:800;margin-bottom:6px;line-height:1;color:#0f172a}
+.lp-stat-num .accent{color:#f59e0b}
+.lp-stat-lbl{color:#64748b;font-size:13px;font-weight:500}
+.lp-features{padding:80px 24px;background:linear-gradient(180deg,#f8fafc,#fff)}
+.lp-section-header{text-align:center;max-width:600px;margin:0 auto 48px}
+.lp-section-label{color:#64748b;text-transform:uppercase;letter-spacing:3px;font-size:11px;font-weight:700;margin-bottom:12px}
+.lp-section-title{color:#0f172a;font-size:36px;font-weight:800;line-height:1.3;margin-bottom:12px}
+.lp-section-desc{color:#64748b;font-size:15px;line-height:1.7}
+.lp-features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:24px;max-width:1000px;margin:0 auto}
+.lp-feat-card{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:32px 28px;transition:box-shadow .3s,transform .3s}
+.lp-feat-card:hover{box-shadow:0 10px 15px rgba(0,0,0,.08);transform:translateY(-2px)}
+.lp-feat-icon{font-size:36px;margin-bottom:16px}
+.lp-feat-card h3{color:#0f172a;font-size:18px;font-weight:700;margin-bottom:8px}
+.lp-feat-card p{color:#64748b;font-size:14px;line-height:1.7}
+@media(max-width:768px){
+  .lp-nav{padding:0 20px}
+  .lp-nav-links{display:none;position:absolute;top:64px;left:0;right:0;background:rgba(15,23,42,.98);flex-direction:column;padding:16px 20px;gap:4px;border-bottom:1px solid rgba(255,255,255,.1);backdrop-filter:blur(12px)}
+  .lp-nav-links.open{display:flex}
+  .lp-nav-toggle{display:flex;align-items:center;justify-content:center}
+  .lp-hero-title{font-size:32px}
+  .lp-hero-sub{font-size:16px}
+  .lp-hero-actions{flex-direction:column;width:100%;padding:0 20px}
+  .lp-btn-amber,.lp-btn-ghost{justify-content:center;width:100%}
+  .lp-stats-row{grid-template-columns:repeat(2,1fr)}
+  .lp-stat-item:nth-child(2)::after{display:none}
+  .lp-stat-item:nth-child(3),.lp-stat-item:nth-child(4){border-top:1px solid #e5e7eb}
+  .lp-section-title{font-size:28px}
+}
+
 /* ── FOOTER ── */
 .footer{background:linear-gradient(180deg,#0d1117,#070b12);color:var(--muted);border-top:1px solid var(--border);padding:48px 24px 28px;margin-top:30px}
 .footer-content{max-width:1000px;margin:0 auto}
@@ -258,6 +317,7 @@ tr:hover td{background:rgba(255,255,255,.015)}
 /* ── PRINT ── */
 @media print{
   .sidebar,.ham,.filter-row,.card-head .btn,.modal-overlay,#installBanner,.overlay-bg,#bulkBar,.no-print,.footer,
+  #landingPage,#landingPage *,#loginScreen,
   #dSessionWrap,#pSessionWrap,#stuPagination{display:none!important}
   .stat-card{cursor:default!important}
   .main{margin-left:0!important;padding:0!important}
@@ -277,6 +337,71 @@ tr:hover td{background:rgba(255,255,255,.015)}
 </head>
 <body class="sb-open">
 
+<!-- LANDING PAGE -->
+<div id="landingPage">
+  <nav class="lp-nav" id="lpNav">
+    <div class="lp-nav-brand" onclick="scrollToSection('hero')">
+      <div class="lp-nav-logo">MK</div>
+      <span class="lp-nav-title">MyKiloi</span>
+    </div>
+    <div class="lp-nav-links" id="lpNavLinks">
+      <a onclick="scrollToSection('hero')">Home</a>
+      <a onclick="scrollToSection('features')">Features</a>
+      <button class="lp-btn-login-nav" onclick="showLogin()">Login</button>
+    </div>
+    <button class="lp-nav-toggle" onclick="toggleLPNav()">☰</button>
+  </nav>
+
+  <section class="lp-hero" id="lp-hero">
+    <div class="lp-badge"><span class="lp-badge-dot"></span><span>Placement Management System — Live Now</span></div>
+    <h1 class="lp-hero-title">My<span>Kiloi</span></h1>
+    <p class="lp-hero-sub">Industrial Training Institute, Kiloi ka official placement management system. Students ka data manage karein, placement track karein, reports banayein.</p>
+    <div class="lp-hero-actions">
+      <button class="lp-btn-amber" onclick="showLogin()">🔐 Login</button>
+      <button class="lp-btn-ghost" onclick="scrollToSection('features')">Explore Features</button>
+    </div>
+  </section>
+
+  <section class="lp-stats">
+    <div class="lp-stats-row">
+      <div class="lp-stat-item"><div class="lp-stat-num">📊</div><div class="lp-stat-lbl">Real-time Dashboard</div></div>
+      <div class="lp-stat-item"><div class="lp-stat-num">🎓</div><div class="lp-stat-lbl">Student Management</div></div>
+      <div class="lp-stat-item"><div class="lp-stat-num">🏢</div><div class="lp-stat-lbl">Job Fair Records</div></div>
+      <div class="lp-stat-item"><div class="lp-stat-num">📋</div><div class="lp-stat-lbl">Reports &amp; PDF</div></div>
+    </div>
+  </section>
+
+  <section class="lp-features" id="lp-features">
+    <div class="lp-section-header">
+      <div class="lp-section-label">Features</div>
+      <h2 class="lp-section-title">System Features</h2>
+      <p class="lp-section-desc">Everything you need to manage placements effectively.</p>
+    </div>
+    <div class="lp-features-grid">
+      <div class="lp-feat-card">
+        <div class="lp-feat-icon">📊</div>
+        <h3>Live Dashboard</h3>
+        <p>Placement statistics, trade-wise breakdown and session-wise analytics in real time.</p>
+      </div>
+      <div class="lp-feat-card">
+        <div class="lp-feat-icon">🎓</div>
+        <h3>Student Database</h3>
+        <p>Complete student records with search, filter, bulk import/export and Firebase sync.</p>
+      </div>
+      <div class="lp-feat-card">
+        <div class="lp-feat-icon">🏢</div>
+        <h3>Job Fair</h3>
+        <p>Track monthly job fair drives, company visits and student placements effortlessly.</p>
+      </div>
+      <div class="lp-feat-card">
+        <div class="lp-feat-icon">📋</div>
+        <h3>Reports &amp; PDF</h3>
+        <p>Generate trade-wise reports, summary PDFs and printable student lists in one click.</p>
+      </div>
+    </div>
+  </section>
+</div>
+
 <div id="appLoader" style="display:none;position:fixed;inset:0;background:#070b12;z-index:9999;align-items:center;justify-content:center;flex-direction:column;gap:16px">
   <div style="width:48px;height:48px;border:4px solid #1e2535;border-top-color:#f59e0b;border-radius:50%;animation:spin 0.8s linear infinite"></div>
   <div style="color:#f59e0b;font-weight:700;font-size:14px;letter-spacing:1px">Loading MyKiloi...</div>
@@ -290,6 +415,8 @@ tr:hover td{background:rgba(255,255,255,.015)}
     var sess=JSON.parse(localStorage.getItem("iti_kiloi_session")||"null");
     if(sess&&sess.username){
       document.addEventListener("DOMContentLoaded",function(){
+        var lp=document.getElementById("landingPage");
+        if(lp) lp.style.display="none";
         var ls=document.getElementById("loginScreen");
         if(ls) ls.style.display="none";
         var loader=document.getElementById("appLoader");
@@ -306,8 +433,11 @@ tr:hover td{background:rgba(255,255,255,.015)}
 </div>
 
 <!-- LOGIN -->
-<div id="loginScreen">
+<div id="loginScreen" style="display:none">
   <div class="login-box">
+    <div style="text-align:left;margin-bottom:8px">
+      <button onclick="backToHome()" style="background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:13px;text-decoration:underline">← Back to Home</button>
+    </div>
     <div class="login-logo">
       <h1>My<span>Kiloi</span></h1>
       <p>Unofficial Student App — Not a Govt. Portal</p>
@@ -818,7 +948,7 @@ tr:hover td{background:rgba(255,255,255,.015)}
     <div class="footer-main">
       <div class="footer-officer-card">
         <div class="footer-officer-name">Er. Mahender Singh</div>
-        <div class="footer-officer-title">Apprenticeship &amp; Placement Officer</div>
+        <div class="footer-officer-title">Apprenticeship Instructor</div>
         <div class="footer-officer-inst">Industrial Training Institute, Kiloi, Haryana</div>
         <a class="footer-contact-item" href="tel:+919992720108">
           <span class="icon">📞</span><span>9992720108</span>
@@ -839,12 +969,12 @@ tr:hover td{background:rgba(255,255,255,.015)}
       <div>
         <div class="footer-section-title">About</div>
         <p style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:14px">MyKiloi — Placement Management System for Industrial Training Institute, Kiloi, Haryana.</p>
-        <p style="font-size:12px;color:var(--muted);line-height:1.7">Developed by Er. Mahender Singh<br>Apprenticeship &amp; Placement Office<br>ITI Kiloi</p>
+        <p style="font-size:12px;color:var(--muted);line-height:1.7">Principal Office<br>ITI Kiloi</p>
       </div>
     </div>
     <div class="footer-bottom">
       <span>ITI Kiloi, Haryana — Placement Cell</span>
-      <span>Managed by <span class="accent">Er. Mahender Singh</span>, Apprenticeship &amp; Placement Officer</span>
+      <span>Managed by <span class="accent">Er. Mahender Singh</span>, Apprenticeship Instructor</span>
     </div>
   </div>
 </footer>
@@ -1082,17 +1212,25 @@ function persistAll(){
 function restoreSession(){
   var loader=document.getElementById("appLoader");
   var sess; try{sess=JSON.parse(localStorage.getItem("iti_kiloi_session")||"null");}catch(e){sess=null;}
-  if(!sess||!sess.username){if(loader)loader.style.display="none";return;}
+  if(!sess||!sess.username){
+    if(loader)loader.style.display="none";
+    var lp=document.getElementById("landingPage");
+    if(lp) lp.style.display="block";
+    return;
+  }
   var u=sess.username;
   if(!users[u]){
     try{localStorage.removeItem("iti_kiloi_session");}catch(e){}
     if(loader)loader.style.display="none";
-    document.getElementById("loginScreen").style.display="flex";
+    var lp2=document.getElementById("landingPage");
+    if(lp2) lp2.style.display="block";
     return;
   }
   currentUser={username:u,...users[u]};
   window.currentUser=currentUser;
   if(loader)loader.style.display="none";
+  var lp3=document.getElementById("landingPage");
+  if(lp3) lp3.style.display="none";
   document.getElementById("loginScreen").style.display="none";
   document.getElementById("app").style.display="block";
   document.getElementById("sbAvatar").textContent=u[0].toUpperCase();
@@ -1332,6 +1470,8 @@ function doLogin(){
       document.getElementById("lErr").style.display="block"; return;
     }
     currentUser={username:u,...users[u]};
+    var lp=document.getElementById("landingPage");
+    if(lp) lp.style.display="none";
     document.getElementById("loginScreen").style.display="none";
     document.getElementById("app").style.display="block";
     document.getElementById("sbAvatar").textContent=u[0].toUpperCase();
@@ -1353,13 +1493,46 @@ function doLogout(){
   try{localStorage.removeItem("iti_kiloi_session");}catch(e){}
   currentUser=null; selectedRole=null;
   document.getElementById("app").style.display="none";
-  document.getElementById("loginScreen").style.display="flex";
+  var lp=document.getElementById("landingPage");
+  if(lp) lp.style.display="block";
+  document.getElementById("loginScreen").style.display="none";
   document.getElementById("lUser").value="";document.getElementById("lPass").value="";
   document.getElementById("loginForm").style.display="none";
   document.getElementById("roleSelect").style.display="block";
   document.getElementById("forgotBox").style.display="none";
   document.getElementById("signUpBox").style.display="none";
 }
+
+// ═══════════════════════════════════════════════
+// LANDING PAGE
+// ═══════════════════════════════════════════════
+function showLogin(){
+  var lp=document.getElementById("landingPage");
+  if(lp) lp.style.display="none";
+  document.getElementById("loginScreen").style.display="flex";
+  selectedRole=null; backToRoleSelect();
+}
+function backToHome(){
+  document.getElementById("loginScreen").style.display="none";
+  var lp=document.getElementById("landingPage");
+  if(lp) lp.style.display="block";
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+function scrollToSection(name){
+  var el=document.getElementById("lp-"+name);
+  if(el){var top=el.getBoundingClientRect().top+window.pageYOffset; window.scrollTo({top:Math.max(0,top-72),behavior:"smooth"});}
+  closeLPNav();
+}
+function toggleLPNav(){
+  document.getElementById("lpNavLinks").classList.toggle("open");
+}
+function closeLPNav(){
+  document.getElementById("lpNavLinks").classList.remove("open");
+}
+window.addEventListener("scroll",function(){
+  var nav=document.getElementById("lpNav");
+  if(nav) nav.classList.toggle("scrolled",window.pageYOffset>10);
+});
 
 // ═══════════════════════════════════════════════
 // NAVIGATION
