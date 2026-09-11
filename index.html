@@ -584,7 +584,9 @@ tr:hover td{background:rgba(255,255,255,.015)}
           </div>
           <div class="form-group">
             <label class="form-label">Category <span class="required">*</span></label>
-            <input class="form-input" type="text" name="category" placeholder="General / OBC / SC / ST / EWS">
+            <select class="form-select" name="category" id="lpCategory">
+              <option value="">-- Select Category --</option>
+            </select>
             <span class="form-error" data-err="category"></span>
           </div>
           <div class="form-group full-width">
@@ -805,7 +807,7 @@ tr:hover td{background:rgba(255,255,255,.015)}
         </div>
       </div>
       <div class="fg"><label>Email ID *</label><input id="suEmail" type="email" required placeholder="your@email.com"></div>
-      <div class="fg"><label>Category *</label><input id="suCompany" required placeholder="General / OBC / SC / ST / EWS"></div>
+      <div class="fg"><label>Category *</label><select id="suCompany" required></select></div>
       <div class="fg"><label>Address *</label><input id="suAddress" required placeholder="Village/City, District"></div>
       <div class="fg"><label>Trade *</label><select id="suTrade" required></select></div>
       <div class="fg"><label>Session *</label>
@@ -1370,7 +1372,7 @@ tr:hover td{background:rgba(255,255,255,.015)}
           </div>
         </div>
       </div>
-      <div class="fg2"><label>Category *</label><input id="fCompany" required placeholder="General / OBC / SC / ST / EWS"></div>
+      <div class="fg2"><label>Category *</label><select id="fCompany" required></select></div>
       <div class="fg2"><label>Email ID</label><input id="fEmail" type="email" placeholder="student@example.com"></div>
     </div>
     <div class="fg2"><label>Remarks</label><input id="fRemarks" placeholder="Any notes..."></div>
@@ -1524,6 +1526,22 @@ tr:hover td{background:rgba(255,255,255,.015)}
   </div>
 </div>
 
+<!-- COLUMN PICKER MODAL -->
+<div class="modal-overlay" id="colPickModal">
+  <div class="modal" style="max-width:420px">
+    <div class="modal-title">🖨️ Select Columns to Print</div>
+    <div id="colPickList" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:14px"></div>
+    <div style="display:flex;gap:8px;margin-bottom:14px">
+      <button class="btn btn-secondary" onclick="colPickCheckAll(true)" style="flex:1;font-size:12px">✅ Select All</button>
+      <button class="btn btn-secondary" onclick="colPickCheckAll(false)" style="flex:1;font-size:12px">❌ Clear All</button>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" onclick="closeModal('colPickModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="colPickPrint()">🖨️ Print</button>
+    </div>
+  </div>
+</div>
+
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
@@ -1538,7 +1556,20 @@ const DEFAULT_USERS = {
 };
 const DEFAULT_TRADES = ["Electrician","Fitter","Welder","COPA","Mechanic (MV)","Plumber","Carpenter","Draughtsman Civil","Turner","Machinist","Surveyor"];
 const SESSIONS = ["2020-21","2021-22","2022-23","2023-24","2024-25","2025-26"];
+const CATEGORIES = ["Gen","BCA","BCB","SC","ST","DSC","EWS","Others"];
 const SAMPLE = [];
+
+function fillTradeOptions(selId,selected,withPlaceholder){
+  const sel=document.getElementById(selId);
+  if(!sel) return;
+  const list=(trades&&trades.length?trades:DEFAULT_TRADES);
+  sel.innerHTML=(withPlaceholder?'<option value="">-- Select trade --</option>':'')+list.map(t=>`<option${t===selected?" selected":""}>${t}</option>`).join("");
+}
+function fillCategoryOptions(selId,selected){
+  const sel=document.getElementById(selId);
+  if(!sel) return;
+  sel.innerHTML='<option value="">-- Select Category --</option>'+CATEGORIES.map(c=>`<option${c===selected?" selected":""}>${c}</option>`).join("");
+}
 
 // ═══════════════════════════════════════════════
 // STATE
@@ -1727,6 +1758,11 @@ window.addEventListener("load",()=>{
   }
 
   function renderAfterLoad(){
+    fillTradeOptions("lpTradeSel","",true);
+    fillCategoryOptions("lpCategory","");
+    fillTradeOptions("suTrade","",false);
+    fillCategoryOptions("suCompany","");
+    fillCategoryOptions("fCompany","");
     // If user already logged in (e.g. page refresh), re-render
     if(currentUser){
       buildNav();
@@ -1802,9 +1838,8 @@ function showSignUp(){
 }
 
 function fillSignUpTrades(){
-  const sel=document.getElementById("suTrade");
-  if(!sel) return;
-  sel.innerHTML=(trades&&trades.length?trades:DEFAULT_TRADES).map(t=>`<option value="${t}">${t}</option>`).join("");
+  fillTradeOptions("suTrade","",false);
+  fillCategoryOptions("suCompany","");
 }
 function toggleOtherRole(val){
   const box=document.getElementById("otherRoleBox");
@@ -1989,10 +2024,8 @@ document.addEventListener("DOMContentLoaded",function(){
   var form=document.getElementById("lpRegForm");
   if(!form) return;
   var trSel=document.getElementById("lpTradeSel");
-  if(trSel){
-    var trOpts=(trades&&trades.length?trades:DEFAULT_TRADES);
-    trSel.innerHTML='<option value="">-- Select trade --</option>'+trOpts.map(function(t){return '<option value="'+t+'">'+t+'</option>';}).join("");
-  }
+  if(trSel){ fillTradeOptions("lpTradeSel","",true); }
+  fillCategoryOptions("lpCategory","");
   var btn=document.getElementById("lpSubmitBtn");
   form.addEventListener("submit",function(e){
     e.preventDefault();
@@ -2682,7 +2715,7 @@ function printStudentsPage(){
     &&(!tr||s.trade===tr)&&(!st||s.status===st)&&(!se||s.session===se)
   );
   const title=`Student List${tr?" — "+tr:""}${st?" — "+st:""}${se?" — "+se:""}${q?" — Search: "+q:""}`;
-  printTable(fil,title);
+  showColumnPicker(cols=>printTable(fil,title,cols));
 }
 
 function renderStudents(resetPage){
@@ -2766,6 +2799,7 @@ function openAddModal(){
   editingId=null;
   document.getElementById("modalTitle").textContent="➕ Add Student";
   ["fName","fRoll","fMobile","fAadhaar","fAddress","fFather","fDob","fCompany","fEmail","fRemarks"].forEach(id=>document.getElementById(id).value="");
+  fillCategoryOptions("fCompany","");
   rebuildStudentTradeSelect(trades[0]||"");
   rebuildStudentSessionSelect("2024-25");
   rebuildStudentStatusSelect("Placed");
@@ -2775,8 +2809,7 @@ function openAddModal(){
 }
 
 function rebuildStudentTradeSelect(selected){
-  const sel=document.getElementById("fTrade2");
-  sel.innerHTML=trades.map(t=>`<option${t===selected?" selected":""}>${t}</option>`).join("");
+  fillTradeOptions("fTrade2",selected,false);
 }
 
 
@@ -2860,7 +2893,9 @@ function editStudent(id){
   document.getElementById("fFather").value=s.father||"";
   document.getElementById("fDob").value=s.dob||"";
   document.getElementById("fEmail").value=s.emailId||"";
-  document.getElementById("fCompany").value=s.email||s.category||"";
+  const catVal=s.email||s.category||"";
+  const catMatch=CATEGORIES.find(c=>c.toLowerCase()===String(catVal).toLowerCase())||"";
+  fillCategoryOptions("fCompany",catMatch||catVal);
   document.getElementById("fRemarks").value=s.remarks;
   document.getElementById("stuModal").classList.add("open");
 }
@@ -2986,6 +3021,44 @@ const printCSS=`*{margin:0;padding:0;box-sizing:border-box}body{font-family:Aria
 
 let pSessionSelected=[]; // empty array = "All Sessions"
 
+const COL_PICK_DEFS=[
+  {key:"sno",     label:"S.No"},
+  {key:"name",    label:"Name"},
+  {key:"father",  label:"Father Name"},
+  {key:"dob",     label:"Date of Birth"},
+  {key:"roll",    label:"Reg. No."},
+  {key:"mobile",  label:"Mobile"},
+  {key:"aadhaar", label:"ID Number"},
+  {key:"trade",   label:"Trade"},
+  {key:"session", label:"Session"},
+  {key:"status",  label:"Status"},
+  {key:"category",label:"Category"},
+  {key:"emailId", label:"Email ID"},
+  {key:"address", label:"Address"},
+  {key:"remarks", label:"Remarks"}
+];
+let colPickCallback=null;
+
+function showColumnPicker(callback){
+  colPickCallback=callback;
+  const list=document.getElementById("colPickList");
+  list.innerHTML=COL_PICK_DEFS.map(c=>`<label style="display:flex;align-items:center;gap:7px;padding:7px 10px;border-radius:8px;background:var(--bg2);font-size:13px;color:var(--text);cursor:pointer;border:1px solid var(--border)">
+    <input type="checkbox" value="${c.key}" checked style="width:16px;height:16px;accent-color:var(--red)"> ${c.label}</label>`).join("");
+  document.getElementById("colPickModal").classList.add("open");
+}
+
+function colPickCheckAll(on){
+  document.querySelectorAll("#colPickList input[type=checkbox]").forEach(cb=>cb.checked=on);
+}
+
+function colPickPrint(){
+  const cols=[];
+  document.querySelectorAll("#colPickList input[type=checkbox]:checked").forEach(cb=>cols.push(cb.value));
+  closeModal("colPickModal");
+  if(cols.length===0){showToast("Koi column select nahi!","err");return;}
+  if(colPickCallback) colPickCallback(cols);
+}
+
 function populatePrintSelects(){
   document.getElementById("pTrade").innerHTML='<option value="">All Trades</option>'+trades.map(t=>`<option>${t}</option>`).join("");
   pSessionSelected=[];
@@ -3044,32 +3117,63 @@ document.addEventListener("click",function(e){
   }
 });
 
-function printTable(data,title){
+function printTable(data,title,cols){
+  if(!cols) cols=["sno","name","roll","trade","session","status","category","mobile"];
+  const colSet=new Set(cols);
+  const colDefs=COL_PICK_DEFS.filter(c=>colSet.has(c.key));
   const w=window.open("","_blank","width=900,height=700");
   if(!w){alert("Allow popups: Click lock icon in address bar → Site Settings → Allow Popups");return;}
   const isAdminPrint=(window.currentUser||currentUser)?.role==="admin";
   const mRollP=r=>isAdminPrint?r:(r?r.slice(0,3)+"***":"-");
-  const rows=data.map((s,i)=>`<tr><td>${i+1}</td><td><b>${s.name}</b></td><td>${mRollP(s.roll||"")}</td><td>${s.trade}</td><td>${s.session}</td><td style="color:${s.status==="Placed"?"#16a34a":s.status==="Self Employed"?"#0d9488":s.status==="Unemployed"?"#dc2626":"#d97706"};font-weight:700">${s.status}</td><td>${s.email||s.category||"—"}</td><td>${s.mobile||"—"}</td></tr>`).join("");
+  const statusColor=v=>v==="Placed"?"#16a34a":v==="Self Employed"?"#0d9488":v==="Unemployed"?"#dc2626":"#d97706";
+  function cellVal(s,key,i){
+    switch(key){
+      case "sno":return i+1;
+      case "name":return `<b>${s.name}</b>`;
+      case "father":return s.father||"—";
+      case "dob":return s.dob||"—";
+      case "roll":return mRollP(s.roll||"");
+      case "mobile":return s.mobile||"—";
+      case "aadhaar":return s.aadhaar||"—";
+      case "trade":return s.trade;
+      case "session":return s.session;
+      case "status":return s.status;
+      case "category":return s.email||s.category||"—";
+      case "emailId":return s.emailId||"—";
+      case "address":return s.address||"—";
+      case "remarks":return s.remarks||"—";
+      default:return"—";
+    }
+  }
+  const thead=colDefs.map(c=>`<th>${c.label}</th>`).join("");
+  const rows=data.map((s,i)=>{
+    const cells=colDefs.map(c=>{
+      const v=cellVal(s,c.key,i);
+      const style=(c.key==="status")?` style="color:${statusColor(s.status)};font-weight:700"`:(c.key==="name"||c.key==="sno")?"":' style="font-size:11px;color:#555"';
+      return `<td${style}>${v}</td>`;
+    }).join("");
+    return `<tr>${cells}</tr>`;
+  }).join("");
   w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${title}</title><style>${printCSS}</style></head><body>
   <div class="hdr"><h1>MYKILOI — PLACEMENT MANAGEMENT</h1><h2>${title}</h2><p>Date: ${new Date().toLocaleDateString("en-IN",{day:"2-digit",month:"long",year:"numeric"})}</p></div>
-  <table><thead><tr><th>#</th><th>Name</th><th>Reg. No.</th><th>Trade</th><th>Session</th><th>Status</th><th>Category</th><th>Mobile</th></tr></thead><tbody>${rows}</tbody></table>
+  <table><thead><tr>${thead}</tr></thead><tbody>${rows}</tbody></table>
   <p style="text-align:right;margin-top:8px;font-size:11px;color:#666">Total: ${data.length} records</p>
-  <div class="foot"><div class="sig">Principal</div><div class="sig">Placement Officer</div><div class="sig">Office Stamp</div></div>
+  <div class="foot"><div class="sig">Instructor</div><div class="sig">Appr. Instructor</div><div class="sig">Group Instructor</div></div>
   <script>setTimeout(()=>window.print(),600)<\/script></body></html>`);
   w.document.close();
 }
 
 function doPrint(type){
-  if(type==="all") return printTable(students,"Full Student List");
-  if(type==="placed") return printTable(students.filter(s=>s.status==="Placed"),"Placed Students");
-  if(type==="apprenticeship") return printTable(students.filter(s=>s.status==="Apprenticeship"),"Apprenticeship Students");
+  if(type==="all") return showColumnPicker(cols=>printTable(students,"Full Student List",cols));
+  if(type==="placed") return showColumnPicker(cols=>printTable(students.filter(s=>s.status==="Placed"),"Placed Students",cols));
+  if(type==="apprenticeship") return showColumnPicker(cols=>printTable(students.filter(s=>s.status==="Apprenticeship"),"Apprenticeship Students",cols));
   if(type==="custom"){
     const t=document.getElementById("pTrade").value,st=document.getElementById("pStatus").value;
     let d=[...students];
     if(t) d=d.filter(x=>x.trade===t);if(st) d=d.filter(x=>x.status===st);
     if(pSessionSelected.length) d=d.filter(x=>pSessionSelected.includes(x.session));
     const seLabel=pSessionSelected.length===1?pSessionSelected[0]:(pSessionSelected.length>1?pSessionSelected.length+" Sessions":"");
-    return printTable(d,`Filtered Report${t?" — "+t:""}${st?" — "+st:""}${seLabel?" — "+seLabel:""}`);
+    return showColumnPicker(cols=>printTable(d,`Filtered Report${t?" — "+t:""}${st?" — "+st:""}${seLabel?" — "+seLabel:""}`,cols));
   }
   if(type==="summary"){
     const s=getStats();
@@ -3092,7 +3196,7 @@ function doPrint(type){
     </div>
     <h3>Trade-wise Breakdown</h3>
     <table><thead><tr><th>Trade</th><th>Total</th><th>Placed</th><th>Apprentice</th><th>Self Emp.</th><th>Studying</th><th>Unemployed</th><th>Placement%</th></tr></thead><tbody>${tradeRows}</tbody></table>
-    <div class="foot"><div class="sig">Principal</div><div class="sig">Placement Officer</div></div>
+    <div class="foot"><div class="sig">Instructor</div><div class="sig">Appr. Instructor</div><div class="sig">Group Instructor</div></div>
     <script>setTimeout(()=>window.print(),600)<\/script></body></html>`);
     w.document.close();
   }
@@ -3153,7 +3257,10 @@ function exportExcel(){
 }
 
 // ── PDF EXPORT (jsPDF + AutoTable) ──
-function exportPDF(type){
+function exportPDF(type,cols){
+  if(type!=="summary" && !cols){
+    return showColumnPicker(c=>exportPDF(type,c));
+  }
   try {
     const {jsPDF} = window.jspdf;
     const doc = new jsPDF({orientation:'landscape', unit:'mm', format:'a4'});
@@ -3219,18 +3326,40 @@ function exportPDF(type){
 
       const isPdfAdmin=(window.currentUser||currentUser)?.role==="admin";
       const mRP=r=>isPdfAdmin?r:(r?r.slice(0,3)+"***":"-");
-      const tableData = data.map((s,i)=>[i+1,s.name,mRP(s.roll||""),s.trade,s.session,s.status,s.email||s.category||"",s.mobile||""]);
+      const pdfCols=cols||["sno","name","roll","trade","session","status","category","mobile"];
+      const pdfColSet=new Set(pdfCols);
+      const pdfColDefs=COL_PICK_DEFS.filter(c=>pdfColSet.has(c.key));
+      const pdfHead=pdfColDefs.map(c=>c.label);
+      const pdfVal=(s,key,i)=>{
+        switch(key){
+          case "sno":return i+1;
+          case "name":return s.name;
+          case "father":return s.father||"";
+          case "dob":return s.dob||"";
+          case "roll":return mRP(s.roll||"");
+          case "mobile":return s.mobile||"";
+          case "aadhaar":return s.aadhaar||"";
+          case "trade":return s.trade;
+          case "session":return s.session;
+          case "status":return s.status;
+          case "category":return s.email||s.category||"";
+          case "emailId":return s.emailId||"";
+          case "address":return s.address||"";
+          case "remarks":return s.remarks||"";
+          default:return"";
+        }
+      };
+      const tableData = data.map((s,i)=>pdfColDefs.map(c=>pdfVal(s,c.key,i)));
       doc.autoTable({
         startY:22,
-        head:[["#","Name","Reg. No.","Trade","Session","Status","Category","Mobile"]],
+        head:[pdfHead],
         body: tableData,
         headStyles:{fillColor:[245,158,11],textColor:[0,0,0],fontStyle:'bold',fontSize:8},
         bodyStyles:{fontSize:7.5,textColor:[40,40,40]},
         alternateRowStyles:{fillColor:[248,249,250]},
-        columnStyles:{0:{cellWidth:8},1:{cellWidth:40},2:{cellWidth:28},3:{cellWidth:28},4:{cellWidth:18},5:{cellWidth:22},6:{cellWidth:38},7:{cellWidth:24}},
         margin:{left:10,right:10},
         didDrawCell: function(data){
-          if(data.section==='body' && data.column.index===5){
+          if(data.section==='body' && pdfColDefs[data.column.index] && pdfColDefs[data.column.index].key==="status"){
             const status = data.cell.raw;
             const colors = {Placed:[34,197,94],Apprenticeship:[59,130,246],Studying:[245,158,11],Unemployed:[239,68,68]};
             const c = colors[status]||[100,100,100];
@@ -3247,8 +3376,9 @@ function exportPDF(type){
       doc.setPage(i);
       doc.setFontSize(7); doc.setTextColor(150,150,150);
       doc.text(`MyKiloi Placement System | Page ${i} of ${pageCount}`, 148.5, 205, {align:"center"});
-      doc.text("Principal's Signature: ___________________", 20, 205);
-      doc.text("Placement Officer: ___________________", 200, 205);
+      doc.text("Instructor: ___________________", 20, 205);
+      doc.text("Appr. Instructor: ___________________", 105, 205);
+      doc.text("Group Instructor: ___________________", 190, 205);
     }
 
     const fname = `MyKiloi_${type}_${new Date().toISOString().slice(0,10)}.pdf`;
@@ -3532,6 +3662,8 @@ function renderTrades(){
       <span style="font-size:13px">${t}</span>
       <button class="no-print" onclick="delTrade('${t}')" style="padding:3px 9px;background:rgba(239,68,68,.12);color:var(--red);border:none;border-radius:6px;cursor:pointer;font-size:11px;font-weight:600">🗑️ Delete</button>
     </div>`).join("")||`<p style="padding:16px;font-size:13px;color:var(--muted)">Koi trade nahi</p>`;
+  fillTradeOptions("lpTradeSel","",true);
+  fillTradeOptions("suTrade","",false);
 }
 
 function addTrade(){
