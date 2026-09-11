@@ -1318,11 +1318,7 @@ tr:hover td{background:rgba(255,255,255,.015)}
           </div>
         </div>
       </div>
-      <div class="fg2"><label>Category</label>
-        <select id="fCatgory">
-          <option value="">Select Category</option><option>General</option><option>OBC</option><option>SC</option><option>ST</option><option>EWS</option><option>Minority</option><option>Other</option>
-        </select>
-      </div>
+      <div class="fg2"><label>Category</label><input id="fCompany" placeholder="General / OBC / SC / ST / EWS"></div>
     </div>
     <div class="fg2"><label>Remarks</label><input id="fRemarks" placeholder="Any notes..."></div>
     <div class="modal-foot">
@@ -2459,7 +2455,7 @@ function renderDashboard(){
   document.getElementById("recentBody").innerHTML=[...scoped].reverse().slice(0,5).map(s=>`
     <tr><td><b>${s.name}</b></td><td>${s.trade}</td><td>${s.session}</td>
     <td><span class="badge b-${s.status.toLowerCase().replace(" ","-")}">${s.status}</span></td>
-    <td style="color:var(--muted)">${s.category||"—"}</td></tr>`).join("")||`<tr><td class="empty-td" colspan="5">No students found</td></tr>`;
+    <td style="color:var(--muted)">${s.email||s.category||"—"}</td></tr>`).join("")||`<tr><td class="empty-td" colspan="5">No students found</td></tr>`;
 
   // Trade-wise overview
   const tradeList=[...new Set(scoped.map(s=>s.trade))].sort();
@@ -2601,7 +2597,7 @@ function renderStudents(resetPage){
       <td style="font-size:12px;color:var(--muted)">${maskRoll(s.roll)}</td>
       <td>${s.mobile||"—"}</td><td>${s.trade}</td><td>${s.session}</td>
       <td><span class="badge b-${s.status.toLowerCase().replace(" ","-")}">${s.status}</span></td>
-      <td style="color:var(--muted)">${s.category||"—"}</td>
+      <td style="color:var(--muted)">${s.email||s.category||"—"}</td>
       <td onclick="event.stopPropagation()"><div style="display:flex;gap:5px">
         <button class="btn-icon bi-view" onclick="viewStudent(${s.id})">👁️</button>
         ${!selectMode?`<button class="btn-icon bi-edit" onclick="editStudent(${s.id})">✏️</button>`:""}
@@ -2644,7 +2640,7 @@ function filterByStatus(status){
 function openAddModal(){
   editingId=null;
   document.getElementById("modalTitle").textContent="➕ Add Student";
-  ["fName","fRoll","fMobile","fAadhaar","fAddress","fFather","fCatgory","fRemarks"].forEach(id=>document.getElementById(id).value="");
+  ["fName","fRoll","fMobile","fAadhaar","fAddress","fFather","fCompany","fRemarks"].forEach(id=>document.getElementById(id).value="");
   rebuildStudentTradeSelect(trades[0]||"");
   rebuildStudentSessionSelect("2024-25");
   rebuildStudentStatusSelect("Placed");
@@ -2737,7 +2733,7 @@ function editStudent(id){
   document.getElementById("fSessionCustomBox").style.display="none";
   document.getElementById("fStatusCustomBox").style.display="none";
   document.getElementById("fFather").value=s.father||"";
-  document.getElementById("fCatgory").value=s.category||"";
+  document.getElementById("fCompany").value=s.email||s.category||"";
   document.getElementById("fRemarks").value=s.remarks;
   document.getElementById("stuModal").classList.add("open");
 }
@@ -2748,7 +2744,7 @@ function viewStudent(id){
   const mRoll=r=>isAdm?r:(r?r.slice(0,3)+"***":"-");
   document.getElementById("viewGrid").innerHTML=[
     ["Name",s.name],["Reg. No.",mRoll(s.roll)],["Mobile",s.mobile||"—"],["ID Number",s.aadhaar||"N/A"],
-    ["Father Name",s.father||"—"],["Address",s.address||"—"],["Category",s.category||"—"],
+    ["Father Name",s.father||"—"],["Address",s.address||"—"],["Category",s.email||s.category||"—"],
     ["Trade",s.trade],["Session",s.session],
     ["Remarks",s.remarks||"—"],
   ].map(([l,v])=>`<div class="detail-item"><div class="dl">${l}</div><div class="dv">${v}</div></div>`).join("")
@@ -2767,8 +2763,8 @@ function saveStudent(){
     trade:document.getElementById("fTrade2").value,
     session:document.getElementById("fSession2").value,
     status:document.getElementById("fStatus2").value,
+    email:document.getElementById("fCompany").value.trim(),
     father:document.getElementById("fFather").value.trim(),
-    category:document.getElementById("fCatgory").value,
     remarks:document.getElementById("fRemarks").value.trim(),
   };
   if(editingId){
@@ -2887,7 +2883,7 @@ function printTable(data,title){
   if(!w){alert("Allow popups: Click lock icon in address bar → Site Settings → Allow Popups");return;}
   const isAdminPrint=(window.currentUser||currentUser)?.role==="admin";
   const mRollP=r=>isAdminPrint?r:(r?r.slice(0,3)+"***":"-");
-  const rows=data.map((s,i)=>`<tr><td>${i+1}</td><td><b>${s.name}</b></td><td>${mRollP(s.roll||"")}</td><td>${s.trade}</td><td>${s.session}</td><td style="color:${s.status==="Placed"?"#16a34a":s.status==="Self Employed"?"#0d9488":s.status==="Unemployed"?"#dc2626":"#d97706"};font-weight:700">${s.status}</td><td>${s.category||"—"}</td><td>${s.mobile||"—"}</td></tr>`).join("");
+  const rows=data.map((s,i)=>`<tr><td>${i+1}</td><td><b>${s.name}</b></td><td>${mRollP(s.roll||"")}</td><td>${s.trade}</td><td>${s.session}</td><td style="color:${s.status==="Placed"?"#16a34a":s.status==="Self Employed"?"#0d9488":s.status==="Unemployed"?"#dc2626":"#d97706"};font-weight:700">${s.status}</td><td>${s.email||s.category||"—"}</td><td>${s.mobile||"—"}</td></tr>`).join("");
   w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${title}</title><style>${printCSS}</style></head><body>
   <div class="hdr"><h1>MYKILOI — PLACEMENT MANAGEMENT</h1><h2>${title}</h2><p>Date: ${new Date().toLocaleDateString("en-IN",{day:"2-digit",month:"long",year:"numeric"})}</p></div>
   <table><thead><tr><th>#</th><th>Name</th><th>Reg. No.</th><th>Trade</th><th>Session</th><th>Status</th><th>Category</th><th>Mobile</th></tr></thead><tbody>${rows}</tbody></table>
@@ -2948,7 +2944,7 @@ function exportExcel(){
 
     // Sheet 1: Students
     const headers = ["S.No","Name","Reg. No.","Mobile","ID Number","Address","Trade","Session","Status","Category","Remarks"];
-    const rows = students.map((s,i)=>[i+1,s.name,s.roll||"",s.mobile||"",s.aadhaar||"",s.address||"",s.trade,s.session,s.status,s.category||"",s.remarks||""]);
+    const rows = students.map((s,i)=>[i+1,s.name,s.roll||"",s.mobile||"",s.aadhaar||"",s.address||"",s.trade,s.session,s.status,s.email||s.category||"",s.remarks||""]);
     const ws = XLSX.utils.aoa_to_sheet([headers,...rows]);
     // Column widths
     ws['!cols'] = [5,22,16,14,16,22,18,10,16,24,18].map(w=>({wch:w}));
@@ -3057,7 +3053,7 @@ function exportPDF(type){
 
       const isPdfAdmin=(window.currentUser||currentUser)?.role==="admin";
       const mRP=r=>isPdfAdmin?r:(r?r.slice(0,3)+"***":"-");
-      const tableData = data.map((s,i)=>[i+1,s.name,mRP(s.roll||""),s.trade,s.session,s.status,s.category||"",s.mobile||""]);
+      const tableData = data.map((s,i)=>[i+1,s.name,mRP(s.roll||""),s.trade,s.session,s.status,s.email||s.category||"",s.mobile||""]);
       doc.autoTable({
         startY:22,
         head:[["#","Name","Reg. No.","Trade","Session","Status","Category","Mobile"]],
@@ -3098,7 +3094,7 @@ function exportPDF(type){
 // ── CSV EXPORT ──
 function exportData(){
   const headers=["S.No","Name","Reg. No.","Mobile","ID Number","Address","Trade","Session","Status","Category","Remarks"];
-  const rows=students.map((s,i)=>[i+1,s.name,s.roll||"",s.mobile||"",s.aadhaar||"",s.address||"",s.trade,s.session,s.status,s.category||"",s.remarks||""].map(v=>`"${String(v||"").replace(/"/g,'""')}"`));
+  const rows=students.map((s,i)=>[i+1,s.name,s.roll||"",s.mobile||"",s.aadhaar||"",s.address||"",s.trade,s.session,s.status,s.email||s.category||"",s.remarks||""].map(v=>`"${String(v||"").replace(/"/g,'""')}"`));
   const csv=[headers.join(","),...rows.map(r=>r.join(","))].join("\n");
   const a=document.createElement("a");
   a.href=URL.createObjectURL(new Blob(["\uFEFF"+csv],{type:"text/csv;charset=utf-8"}));
@@ -3183,7 +3179,7 @@ function processCSV(file){
       for(let c of line){if(c==='"'){inQ=!inQ;}else if(c===','&&!inQ){cols.push(cur.trim());cur="";}else cur+=c;}
       cols.push(cur.trim());
       if(cols.length>=2&&cols[0]&&!cols[0].toLowerCase().includes("total")&&!cols[0].toLowerCase().includes("name")){
-        students.push({id:nextId++,name:cols[0]||"",roll:cols[1]||"",mobile:cols[2]||"",aadhaar:cols[3]||"",address:cols[4]||"",trade:cols[5]||"Other",session:cols[6]||"2024-25",status:["Placed","Apprenticeship","Self Employed","Studying","Unemployed"].includes(cols[7])?cols[7]:"Unemployed",category:cols[8]||"",company:cols[9]||"",remarks:cols[10]||""});
+        students.push({id:nextId++,name:cols[0]||"",roll:cols[1]||"",mobile:cols[2]||"",aadhaar:cols[3]||"",address:cols[4]||"",trade:cols[5]||"Other",session:cols[6]||"2024-25",status:["Placed","Apprenticeship","Self Employed","Studying","Unemployed"].includes(cols[7])?cols[7]:"Unemployed",email:cols[8]||"",company:cols[9]||"",remarks:cols[10]||""});
         added++;
       }else skipped++;
     });
