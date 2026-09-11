@@ -478,7 +478,8 @@ tr:hover td{background:rgba(255,255,255,.015)}
 }
 
 /* ── SHARE LINK (shareable / whatsapp / copyable) ── */
-#lpPage-home{position:relative}
+.lp-share-wrap.inline{position:relative;top:auto;right:auto}
+#lpPage-home,#lpPage-drives{position:relative}
 .lp-share-wrap{position:absolute;top:82px;right:24px;z-index:60}
 .lp-share-btn{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.22);color:#fff;font-size:13px;font-weight:600;padding:9px 16px;border-radius:100px;cursor:pointer;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);transition:all .2s;font-family:var(--font-english),var(--font-hindi),sans-serif}
 .lp-share-btn:hover{background:rgba(245,158,11,.2);border-color:rgba(245,158,11,.5)}
@@ -573,19 +574,6 @@ tr:hover td{background:rgba(255,255,255,.015)}
 
   <!-- PAGE: HOME -->
   <div class="lp-page" id="lpPage-home">
-
-  <!-- SHARE LINK -->
-  <div class="lp-share-wrap">
-    <button type="button" class="lp-share-btn" onclick="toggleLpShare()">🔗 Share</button>
-    <div class="lp-share-panel" id="lpSharePanel">
-      <div class="lp-share-head"><span>Share this page</span><button type="button" onclick="toggleLpShare(false)">✕</button></div>
-      <input class="lp-share-input" id="lpShareInput" type="text" readonly onclick="this.select()">
-      <div class="lp-share-actions">
-        <button type="button" class="lp-share-wa" onclick="shareLpWhatsApp()">💬 WhatsApp</button>
-        <button type="button" class="lp-share-copy" id="lpShareCopyBtn" onclick="copyLpLink()">📋 Copy Link</button>
-      </div>
-    </div>
-  </div>
 
   <!-- HERO (banner image background) -->
   <section class="hero-section" id="lp-hero">
@@ -1367,6 +1355,17 @@ tr:hover td{background:rgba(255,255,255,.015)}
         <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:20px">
           <div class="ph" style="margin-bottom:0"><h1>🏢 Job Fair</h1><p>Monthly Job Fair records — Firebase synced ☁️</p></div>
           <div style="display:flex;gap:8px;flex-wrap:wrap" class="no-print">
+            <div class="lp-share-wrap inline">
+              <button type="button" class="lp-share-btn" onclick="toggleLpShare(this)">🔗 Share Page</button>
+              <div class="lp-share-panel">
+                <div class="lp-share-head"><span>Share this page</span><button type="button" onclick="toggleLpShare(this,false)">✕</button></div>
+                <input class="lp-share-input" type="text" readonly onclick="this.select()">
+                <div class="lp-share-actions">
+                  <button type="button" class="lp-share-wa" onclick="shareLpWhatsApp()">💬 WhatsApp</button>
+                  <button type="button" class="lp-share-copy" onclick="copyLpLink(this)">📋 Copy Link</button>
+                </div>
+              </div>
+            </div>
             <button class="print-btn" onclick="printCurrentPage()">🖨️ Print Page</button>
             <button class="btn btn-primary" onclick="openAddJobFairModal()">➕ Add Entry</button>
             <button class="btn btn-primary" style="background:linear-gradient(135deg,var(--blue),#2563eb)" onclick="openLPDriveModal()">➕ Add Company</button>
@@ -2153,25 +2152,31 @@ function closeLPNav(){
 function lpShareUrl(){
   try{ return location.href.split("#")[0].split("?")[0]; }catch(e){ return window.location.origin; }
 }
-function toggleLpShare(force){
-  var p=document.getElementById("lpSharePanel"); if(!p) return;
+function lpSharePanelOf(anchor){
+  var w=anchor&&anchor.closest?anchor.closest(".lp-share-wrap"):null;
+  return w?w.querySelector(".lp-share-panel"):null;
+}
+function toggleLpShare(anchor,force){
+  var w=anchor&&anchor.closest?anchor.closest(".lp-share-wrap"):null; if(!w) return;
+  var p=w.querySelector(".lp-share-panel"); if(!p) return;
   var show=typeof force==="boolean"?force:p.style.display==="none";
   p.style.display=show?"block":"none";
   if(show){
-    var inp=document.getElementById("lpShareInput"); if(inp){ inp.value=lpShareUrl(); inp.focus(); inp.select(); }
+    var inp=w.querySelector(".lp-share-input"); if(inp){ inp.value=lpShareUrl(); inp.focus(); inp.select(); }
   }
 }
-function copyLpLink(){
-  var text=lpShareUrl();
-  var btn=document.getElementById("lpShareCopyBtn");
-  var done=function(){ if(btn){ btn.textContent="✅ Copied!"; setTimeout(function(){btn.textContent="📋 Copy Link";},1600); } };
+function copyLpLink(btn){
+  var w=btn&&btn.closest?btn.closest(".lp-share-wrap"):null; if(!w) return;
+  var inp=w.querySelector(".lp-share-input");
+  var b=w.querySelector(".lp-share-copy");
+  var done=function(){ if(b){ b.textContent="✅ Copied!"; setTimeout(function(){b.textContent="📋 Copy Link";},1600); } };
   if(navigator.clipboard&&navigator.clipboard.writeText){
-    navigator.clipboard.writeText(text).then(function(){done();},function(){ lpShareFallbackCopy(text); done(); });
-  } else { lpShareFallbackCopy(text); done(); }
+    navigator.clipboard.writeText(lpShareUrl()).then(function(){done();},function(){ lpShareFallbackCopy(lpShareUrl(),inp); done(); });
+  } else { lpShareFallbackCopy(lpShareUrl(),inp); done(); }
 }
-function lpShareFallbackCopy(text){
+function lpShareFallbackCopy(text,inp){
   try{
-    var inp=document.getElementById("lpShareInput");
+    if(!inp) return;
     inp.value=text; inp.style.display="block"; inp.focus(); inp.select();
     document.execCommand("copy");
   }catch(e){}
