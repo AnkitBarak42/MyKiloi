@@ -15,6 +15,9 @@
 <meta http-equiv="Expires" content="0">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
 <title>MyKiloi — Placement System</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -39,10 +42,17 @@ console.log("✅ Firebase connected!");
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 :root{
-  --bg:#070b12;--bg2:#0d1117;--card:#161b24;--border:#1e2535;
+  --bg:#000000;--bg2:#0a0a0a;--card:#161b24;--border:#1e2535;
   --accent:#f59e0b;--accent2:#d97706;
   --blue:#3b82f6;--green:#22c55e;--red:#ef4444;--purple:#a855f7;
   --text:#e2e8f0;--muted:#64748b;--light:#94a3b8;
+  --primary-900:#0f172a;--primary-800:#1e293b;--primary-700:#334155;--primary-600:#475569;--primary-500:#64748b;--primary-400:#94a3b8;--primary-300:#cbd5e1;--primary-200:#e2e8f0;--primary-100:#f1f5f9;--primary-50:#f8fafc;
+  --accent-600:#d97706;--accent-500:#f59e0b;--accent-400:#fbbf24;--accent-300:#fcd34d;--accent-100:#fef3c7;
+  --blue-700:#1d4ed8;--blue-600:#2563eb;--blue-500:#3b82f6;--blue-400:#60a5fa;--blue-100:#dbeafe;
+  --green-600:#16a34a;--green-500:#22c55e;--green-100:#dcfce7;
+  --red-500:#ef4444;--red-100:#fee2e2;
+  --font-hindi:"Noto Sans Devanagari","Segoe UI",sans-serif;
+  --font-english:"Inter","Segoe UI",system-ui,sans-serif;
 }
 body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;min-height:100vh;overflow-x:hidden}
 input,select,textarea,button{font-family:inherit}
@@ -233,85 +243,209 @@ tr:hover td{background:rgba(255,255,255,.015)}
   .modal{padding:18px}
 }
 
-/* ── LANDING PAGE ── */
-#landingPage{background:linear-gradient(170deg,#0f172a 0%,#1e293b 100%);min-height:100vh;color:#e2e8f0;position:relative;overflow:hidden}
-.lp-nav{position:fixed;top:0;left:0;right:0;height:64px;z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:0 40px;transition:background .3s,box-shadow .3s,backdrop-filter .3s}
-.lp-nav.scrolled{backdrop-filter:blur(12px);background:rgba(15,23,42,.95);box-shadow:0 1px 3px rgba(0,0,0,.3)}
-.lp-nav-brand{display:flex;align-items:center;gap:12px;cursor:pointer}
-.lp-nav-logo{background:#fff;width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#0f172a;letter-spacing:.5px;flex-shrink:0}
-.lp-nav-title{color:#fff;font-size:15px;font-weight:700;white-space:nowrap}
-.lp-nav-links{display:flex;align-items:center;gap:8px}
-.lp-nav-links a{color:#cbd5e1;border-radius:6px;transition:color .3s,background .3s;white-space:nowrap;padding:8px 16px;font-size:13px;font-weight:500;text-decoration:none;cursor:pointer}
-.lp-nav-links a:hover{color:#fff;background:rgba(255,255,255,.08)}
-.lp-btn-login-nav{color:#fff;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);padding:8px 20px;font-weight:600;border-radius:6px;cursor:pointer;font-size:13px;transition:all .3s}
-.lp-btn-login-nav:hover{background:rgba(255,255,255,.2)}
-.lp-nav-toggle{display:none;color:#fff;background:none;padding:4px;font-size:22px;border:none;cursor:pointer}
-.lp-hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:100px 24px 60px;position:relative}
-.lp-hero::before{content:"";position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.08),transparent)}
-.lp-badge{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:100px;display:inline-flex;align-items:center;gap:8px;margin-bottom:32px;padding:8px 20px}
-.lp-badge-dot{background:#22c55e;border-radius:50%;width:8px;height:8px;box-shadow:0 0 0 3px rgba(34,197,94,.15)}
-.lp-badge span{color:#cbd5e1;letter-spacing:.5px;font-size:13px;font-weight:600}
-.lp-hero-title{color:#fff;font-size:52px;font-weight:800;line-height:1.2;margin-bottom:12px;position:relative;z-index:1}
-.lp-hero-title span{color:#fbbf24}
-.lp-hero-sub{color:#94a3b8;font-size:20px;font-weight:500;line-height:1.7;max-width:600px;margin-bottom:40px;position:relative;z-index:1}
-.lp-hero-actions{display:flex;gap:16px;position:relative;z-index:1;flex-wrap:wrap;justify-content:center}
-.lp-btn-amber{background:linear-gradient(135deg,#f59e0b,#d97706);color:#000;border-radius:10px;padding:14px 32px;font-size:15px;font-weight:700;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:all .3s}
-.lp-btn-amber:hover{background:linear-gradient(135deg,#fbbf24,#f59e0b);box-shadow:0 4px 12px rgba(245,158,11,.3)}
-.lp-btn-ghost{color:#e2e8f0;border-radius:10px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);padding:14px 32px;font-size:15px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:all .3s}
-.lp-btn-ghost:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.25)}
-.lp-stats{background:#fff;border-bottom:1px solid #e5e7eb;padding:0 24px}
-.lp-stats-row{max-width:1000px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr)}
-.lp-stat-item{display:flex;flex-direction:column;align-items:center;padding:28px 16px;position:relative}
-.lp-stat-item:not(:last-child)::after{content:"";position:absolute;top:50%;right:0;transform:translateY(-50%);width:1px;height:40px;background:#e5e7eb}
-.lp-stat-num{font-size:28px;font-weight:800;margin-bottom:6px;line-height:1;color:#0f172a}
-.lp-stat-num .accent{color:#f59e0b}
-.lp-stat-lbl{color:#64748b;font-size:13px;font-weight:500}
-.lp-features{padding:80px 24px;background:linear-gradient(180deg,#f8fafc,#fff)}
-.lp-section-header{text-align:center;max-width:600px;margin:0 auto 48px}
-.lp-section-label{color:#64748b;text-transform:uppercase;letter-spacing:3px;font-size:11px;font-weight:700;margin-bottom:12px}
-.lp-section-title{color:#0f172a;font-size:36px;font-weight:800;line-height:1.3;margin-bottom:12px}
-.lp-section-desc{color:#64748b;font-size:15px;line-height:1.7}
-.lp-features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:24px;max-width:1000px;margin:0 auto}
-.lp-feat-card{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:32px 28px;transition:box-shadow .3s,transform .3s}
-.lp-feat-card:hover{box-shadow:0 10px 15px rgba(0,0,0,.08);transform:translateY(-2px)}
-.lp-feat-icon{font-size:36px;margin-bottom:16px}
-.lp-feat-card h3{color:#0f172a;font-size:18px;font-weight:700;margin-bottom:8px}
-.lp-feat-card p{color:#64748b;font-size:14px;line-height:1.7}
+/* ── LANDING PAGE — MyKiloi dark theme (structure of iti-placement-drive.vercel.app) ── */
+#landingPage{font-family:var(--font-hindi);color:var(--text);background:var(--bg);line-height:1.6;overflow-x:hidden}
+#landingPage h1,#landingPage h2,#landingPage h3{font-family:var(--font-hindi)}
+#landingPage input,#landingPage select,#landingPage textarea,#landingPage button{font-family:var(--font-hindi)}
+#landingPage a{color:inherit;text-decoration:none}
+#landingPage img{max-width:100%;display:block}
+#landingPage button{cursor:pointer;border:none;outline:none;font-family:inherit}
+#landingPage ul{list-style:none}
+.loader-overlay{z-index:9999;background:var(--bg);flex-direction:column;justify-content:center;align-items:center;gap:32px;display:flex;position:fixed;inset:0}
+.loader-content{flex-direction:column;align-items:center;gap:24px;display:flex}
+.loader-icon{background:#fff;width:72px;height:72px;font-family:var(--font-english);color:#0f172a;letter-spacing:1px;border-radius:18px;justify-content:center;align-items:center;font-size:24px;font-weight:800;display:flex}
+.loader-text{text-align:center}
+.loader-text h2{font-family:var(--font-hindi);color:#fff;letter-spacing:.5px;margin-bottom:4px;font-size:20px;font-weight:700}
+.loader-text p{color:var(--muted);font-size:13px;font-weight:500}
+.loader-bar-track{background:var(--card);border-radius:2px;width:200px;height:3px;overflow:hidden}
+.loader-bar{background:var(--accent);border-radius:2px;height:100%;animation:1.8s ease-in-out forwards loaderProgress}
+@keyframes loaderProgress{0%{width:0%}30%{width:40%}60%{width:70%}to{width:100%}}
+.lp-navbar{z-index:1000;height:64px;transition:background .3s,box-shadow .3s,backdrop-filter .3s;justify-content:space-between;align-items:center;padding:0 40px;display:flex;position:fixed;top:0;left:0;right:0}
+.lp-navbar.scrolled{-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);background:rgba(0,0,0,.95);box-shadow:0 1px 3px rgba(0,0,0,.4)}
+.lp-navbar-brand{cursor:pointer;align-items:center;gap:12px;display:flex}
+.lp-navbar-logo{background:#fff;width:36px;height:36px;font-family:var(--font-english);color:#0f172a;letter-spacing:.5px;border-radius:8px;flex-shrink:0;justify-content:center;align-items:center;font-size:12px;font-weight:800;display:flex}
+.lp-navbar-title{font-family:var(--font-hindi);color:#fff;white-space:nowrap;font-size:15px;font-weight:700}
+.lp-navbar-links{align-items:center;gap:8px;display:flex}
+.lp-navbar-links a{color:var(--light);border-radius:6px;transition:color .3s,background .3s;white-space:nowrap;padding:8px 16px;font-size:13px;font-weight:500;text-decoration:none;cursor:pointer}
+.lp-navbar-links a:hover{color:#fff;background:rgba(255,255,255,.08)}
+.lp-navbar-links .lp-navbar-cta{color:#fff!important;background:rgba(255,255,255,.12)!important;border:1px solid rgba(255,255,255,.2)!important;padding:8px 20px!important;font-weight:600!important;border-radius:6px}
+.lp-navbar-links .lp-navbar-cta:hover{background:rgba(255,255,255,.22)!important}
+.lp-navbar-links .lp-btn-login-nav{color:#fff;background:rgba(245,158,11,.18);border:1px solid rgba(245,158,11,.4);padding:8px 20px;font-weight:600;border-radius:6px;cursor:pointer;font-size:13px;transition:all .3s;white-space:nowrap;font-family:var(--font-hindi)}
+.lp-navbar-links .lp-btn-login-nav:hover{background:rgba(245,158,11,.3)}
+.lp-navbar-toggle{color:#fff;background:transparent;padding:4px;font-size:24px;border:none;cursor:pointer;display:none}
+.lp-page{min-height:100vh;animation:lpFade .25s ease}
+.lp-page.sub{padding-top:64px;background:linear-gradient(180deg,var(--bg2),var(--bg))}
+.lp-page.sub .section{padding-top:32px}
+.lp-topbar{padding:0 24px;margin-top:24px}
+.lp-back-btn{display:inline-flex;align-items:center;gap:6px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;color:var(--light);font-family:var(--font-english),var(--font-hindi),sans-serif;font-size:13px;font-weight:500;padding:9px 16px;cursor:pointer;transition:all .2s}
+.lp-back-btn:hover{color:#fff;border-color:rgba(245,158,11,.4);background:var(--card)}
+@keyframes lpFade{from{opacity:0}to{opacity:1}}
+.hero-section{text-align:center;background:linear-gradient(180deg,#000 0%,#050505 100%);flex-direction:column;justify-content:center;align-items:center;min-height:100vh;padding:100px 24px 60px;display:flex;position:relative;overflow:hidden}
+.hero-section::before{content:"";pointer-events:none;background:linear-gradient(90deg,transparent,rgba(245,158,11,.18),transparent);height:1px;position:absolute;bottom:0;left:0;right:0}
+.hero-badge{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:100px;align-items:center;gap:8px;margin-bottom:32px;padding:8px 20px;display:inline-flex}
+.hero-badge-dot{background:#22c55e;border-radius:50%;flex-shrink:0;width:8px;height:8px;box-shadow:0 0 0 3px rgba(34,197,94,.15)}
+.hero-badge span{color:var(--light);letter-spacing:.5px;font-size:13px;font-weight:600}
+.hero-title{font-family:var(--font-hindi);color:#fff;z-index:1;margin-bottom:12px;font-size:52px;font-weight:800;line-height:1.2;position:relative}
+.hero-title-accent{color:#fbbf24}
+.hero-subtitle{font-family:var(--font-hindi);color:var(--light);z-index:1;max-width:600px;margin-bottom:40px;font-size:20px;font-weight:500;line-height:1.7;position:relative}
+.hero-actions{z-index:1;gap:16px;display:flex;position:relative;flex-wrap:wrap;justify-content:center}
+.btn-primary{background:linear-gradient(135deg,#f59e0b,#d97706);color:#0f172a;border-radius:10px;transition:background .3s,box-shadow .3s;align-items:center;gap:8px;padding:14px 32px;font-size:15px;font-weight:700;display:inline-flex;cursor:pointer;border:none}
+.btn-primary:hover{background:linear-gradient(135deg,#fbbf24,#f59e0b);box-shadow:0 4px 12px rgba(245,158,11,.3)}
+.btn-secondary{color:var(--text);border-radius:10px;transition:background .3s,border-color .3s;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);align-items:center;gap:8px;padding:14px 32px;font-size:15px;font-weight:600;display:inline-flex;cursor:pointer}
+.btn-secondary:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.25)}
+.stats-bar{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 24px}
+.stats-container{grid-template-columns:repeat(4,1fr);max-width:1000px;margin:0 auto;display:grid}
+.stat-item{flex-direction:column;align-items:center;padding:28px 16px;display:flex;position:relative}
+.stat-item:not(:last-child)::after{content:"";background:var(--border);width:1px;height:40px;position:absolute;top:50%;right:0;transform:translateY(-50%)}
+.stat-number{font-family:var(--font-english);color:#fff;margin-bottom:6px;font-size:28px;font-weight:800;line-height:1}
+.stat-number .accent{color:#fbbf24}
+.stat-label{color:var(--muted);font-size:13px;font-weight:500}
+.section{padding:80px 24px}
+.section-header{text-align:center;max-width:600px;margin:0 auto 56px}
+.section-label{font-family:var(--font-english);color:var(--accent);text-transform:uppercase;letter-spacing:3px;align-items:center;gap:8px;margin-bottom:12px;font-size:11px;font-weight:700;display:inline-flex}
+.section-title{font-family:var(--font-hindi);color:#fff;margin-bottom:12px;font-size:36px;font-weight:800;line-height:1.3}
+.section-desc{color:var(--muted);font-size:15px;line-height:1.7}
+.companies-grid{flex-direction:column;gap:32px;max-width:1100px;margin:0 auto;display:flex}
+.company-card{background:var(--card);border:1px solid var(--border);border-radius:16px;transition:box-shadow .3s,transform .3s,border-color .3s;overflow:hidden}
+.company-card:hover{box-shadow:0 10px 15px rgba(0,0,0,.4);border-color:rgba(245,158,11,.35)}
+.company-card-header{border-bottom:1px solid var(--border);justify-content:space-between;align-items:flex-start;gap:16px;padding:28px 32px;display:flex}
+.company-card-header-left{flex:1;align-items:flex-start;gap:16px;display:flex}
+.company-number{border-radius:10px;background:linear-gradient(135deg,#f59e0b,#d97706);width:44px;height:44px;font-family:var(--font-english);color:#0f172a;flex-shrink:0;justify-content:center;align-items:center;font-size:16px;font-weight:800;display:flex}
+.company-name{font-family:var(--font-english);color:#fff;margin-bottom:4px;font-size:18px;font-weight:700;line-height:1.3}
+.company-location{color:var(--light);align-items:flex-start;gap:4px;font-size:13px;line-height:1.5;display:flex}
+.company-location .icon{flex-shrink:0;margin-top:2px}
+.company-details-list{flex-direction:column;gap:12px;display:flex}
+.company-detail-item{justify-content:space-between;gap:12px;border-bottom:1px solid var(--border);padding-bottom:12px;display:flex}
+.company-detail-item:last-child{border-bottom:none;padding-bottom:0}
+.detail-label{color:var(--muted);font-size:13px;white-space:nowrap}
+.detail-value{color:#fff;text-align:right;margin-left:auto;font-size:14px;font-weight:500}
+.company-footer{margin-top:16px}
+.company-footer .btn-success-wa{width:100%}
+.company-type-badge{white-space:nowrap;border-radius:100px;flex-shrink:0;padding:6px 14px;font-size:12px;font-weight:600;display:inline-flex}
+.badge-apprenticeship{background:rgba(59,130,246,.15);color:#60a5fa;border:1px solid rgba(59,130,246,.3)}
+.badge-job{background:rgba(34,197,94,.15);color:#4ade80;border:1px solid rgba(34,197,94,.3)}
+.company-card-body{flex-direction:column;gap:24px;padding:28px 32px;display:flex}
+.company-info-grid{grid-template-columns:repeat(2,1fr);gap:20px;display:grid}
+.info-block{flex-direction:column;gap:8px;display:flex}
+.info-block-label{color:var(--muted);text-transform:uppercase;letter-spacing:1px;font-size:11px;font-weight:700}
+.info-block-value{color:var(--text);font-size:14px;font-weight:600;line-height:1.5}
+.info-block-value .highlight{color:#fbbf24;font-weight:700}
+.salary-display{background:var(--bg2);border:1px solid var(--border);border-radius:10px;align-items:center;gap:16px;padding:16px 20px;display:flex}
+.salary-icon{border-radius:6px;background:var(--accent);width:40px;height:40px;color:#0f172a;flex-shrink:0;justify-content:center;align-items:center;font-size:18px;display:flex}
+.salary-details{flex:1}
+.salary-amount{font-family:var(--font-english);color:#fff;font-size:20px;font-weight:800}
+.salary-period{color:var(--muted);font-size:12px;font-weight:500}
+.trades-list{flex-wrap:wrap;gap:8px;display:flex}
+.trade-tag{background:var(--bg2);border:1px solid var(--border);font-family:var(--font-english);color:var(--light);border-radius:100px;align-items:center;gap:6px;padding:6px 14px;font-size:13px;font-weight:500;display:inline-flex}
+.trade-tag .count{background:var(--accent);color:#0f172a;border-radius:100px;padding:1px 7px;font-size:11px;font-weight:700}
+.benefits-list{grid-template-columns:repeat(2,1fr);gap:10px;display:grid}
+.benefit-item{color:var(--light);align-items:flex-start;gap:8px;font-size:13px;line-height:1.5;display:flex}
+.benefit-icon{color:#4ade80;flex-shrink:0;margin-top:2px}
+.eligibility-grid{grid-template-columns:repeat(4,1fr);gap:12px;display:grid}
+.eligibility-item{background:var(--bg2);border:1px solid var(--border);border-radius:6px;text-align:center;padding:12px}
+.eligibility-item .label{color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;font-size:11px;font-weight:600}
+.eligibility-item .value{color:var(--text);font-size:14px;font-weight:700}
+.form-section{background:linear-gradient(180deg,var(--bg),var(--bg2))}
+.form-container{background:var(--card);border:1px solid var(--border);border-radius:24px;max-width:720px;box-shadow:0 10px 15px rgba(0,0,0,.4);margin:0 auto;padding:48px}
+.form-grid{grid-template-columns:repeat(2,1fr);gap:24px;display:grid}
+.form-group{flex-direction:column;gap:6px;display:flex}
+.form-group.full-width{grid-column:1/-1}
+.form-label{color:var(--light);align-items:center;gap:4px;font-size:13px;font-weight:600;display:flex}
+.form-label .required{color:var(--red)}
+.form-input,.form-select{background:var(--bg2);border:1.5px solid var(--border);border-radius:6px;width:100%;color:var(--text);transition:border-color .3s,box-shadow .3s;outline:none;padding:12px 16px;font-size:14px;font-family:var(--font-english)}
+.form-input:focus,.form-select:focus{border-color:var(--accent);background:var(--bg);box-shadow:0 0 0 3px rgba(245,158,11,.15)}
+.form-input::placeholder{color:var(--muted)}
+.form-select{appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-position:right 14px center;background-repeat:no-repeat;padding-right:36px}
+.radio-group{gap:16px;padding-top:4px;display:flex}
+.radio-label{color:var(--light);cursor:pointer;border:1.5px solid var(--border);border-radius:6px;transition:all .3s;background:var(--bg2);align-items:center;gap:8px;padding:8px 16px;font-size:14px;display:flex}
+.radio-label:hover{border-color:rgba(245,158,11,.4)}
+.radio-label input{accent-color:var(--accent2);width:16px;height:16px}
+.radio-label input:checked+span{font-weight:600}
+.radio-label:has(input:checked){border-color:var(--accent);background:rgba(245,158,11,.08);color:#fbbf24}
+.checkbox-group{flex-direction:column;gap:10px;padding-top:4px;display:flex}
+.checkbox-label{color:var(--light);cursor:pointer;border:1.5px solid var(--border);border-radius:6px;transition:all .3s;background:var(--bg2);align-items:center;gap:10px;padding:10px 16px;font-size:14px;line-height:1.4;display:flex}
+.checkbox-label:hover{border-color:rgba(245,158,11,.4)}
+.checkbox-label input{accent-color:var(--accent2);flex-shrink:0;width:16px;height:16px}
+.checkbox-label:has(input:checked){border-color:var(--accent);background:rgba(245,158,11,.08)}
+.form-divider{background:var(--border);grid-column:1/-1;height:1px;margin:8px 0}
+.form-note{background:rgba(245,158,11,.08);border-radius:6px;color:#fbbf24;border:1px solid rgba(245,158,11,.25);grid-column:1/-1;align-items:flex-start;gap:10px;padding:14px 18px;font-size:13px;font-weight:500;line-height:1.5;display:flex}
+.form-note .note-icon{flex-shrink:0;margin-top:1px;font-size:16px}
+.form-submit-area{flex-direction:column;grid-column:1/-1;align-items:center;gap:16px;margin-top:8px;display:flex}
+.btn-submit{background:linear-gradient(135deg,#f59e0b,#d97706);width:100%;color:#0f172a;border-radius:10px;transition:background .3s,box-shadow .3s,opacity .3s;justify-content:center;align-items:center;gap:10px;padding:16px 32px;font-size:16px;font-weight:700;display:flex;cursor:pointer;border:none}
+.btn-submit:hover:not(:disabled){background:linear-gradient(135deg,#fbbf24,#f59e0b);box-shadow:0 4px 12px rgba(245,158,11,.3)}
+.btn-submit:disabled{opacity:.6;cursor:not-allowed}
+.btn-submit .spinner{border:2.5px solid rgba(15,23,42,.3);border-top-color:#0f172a;border-radius:50%;width:18px;height:18px;animation:.7s linear infinite spin}
+@keyframes spin{to{transform:rotate(360deg)}}
+.form-error{color:var(--red);margin-top:2px;font-size:12px;font-weight:500}
+.success-overlay{z-index:9998;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);background:rgba(0,0,0,.92);justify-content:center;align-items:center;padding:24px;display:flex;position:fixed;inset:0}
+.success-card{background:var(--card);border:1px solid var(--border);border-radius:24px;text-align:center;width:100%;max-width:440px;box-shadow:0 20px 25px rgba(0,0,0,.5);padding:48px}
+.success-icon{background:rgba(34,197,94,.15);width:72px;height:72px;color:#4ade80;border-radius:50%;justify-content:center;align-items:center;margin:0 auto 24px;font-size:32px;display:flex}
+.success-card h3{font-family:var(--font-hindi);color:#fff;margin-bottom:8px;font-size:22px;font-weight:700}
+.success-card p{color:var(--muted);margin-bottom:28px;font-size:14px;line-height:1.6}
+.success-actions{flex-direction:column;gap:12px;display:flex}
+.btn-success-wa{color:#fff;border-radius:10px;transition:transform .3s;background:#25d366;justify-content:center;align-items:center;gap:10px;padding:14px 24px;font-size:15px;font-weight:600;display:inline-flex;text-decoration:none;cursor:pointer;border:none}
+.btn-success-wa:hover{transform:translateY(-1px)}
+.btn-success-close{color:var(--muted);transition:color .3s;background:transparent;padding:10px;font-size:14px;font-weight:500;cursor:pointer;border:none}
+.btn-success-close:hover{color:var(--text)}
 @media(max-width:768px){
-  .lp-nav{padding:0 20px}
-  .lp-nav-links{display:none;position:absolute;top:64px;left:0;right:0;background:rgba(15,23,42,.98);flex-direction:column;padding:16px 20px;gap:4px;border-bottom:1px solid rgba(255,255,255,.1);backdrop-filter:blur(12px)}
-  .lp-nav-links.open{display:flex}
-  .lp-nav-toggle{display:flex;align-items:center;justify-content:center}
-  .lp-hero-title{font-size:32px}
-  .lp-hero-sub{font-size:16px}
-  .lp-hero-actions{flex-direction:column;width:100%;padding:0 20px}
-  .lp-btn-amber,.lp-btn-ghost{justify-content:center;width:100%}
-  .lp-stats-row{grid-template-columns:repeat(2,1fr)}
-  .lp-stat-item:nth-child(2)::after{display:none}
-  .lp-stat-item:nth-child(3),.lp-stat-item:nth-child(4){border-top:1px solid #e5e7eb}
-  .lp-section-title{font-size:28px}
+  .lp-navbar{padding:0 20px}
+  .lp-navbar-links{-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);background:rgba(0,0,0,.98);flex-direction:column;gap:4px;padding:16px 20px;display:none;position:absolute;top:64px;left:0;right:0}
+  .lp-navbar-links.open{display:flex}
+  .lp-navbar-links a{text-align:left;width:100%;padding:12px 16px}
+  .lp-navbar-links .lp-btn-login-nav{width:100%;text-align:center;padding:12px 16px}
+  .lp-navbar-toggle{justify-content:center;align-items:center;display:flex}
+  .hero-title{font-size:32px}
+  .hero-subtitle{font-size:16px}
+  .hero-actions{flex-direction:column;width:100%;padding:0 20px}
+  .btn-primary,.btn-secondary{justify-content:center}
+  .section-title{font-size:28px}
+  .stats-container{grid-template-columns:repeat(2,1fr)}
+  .stat-item:nth-child(2)::after{display:none}
+  .stat-item:nth-child(3),.stat-item:nth-child(4){border-top:1px solid var(--border)}
+  .stat-item:nth-child(3)::after{display:block}
+  .company-card-header{flex-direction:column;padding:20px}
+  .company-card-body{padding:20px}
+  .company-info-grid,.benefits-list{grid-template-columns:1fr}
+  .eligibility-grid{grid-template-columns:repeat(2,1fr)}
+  .salary-display{text-align:center;flex-direction:column}
+  .form-section{padding:48px 0}
+  .form-section .section-header{padding:0 20px}
+  .form-container{box-shadow:none;border-left:none;border-right:none;border-radius:0;max-width:100%;padding:24px 16px 100px}
+  .form-grid{grid-template-columns:1fr;gap:20px}
+  .form-input,.form-select{min-height:50px;padding:14px 16px;font-size:16px;font-family:var(--font-english)}
+  .form-select{padding-right:40px}
+  .form-label{margin-bottom:2px;font-size:14px}
+  .radio-group{flex-direction:column;gap:8px}
+  .radio-label,.checkbox-label{min-height:50px;padding:14px 16px;font-size:15px}
+  .form-submit-area{background:var(--card);border-top:1px solid var(--border);z-index:10;margin:0 -16px;padding:16px;position:sticky;bottom:0}
+  .btn-submit{border-radius:6px;min-height:54px;font-size:17px}
+  .form-note{padding:12px 14px;font-size:13px}
 }
 
 /* ── FOOTER ── */
-.footer{background:linear-gradient(180deg,#0d1117,#070b12);color:var(--muted);border-top:1px solid var(--border);padding:48px 24px 28px;margin-top:30px}
+.footer{background:var(--primary-900);color:var(--primary-300);padding:60px 24px 32px;font-family:var(--font-hindi)}
 .footer-content{max-width:1000px;margin:0 auto}
-.footer-main{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:36px;border-bottom:1px solid var(--border);padding-bottom:32px}
-.footer-officer-card{border:1px solid var(--border);border-radius:14px;background:rgba(255,255,255,.03);padding:24px}
-.footer-officer-name{color:var(--text);font-size:19px;font-weight:800;margin-bottom:4px}
-.footer-officer-title{color:var(--accent);font-size:13px;font-weight:700;margin-bottom:4px}
-.footer-officer-inst{color:var(--muted);font-size:13px;margin-bottom:16px;line-height:1.6}
-.footer-contact-item{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:14px;margin-bottom:10px;text-decoration:none;transition:color .2s}
-.footer-contact-item:hover{color:var(--text)}
-.footer-contact-item .icon{color:var(--accent);flex-shrink:0;font-size:16px}
-.footer-section-title{color:var(--text);margin-bottom:16px;font-size:15px;font-weight:700}
-.footer-links{display:flex;flex-direction:column;gap:12px}
-.footer-links a{color:var(--muted);cursor:pointer;text-decoration:none;display:flex;align-items:center;gap:6px;font-size:14px;transition:color .2s}
-.footer-links a:hover{color:var(--text)}
-.footer-bottom{color:var(--muted);display:flex;justify-content:space-between;align-items:center;padding-top:22px;font-size:12px;flex-wrap:wrap;gap:8px}
-.footer-bottom .accent{color:var(--accent)}
-@media(max-width:720px){
-  .footer-main{grid-template-columns:1fr;gap:28px}
-  .footer-bottom{text-align:center;flex-direction:column;gap:6px}
+.footer-main{border-bottom:1px solid var(--primary-700);grid-template-columns:1.3fr 1fr 1fr;gap:48px;padding-bottom:40px;display:grid}
+.footer-officer-card{border:1px solid var(--primary-700);border-radius:16px;background:#ffffff0a;padding:28px}
+.footer-officer-name{font-family:var(--font-hindi);color:var(--white,#fff);margin-bottom:4px;font-size:20px;font-weight:700}
+.footer-officer-title{color:var(--accent-400);margin-bottom:4px;font-size:13px;font-weight:600}
+.footer-officer-inst{color:var(--primary-400);margin-bottom:20px;font-size:13px;line-height:1.6}
+.footer-contact-item{color:var(--primary-300);align-items:center;gap:10px;margin-bottom:10px;font-size:14px;display:flex;text-decoration:none;cursor:pointer;transition:color .2s}
+.footer-contact-item:hover{color:var(--white,#fff)}
+.footer-contact-item .icon{color:var(--accent-500);flex-shrink:0;font-size:16px}
+.footer-section-title{font-family:var(--font-hindi);color:var(--white,#fff);margin-bottom:20px;font-size:15px;font-weight:700}
+.footer-links{flex-direction:column;gap:12px;display:flex}
+.footer-links a{color:var(--primary-400);transition:color .3s;align-items:center;gap:6px;font-size:14px;display:flex;text-decoration:none;cursor:pointer}
+.footer-links a:hover{color:var(--white,#fff)}
+.whatsapp-btn{color:var(--white,#fff);border-radius:10px;transition:transform .3s,box-shadow .3s;background:#25d366;align-items:center;gap:10px;margin-top:8px;padding:12px 24px;font-size:14px;font-weight:600;display:inline-flex;text-decoration:none;box-shadow:0 4px 14px #25d3664d}
+.whatsapp-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px #25d36666}
+.whatsapp-btn .icon{font-size:20px}
+.footer-bottom{color:var(--primary-500);justify-content:space-between;align-items:center;padding-top:24px;font-size:12px;display:flex;flex-wrap:wrap;gap:8px}
+.footer-bottom a{color:var(--primary-400);transition:color .3s}
+.footer-bottom a:hover{color:var(--white,#fff)}
+@media(max-width:768px){
+  .footer-main{grid-template-columns:1fr;gap:32px}
+  .footer-bottom{text-align:center;flex-direction:column;gap:8px}
 }
 
 /* ── PRINT ── */
@@ -339,67 +473,208 @@ tr:hover td{background:rgba(255,255,255,.015)}
 
 <!-- LANDING PAGE -->
 <div id="landingPage">
-  <nav class="lp-nav" id="lpNav">
-    <div class="lp-nav-brand" onclick="scrollToSection('hero')">
-      <div class="lp-nav-logo">MK</div>
-      <span class="lp-nav-title">MyKiloi</span>
+  <nav class="lp-navbar" id="lpNav">
+    <div class="lp-navbar-brand" onclick="goToPage('home')">
+      <div class="lp-navbar-logo">MK</div>
+      <span class="lp-navbar-title">MyKiloi</span>
     </div>
-    <div class="lp-nav-links" id="lpNavLinks">
-      <a onclick="scrollToSection('hero')">Home</a>
-      <a onclick="scrollToSection('features')">Features</a>
-      <button class="lp-btn-login-nav" onclick="showLogin()">Login</button>
+    <div class="lp-navbar-links" id="lpNavLinks">
+      <a onclick="goToPage('drives')">Placement Drives</a>
+      <a onclick="goToPage('form')">Registration</a>
+      <a onclick="goToPage('contact')">Contact</a>
+      <a class="lp-navbar-cta" onclick="goToPage('form')">Apply Now</a>
+      <button type="button" class="lp-btn-login-nav" onclick="showLogin()">🔐 Login</button>
     </div>
-    <button class="lp-nav-toggle" onclick="toggleLPNav()">☰</button>
+    <button class="lp-navbar-toggle" onclick="toggleLPNav()" aria-label="Toggle menu">☰</button>
   </nav>
 
-  <section class="lp-hero" id="lp-hero">
-    <div class="lp-badge"><span class="lp-badge-dot"></span><span>Placement Management System — Live Now</span></div>
-    <h1 class="lp-hero-title">My<span>Kiloi</span></h1>
-    <p class="lp-hero-sub">Industrial Training Institute, Kiloi ka official placement management system. Students ka data manage karein, placement track karein, reports banayein.</p>
-    <div class="lp-hero-actions">
-      <button class="lp-btn-amber" onclick="showLogin()">🔐 Login</button>
-      <button class="lp-btn-ghost" onclick="scrollToSection('features')">Explore Features</button>
+  <!-- PAGE: HOME -->
+  <div class="lp-page" id="lpPage-home">
+
+  <!-- HERO -->
+  <section class="hero-section" id="lp-hero">
+    <div class="hero-badge"><div class="hero-badge-dot"></div><span>Registration Open</span></div>
+    <h1 class="hero-title">Govt. ITI Kiloi<br><span class="hero-title-accent">Campus Placement Drive</span></h1>
+    <p class="hero-subtitle">Apprenticeship and job opportunities at reputed companies.<br>Register now and secure your future.</p>
+    <div class="hero-actions">
+      <a class="btn-primary" onclick="goToPage('form')">📝 Apply Now</a>
+      <a class="btn-secondary" onclick="goToPage('drives')">📋 View Details</a>
     </div>
   </section>
 
-  <section class="lp-stats">
-    <div class="lp-stats-row">
-      <div class="lp-stat-item"><div class="lp-stat-num">📊</div><div class="lp-stat-lbl">Real-time Dashboard</div></div>
-      <div class="lp-stat-item"><div class="lp-stat-num">🎓</div><div class="lp-stat-lbl">Student Management</div></div>
-      <div class="lp-stat-item"><div class="lp-stat-num">🏢</div><div class="lp-stat-lbl">Job Fair Records</div></div>
-      <div class="lp-stat-item"><div class="lp-stat-num">📋</div><div class="lp-stat-lbl">Reports &amp; PDF</div></div>
+  <!-- STATS -->
+  <section class="stats-bar">
+    <div class="stats-container">
+      <div class="stat-item"><div class="stat-number">500<span class="accent">+</span></div><div class="stat-label">Total Posts</div></div>
+      <div class="stat-item"><div class="stat-number">3</div><div class="stat-label">Companies</div></div>
+      <div class="stat-item"><div class="stat-number">₹24,300</div><div class="stat-label">Max Salary/Month</div></div>
+      <div class="stat-item"><div class="stat-number">₹18,000</div><div class="stat-label">Stipend/Month</div></div>
+    </div>
+  </section>
+  </div>
+
+  <!-- PAGE: PLACEMENT DRIVES -->
+  <div class="lp-page sub" id="lpPage-drives" style="display:none">
+    <div class="lp-topbar"><button type="button" class="lp-back-btn" onclick="goToPage('home')">← Back to Home</button></div>
+  <!-- PLACEMENT DRIVES -->
+  <section class="section" id="lp-drives">
+    <div class="section-header">
+      <div class="section-label">Placement Drives</div>
+      <h2 class="section-title">Available Placement Drives</h2>
+      <p class="section-desc">Read the details of the companies below carefully and apply as per your eligibility.</p>
+    </div>
+
+    <div class="companies-grid" id="lpDrivesList"></div>
+    <div class="section-desc" id="lpDrivesEmpty" style="display:none;text-align:center;padding:32px 0;color:var(--muted)">No companies added yet. Check back soon!</div>
+
+  </section>
+  </div>
+
+  <!-- PAGE: REGISTRATION -->
+  <div class="lp-page sub" id="lpPage-form" style="display:none">
+    <div class="lp-topbar"><button type="button" class="lp-back-btn" onclick="goToPage('home')">← Back to Home</button></div>
+  <!-- REGISTRATION FORM -->
+  <section class="section form-section" id="lp-form">
+    <div class="section-header">
+      <div class="section-label">Registration</div>
+      <h2 class="section-title">Registration Form</h2>
+      <p class="section-desc">Fill the form below correctly. All required fields (<span style="color:var(--red-500)">*</span>) are mandatory.</p>
+    </div>
+    <div class="form-container">
+      <form id="lpRegForm" novalidate>
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Name <span class="required">*</span></label>
+            <input class="form-input" type="text" name="name" placeholder="Enter your full name">
+            <span class="form-error" data-err="name"></span>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Session <span class="required">*</span></label>
+            <input class="form-input" type="text" name="session" placeholder="e.g. 2023-2025">
+            <span class="form-error" data-err="session"></span>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Gender <span class="required">*</span></label>
+            <div class="radio-group">
+              <label class="radio-label"><input type="radio" name="gender" value="Male"><span>Male</span></label>
+              <label class="radio-label"><input type="radio" name="gender" value="Female"><span>Female</span></label>
+            </div>
+            <span class="form-error" data-err="gender"></span>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Trade <span class="required">*</span></label>
+            <select class="form-select" name="trade">
+              <option value="">-- Select trade --</option>
+              <option>RAC</option><option>Machinist</option><option>Welder</option><option>Fitter</option><option>Electronics Mechanic</option><option>Turner</option><option>Electrician</option><option>Tool &amp; Die Maker</option><option>Plumber</option><option>Dress Making (DM)</option><option>Sewing Technology (ST)</option><option>Wireman</option>
+            </select>
+            <span class="form-error" data-err="trade"></span>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Mobile Number <span class="required">*</span></label>
+            <input class="form-input" type="tel" name="mobile" placeholder="10-digit mobile number" maxlength="10">
+            <span class="form-error" data-err="mobile"></span>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email ID</label>
+            <input class="form-input" type="email" name="email" placeholder="example@email.com">
+            <span class="form-error" data-err="email"></span>
+          </div>
+          <div class="form-divider"></div>
+          <div class="form-group full-width">
+            <label class="form-label">Have you completed apprenticeship? <span class="required">*</span></label>
+            <div class="radio-group">
+              <label class="radio-label"><input type="radio" name="apprenticeshipDone" value="Yes"><span>Yes</span></label>
+              <label class="radio-label"><input type="radio" name="apprenticeshipDone" value="No"><span>No</span></label>
+            </div>
+            <span class="form-error" data-err="apprenticeshipDone"></span>
+          </div>
+          <div class="form-group full-width">
+            <label class="form-label">Confirmation <span class="required">*</span></label>
+            <div class="checkbox-group">
+              <label class="checkbox-label"><input type="checkbox" name="readAllDetails"><span>I have carefully read the details of all the companies mentioned above.</span></label>
+            </div>
+            <span class="form-error" data-err="readAllDetails"></span>
+          </div>
+          <div class="form-group full-width">
+            <label class="form-label">Which company would you like to apply for? <span class="required">*</span></label>
+            <div class="checkbox-group" id="lpApplyCompanies"></div>
+            <span class="form-error" data-err="applyingFor"></span>
+          </div>
+          <div class="form-note"><span class="note-icon">⚠️</span><span>Please fill the correct information. Your application may be rejected if the details are wrong. After submitting the form, please join the WhatsApp group.</span></div>
+          <div class="form-submit-area">
+            <button type="submit" class="btn-submit" id="lpSubmitBtn">Submit Form</button>
+          </div>
+        </div>
+      </form>
     </div>
   </section>
 
-  <section class="lp-features" id="lp-features">
-    <div class="lp-section-header">
-      <div class="lp-section-label">Features</div>
-      <h2 class="lp-section-title">System Features</h2>
-      <p class="lp-section-desc">Everything you need to manage placements effectively.</p>
+  <!-- SUCCESS OVERLAY -->
+  <div class="success-overlay" id="lpRegSuccess" style="display:none">
+    <div class="success-card">
+      <div class="success-icon">✓</div>
+      <h3>Registration Successful!</h3>
+      <p>Your form has been submitted successfully. Please join the WhatsApp group below for updates.</p>
+      <div class="success-actions">
+        <a class="btn-success-wa" id="lpSuccessWa" href="https://chat.whatsapp.com/LipB0iromkA8nI2oFi3JQy?s=cl&p=i&mlu=0&ilr=4" target="_blank" rel="noopener noreferrer"><span>💬</span>Join WhatsApp Group</a>
+        <button class="btn-success-close" onclick="closeRegSuccess()">Close</button>
+      </div>
     </div>
-    <div class="lp-features-grid">
-      <div class="lp-feat-card">
-        <div class="lp-feat-icon">📊</div>
-        <h3>Live Dashboard</h3>
-        <p>Placement statistics, trade-wise breakdown and session-wise analytics in real time.</p>
-      </div>
-      <div class="lp-feat-card">
-        <div class="lp-feat-icon">🎓</div>
-        <h3>Student Database</h3>
-        <p>Complete student records with search, filter, bulk import/export and Firebase sync.</p>
-      </div>
-      <div class="lp-feat-card">
-        <div class="lp-feat-icon">🏢</div>
-        <h3>Job Fair</h3>
-        <p>Track monthly job fair drives, company visits and student placements effortlessly.</p>
-      </div>
-      <div class="lp-feat-card">
-        <div class="lp-feat-icon">📋</div>
-        <h3>Reports &amp; PDF</h3>
-        <p>Generate trade-wise reports, summary PDFs and printable student lists in one click.</p>
+  </div>
+  </div>
+
+  <!-- PAGE: CONTACT -->
+  <div class="lp-page sub" id="lpPage-contact" style="display:none">
+    <div class="lp-topbar"><button type="button" class="lp-back-btn" onclick="goToPage('home')">← Back to Home</button></div>
+  <!-- CONTACT -->
+  <section class="section" id="lp-contact">
+    <div class="section-header">
+      <div class="section-label">Contact</div>
+      <h2 class="section-title">Contact Us</h2>
+      <p class="section-desc">Contact us for any information regarding registration or placement.</p>
+    </div>
+    <div class="companies-grid" style="max-width:780px">
+      <div class="company-card">
+        <div class="company-header">
+          <div class="company-badge" style="background:rgba(245,158,11,.15);color:var(--accent)">Contact</div>
+        </div>
+        <div class="company-card-body">
+          <h3 class="company-name">Er. Mahender Singh<span style="display:block;font-size:13px;font-weight:500;color:var(--muted);font-family:var(--font-english);margin-top:2px">Apprenticeship Instructor</span></h3>
+          <div class="company-details-list">
+            <div class="company-detail-item">
+              <span class="detail-label">Institute</span>
+              <span class="detail-value">Govt. ITI Kiloi (Haryana)</span>
+            </div>
+            <div class="company-detail-item">
+              <span class="detail-label">Phone</span>
+              <span class="detail-value"><a href="tel:+919992720108" style="color:var(--accent);text-decoration:none">+91 99927 20108</a></span>
+            </div>
+            <div class="company-detail-item">
+              <span class="detail-label">WhatsApp</span>
+              <span class="detail-value"><a href="https://wa.me/919992720108" target="_blank" rel="noopener noreferrer" style="color:var(--accent);text-decoration:none">+91 99927 20108</a></span>
+            </div>
+          </div>
+          <div class="company-footer" style="display:flex;gap:10px;flex-direction:column">
+            <a class="btn-success-wa" href="https://chat.whatsapp.com/LipB0iromkA8nI2oFi3JQy?s=cl&p=i&mlu=0&ilr=4" target="_blank" rel="noopener noreferrer"><span>💬</span>Join WhatsApp Group</a>
+            <button class="btn-primary" style="width:100%;justify-content:center" onclick="goToPage('form')"><span>📝</span>Register Now</button>
+          </div>
+        </div>
       </div>
     </div>
   </section>
+  </div>
+
+  <!-- LOADER -->
+  <div class="loader-overlay" id="lpLoader">
+    <div class="loader-content">
+      <div class="loader-icon">MK</div>
+      <div class="loader-text">
+        <h2>MyKiloi</h2>
+        <p>Campus Placement Portal</p>
+      </div>
+      <div class="loader-bar-track"><div class="loader-bar"></div></div>
+    </div>
+  </div>
 </div>
 
 <div id="appLoader" style="display:none;position:fixed;inset:0;background:#070b12;z-index:9999;align-items:center;justify-content:center;flex-direction:column;gap:16px">
@@ -594,7 +869,7 @@ tr:hover td{background:rgba(255,255,255,.015)}
         <div class="card">
           <div class="card-head"><h3>🕐 Recent Students</h3><button class="btn btn-secondary btn-sm" onclick="showPage('students')">View All →</button></div>
           <div class="tbl-wrap">
-            <table><thead><tr><th>Name</th><th>Trade</th><th>Session</th><th>Status</th><th>Email ID</th></tr></thead>
+            <table><thead><tr><th>Name</th><th>Trade</th><th>Session</th><th>Status</th><th>Category</th></tr></thead>
             <tbody id="recentBody"></tbody></table>
           </div>
         </div>
@@ -630,7 +905,7 @@ tr:hover td{background:rgba(255,255,255,.015)}
           </div>
           <div class="tbl-wrap">
             <table>
-              <thead><tr id="stuThead"><th>#</th><th>Name</th><th>Reg. No.</th><th>Mobile</th><th>Trade</th><th>Session</th><th>Status</th><th>Email ID</th><th>Actions</th></tr></thead>
+              <thead><tr id="stuThead"><th>#</th><th>Name</th><th>Reg. No.</th><th>Mobile</th><th>Trade</th><th>Session</th><th>Status</th><th>Category</th><th>Actions</th></tr></thead>
               <tbody id="stuBody"></tbody>
             </table>
           </div>
@@ -898,6 +1173,24 @@ tr:hover td{background:rgba(255,255,255,.015)}
           <div style="display:flex;gap:8px;flex-wrap:wrap" class="no-print">
             <button class="print-btn" onclick="printCurrentPage()">🖨️ Print Page</button>
             <button class="btn btn-primary" onclick="openAddJobFairModal()">➕ Add Entry</button>
+            <button class="btn btn-primary" style="background:linear-gradient(135deg,var(--blue),#2563eb)" onclick="openLPDriveModal()">➕ Add Company</button>
+          </div>
+        </div>
+
+        <!-- COMPANY PLACEMENT DRIVES -->
+        <div class="card" style="margin-bottom:16px">
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:12px">
+            <div>
+              <h2 style="margin:0 0 3px;font-size:17px">🏢 Company Placement Drives</h2>
+              <p style="margin:0;font-size:12px;color:var(--muted)">These companies appear on the public Placement page. Seat count is auto-calculated from trade posts.</p>
+            </div>
+            <span class="cnt-label" id="lpDriveCount"></span>
+          </div>
+          <div class="tbl-wrap">
+            <table>
+              <thead><tr><th>#</th><th>Company</th><th>Type</th><th>Posts</th><th>Location</th><th>Status</th><th class="no-print">Actions</th></tr></thead>
+              <tbody id="lpDriveBody"></tbody>
+            </table>
           </div>
         </div>
 
@@ -943,7 +1236,7 @@ tr:hover td{background:rgba(255,255,255,.015)}
 </div><!-- /app -->
 
 <!-- FOOTER -->
-<footer class="footer">
+<footer class="footer" id="contact">
   <div class="footer-content">
     <div class="footer-main">
       <div class="footer-officer-card">
@@ -990,6 +1283,7 @@ tr:hover td{background:rgba(255,255,255,.015)}
       <div class="fg2"><label>ID Number</label><input id="fAadhaar" placeholder="ID / Roll Number" maxlength="14"></div>
     </div>
     <div class="fg2"><label>Address</label><input id="fAddress" placeholder="Village/City, District"></div>
+    <div class="fg2"><label>Father Name</label><input id="fFather" placeholder="Father's full name"></div>
     <div class="form-grid">
       <div class="fg2"><label>Trade *</label>
         <select id="fTrade2"></select>
@@ -1024,7 +1318,11 @@ tr:hover td{background:rgba(255,255,255,.015)}
           </div>
         </div>
       </div>
-      <div class="fg2"><label>Email ID</label><input id="fCompany" placeholder="student@email.com"></div>
+      <div class="fg2"><label>Category</label>
+        <select id="fCatgory">
+          <option value="">Select Category</option><option>General</option><option>OBC</option><option>SC</option><option>ST</option><option>EWS</option><option>Minority</option><option>Other</option>
+        </select>
+      </div>
     </div>
     <div class="fg2"><label>Remarks</label><input id="fRemarks" placeholder="Any notes..."></div>
     <div class="modal-foot">
@@ -1128,6 +1426,51 @@ tr:hover td{background:rgba(255,255,255,.015)}
     <div class="modal-foot">
       <button class="btn btn-secondary" onclick="closeModal('jobFairModal')">Cancel</button>
       <button class="btn btn-primary" onclick="saveJobFairEntry()">💾 Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD COMPANY (PLACEMENT DRIVE) MODAL -->
+<div class="modal-overlay" id="addDriveModal">
+  <div class="modal" style="max-width:680px">
+    <div class="modal-title" id="lpDriveModalTitle">🏢 Add Company</div>
+    <div class="form-grid">
+      <div class="fg2"><label>Company Name *</label><input id="ldName" placeholder="e.g. Godrej Enterprises Group"></div>
+      <div class="fg2"><label>Sub-title</label><input id="ldSub" placeholder="e.g. (Godrej &amp; Boyce Mfg. Co. Ltd.)"></div>
+      <div class="fg2"><label>Type *</label>
+        <select id="ldType" style="width:100%;padding:8px 10px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;outline:none">
+          <option value="Apprenticeship">Apprenticeship</option>
+          <option value="Job">Job</option>
+        </select>
+      </div>
+      <div class="fg2"><label>Location *</label><input id="ldLocation" placeholder="City / Area, State"></div>
+      <div class="fg2"><label>Job Role</label><input id="ldRole" placeholder="e.g. Apprentice / Machine Operator"></div>
+      <div class="fg2"><label>Role Highlight</label><input id="ldRoleHighlight" placeholder="e.g. ₹24,300/- gross per month"></div>
+      <div class="fg2"><label>Salary Amount</label><input id="ldSalaryAmount" placeholder="e.g. ₹18,000/-"></div>
+      <div class="fg2"><label>Salary Period</label><input id="ldSalaryPeriod" placeholder="e.g. stipend per month"></div>
+      <div class="fg2" style="grid-column:1/-1"><label>Salary Details</label><input id="ldSalaryDetails" placeholder="Detailed salary / training period breakdown"></div>
+      <div class="fg2"><label>Website</label><input id="ldWebsite" placeholder="https://example.com"></div>
+      <div class="fg2"><label>Note</label><input id="ldNote" placeholder="General note (if any)"></div>
+      <div class="fg2" style="grid-column:1/-1">
+        <label>Trades &amp; Posts — enter trade, optional count (e.g. Welder, 85)</label>
+        <div style="display:flex;gap:6px;align-items:center">
+          <input id="ldTradeInput" placeholder="e.g. Welder, 85"
+            style="flex:1;padding:8px 10px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;outline:none"
+            onkeydown="if(event.key==='Enter'){event.preventDefault();addLPTradeChip();}">
+          <button onclick="addLPTradeChip()" style="padding:8px 12px;background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;border-radius:8px;color:#000;font-weight:700;font-size:13px;cursor:pointer">+ Add</button>
+        </div>
+        <div id="ldTradeChips" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px"></div>
+      </div>
+      <div class="fg2" style="grid-column:1/-1"><label>Benefits (one per line)</label><textarea id="ldBenefits" rows="4" style="width:100%;padding:8px 10px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;outline:none;resize:vertical" placeholder="Overtime at double rate&#10;14 annual leaves (7 CL + 7 SL)"></textarea></div>
+      <div class="fg2"><label>Work Label 1</label><input id="ldWorkLabel1" placeholder="e.g. Time"></div>
+      <div class="fg2"><label>Work Value 1</label><input id="ldWorkValue1" placeholder="e.g. 09:00 — 18:00"></div>
+      <div class="fg2"><label>Work Label 2</label><input id="ldWorkLabel2" placeholder="e.g. Weekly Off"></div>
+      <div class="fg2"><label>Work Value 2</label><input id="ldWorkValue2" placeholder="e.g. Every Sunday"></div>
+    </div>
+    <label style="display:flex;align-items:center;gap:8px;margin-top:14px;font-size:14px;color:var(--text);cursor:pointer"><input type="checkbox" id="ldActive" checked> Active — visible on the public placement page</label>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" onclick="closeLPDriveModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveLPDrive()">💾 Save Company</button>
     </div>
   </div>
 </div>
@@ -1519,8 +1862,15 @@ function backToHome(){
   window.scrollTo({top:0,behavior:"smooth"});
 }
 function scrollToSection(name){
-  var el=document.getElementById("lp-"+name);
+  var el=document.getElementById("lp-"+name)||document.getElementById(name);
   if(el){var top=el.getBoundingClientRect().top+window.pageYOffset; window.scrollTo({top:Math.max(0,top-72),behavior:"smooth"});}
+  closeLPNav();
+}
+function goToPage(name){
+  var pages=document.querySelectorAll(".lp-page");
+  for(var i=0;i<pages.length;i++) pages[i].style.display="none";
+  var el=document.getElementById("lpPage-"+name);
+  if(el){ el.style.display="block"; window.scrollTo(0,0); }
   closeLPNav();
 }
 function toggleLPNav(){
@@ -1533,6 +1883,351 @@ window.addEventListener("scroll",function(){
   var nav=document.getElementById("lpNav");
   if(nav) nav.classList.toggle("scrolled",window.pageYOffset>10);
 });
+
+// ── LANDING: LOADER ──
+function runLPLoader(){
+  try{
+    var ldr=document.getElementById("lpLoader");
+    if(!ldr) return;
+    var lp=document.getElementById("landingPage");
+    if(lp&&lp.style.display==="none") return;
+    setTimeout(function(){ ldr.style.transition="opacity .5s ease"; ldr.style.opacity="0"; },2200);
+    setTimeout(function(){ ldr.style.display="none"; },2800);
+  }catch(e){}
+}
+
+// ── LANDING: REGISTRATION FORM ──
+let lpDrives=[];
+let lpDriveNextId=1;
+let editingLPDriveId=null;
+let selectedLPDriveChipTrades=[];
+document.addEventListener("DOMContentLoaded",function(){
+  runLPLoader();
+  setupLPDriveUI();
+  var form=document.getElementById("lpRegForm");
+  if(!form) return;
+  var btn=document.getElementById("lpSubmitBtn");
+  form.addEventListener("submit",function(e){
+    e.preventDefault();
+    var errs={};
+    var f={};
+    ["name","session","mobile","email"].forEach(function(n){
+      var el=form.querySelector('[name="'+n+'"]');
+      f[n]=(el&&el.value?el.value:"").trim();
+    });
+    f.gender=(form.querySelector('[name="gender"]:checked')||{}).value||"";
+    f.trade=(form.querySelector('[name="trade"]')||{}).value||"";
+    f.apprenticeshipDone=(form.querySelector('[name="apprenticeshipDone"]:checked')||{}).value||"";
+    f.readAllDetails=!!form.querySelector('[name="readAllDetails"]').checked;
+    f.applyingFor=[].map.call(form.querySelectorAll('[name="applyingFor"]:checked'),function(c){return c.value;});
+
+    if(!f.name) errs.name="Name is required";
+    if(!f.gender) errs.gender="Select gender";
+    if(!f.trade) errs.trade="Select trade";
+    if(!f.session) errs.session="Session is required";
+    if(!/^[6-9]\d{9}$/.test(f.mobile)) errs.mobile="Enter a valid 10-digit mobile number";
+    if(f.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email)) errs.email="Enter a valid email";
+    if(!f.apprenticeshipDone) errs.apprenticeshipDone="Please select this";
+    if(!f.readAllDetails) errs.readAllDetails="Please read all company details and check this box";
+    if(f.applyingFor.length===0) errs.applyingFor="Select at least one company";
+
+    form.querySelectorAll(".form-error").forEach(function(s){s.textContent="";});
+    Object.keys(errs).forEach(function(k){
+      var s=form.querySelector('[data-err="'+k+'"]');
+      if(s) s.textContent="❌ "+errs[k];
+    });
+    if(Object.keys(errs).length>0) return;
+
+    var payload={
+      name:f.name, gender:f.gender, trade:f.trade, session:f.session,
+      mobile:f.mobile, email:f.email, apprenticeshipDone:f.apprenticeshipDone,
+      readAllDetails:f.readAllDetails,
+      applyingFor:f.applyingFor.map(function(v){var d=lpDrives.find(function(x){return String(x.id)===String(v);}); return d?d.name:"Company "+v;}),
+      createdAt:new Date().toISOString()
+    };
+    btn.disabled=true;
+    btn.innerHTML='<div class="spinner"></div> Submitting...';
+    var db=window._db;
+    if(db){
+      db.ref("iti_kiloi/registrations").push(payload).then(function(){
+        form.reset();
+        document.getElementById("lpRegSuccess").style.display="flex";
+      }).catch(function(err2){
+        console.error("Submission error:",err2);
+        alert("Something went wrong. Please try again.");
+      }).finally(function(){
+        btn.disabled=false;
+        btn.textContent="Submit Form";
+      });
+    }else{
+      alert("Something went wrong. Please try again.");
+      btn.disabled=false;
+      btn.textContent="Submit Form";
+    }
+  });
+});
+function closeRegSuccess(){
+  var o=document.getElementById("lpRegSuccess");
+  if(o) o.style.display="none";
+}
+
+// ═══════════════════════════════════════════════
+// PLACEMENT DRIVES (COMPANIES) — data + render
+// ═══════════════════════════════════════════════
+let _lpDrivesSeeded=false;
+
+function escLP(s){
+  return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+function lpLsGet(){ try{ return JSON.parse(localStorage.getItem("iti_kiloi_drives")||"null"); }catch(e){ return null; } }
+function lpLsSet(d){ localStorage.setItem("iti_kiloi_drives",JSON.stringify(d)); }
+
+function cleanupLegacyLPDrives(){
+  if(localStorage.getItem("iti_kiloi_drives_v2_clean")==="1") return;
+  localStorage.setItem("iti_kiloi_drives_v2_clean","1");
+  var legacy=function(n){ return n==="Godrej Enterprises Group"||n==="Arihant Spinning Mills, Malerkotla"||n==="Litpax Technologies Pvt. Ltd."; };
+  var kept=lpDrives.filter(function(d){ return !d || !legacy(d.name) || d.updatedAt; });
+  if(kept.length!==lpDrives.length){
+    lpDrives=kept;
+    persistLPDrives();
+  }
+}
+
+function loadLPDrives(){
+  if(_lpDrivesSeeded) return;
+  _lpDrivesSeeded=true;
+  var db=window._db;
+  var apply=function(data){
+    if(data&&data.length){ lpDrives=data.slice().sort(function(a,b){return (a.id||0)-(b.id||0);}); }
+    else { lpDrives=[]; }
+    cleanupLegacyLPDrives();
+    lpDriveNextId=lpDrives.length?Math.max.apply(null,lpDrives.map(function(x){return x.id||0;}))+1:1;
+    renderLPDrivesPage();
+    renderLPApplyBox();
+    renderLPAdminList();
+  };
+  var fromObj=function(obj){
+    if(obj && typeof obj==="object") return Object.keys(obj).map(function(k){return obj[k];});
+    return null;
+  };
+  if(db){
+    db.ref("iti_kiloi/drives").on("value",function(snap){
+      apply(fromObj(snap.val()));
+    },function(err){ apply(lpLsGet()); });
+  } else {
+    apply(lpLsGet());
+  }
+}
+
+function lpPosts(d){
+  var n=0; (d.trades||[]).forEach(function(t){ n+=(parseInt(t.c,10)||0); });
+  return n;
+}
+
+function renderLPDrivesPage(){
+  var list=document.getElementById("lpDrivesList");
+  var empty=document.getElementById("lpDrivesEmpty");
+  if(!list) return;
+  var active=lpDrives.filter(function(d){return d.active!==false;});
+  if(empty) empty.style.display=active.length?"none":"block";
+  list.innerHTML=active.map(function(d,i){
+    var sub=d.sub?'<span style="display:block;font-size:13px;font-weight:500;color:var(--muted);margin-top:2px">'+escLP(d.sub)+'</span>':"";
+    var trades=(d.trades||[]).map(function(t){
+      return '<span class="trade-tag">'+escLP(t.t)+(t.c?'<span class="count">'+t.c+'</span>':"")+'</span>';
+    }).join("");
+    var benefits=(d.benefits||[]).map(function(b){
+      return '<div class="benefit-item"><span class="benefit-icon">✓</span><span>'+escLP(b)+'</span></div>';
+    }).join("");
+    var work="";
+    if(d.workLabel1||d.workValue1||d.workLabel2||d.workValue2){
+      work='<div class="info-block"><div class="info-block-label">Working Hours</div><div class="eligibility-grid" style="grid-template-columns:repeat(2,1fr)">';
+      if(d.workLabel1||d.workValue1) work+='<div class="eligibility-item"><div class="label">'+escLP(d.workLabel1)+'</div><div class="value">'+escLP(d.workValue1)+'</div></div>';
+      if(d.workLabel2||d.workValue2) work+='<div class="eligibility-item"><div class="label">'+escLP(d.workLabel2)+'</div><div class="value">'+escLP(d.workValue2)+'</div></div>';
+      work+='</div></div>';
+    }
+    var badge=(d.type||"").toLowerCase()==="job"?"badge-job":"badge-apprenticeship";
+    return '<div class="company-card">'
+      +'<div class="company-card-header"><div class="company-card-header-left">'
+      +'<div class="company-number">'+(i+1)+'</div><div>'
+      +'<h3 class="company-name">'+escLP(d.name||"Company")+sub+'</h3>'
+      +'<div class="company-location"><span class="icon">📍</span><span>'+escLP(d.location||"")+'</span></div>'
+      +'</div></div>'
+      +'<span class="company-type-badge '+badge+'">'+escLP(d.type||"")+'</span></div>'
+      +'<div class="company-card-body">'
+      +(d.role?'<div class="info-block"><div class="info-block-label">Job Role</div><div class="info-block-value">'+escLP(d.role)+(d.roleHighlight?' — <span class="highlight">'+escLP(d.roleHighlight)+'</span>':"")+'</div></div>':"")
+      +(d.salaryAmount?'<div class="salary-display"><div class="salary-icon">₹</div><div class="salary-details"><div class="salary-amount">'+escLP(d.salaryAmount)+'</div>'+(d.salaryPeriod?'<div class="salary-period">'+escLP(d.salaryPeriod)+'</div>':"")+'</div></div>':"")
+      +(d.salaryDetails?'<div class="info-block"><div class="info-block-label">Salary Details</div><div class="info-block-value">'+escLP(d.salaryDetails)+'</div></div>':"")
+      +(d.website?'<div class="info-block"><div class="info-block-label">Website</div><div class="info-block-value"><a href="'+escLP(d.website)+'" target="_blank" rel="noopener noreferrer" style="color:var(--blue);text-decoration:underline">'+escLP(d.website)+'</a></div></div>':"")
+      +(trades?'<div class="info-block"><div class="info-block-label">Eligible Trades &amp; Posts</div><div class="trades-list">'+trades+'</div></div>':"")
+      +(d.note?'<div class="form-note"><span class="note-icon">ℹ️</span><span>'+escLP(d.note)+'</span></div>':"")
+      +work
+      +(benefits?'<div class="info-block"><div class="info-block-label">Other Benefits &amp; Facilities</div><div class="benefits-list">'+benefits+'</div></div>':"")
+      +'</div>'
+      +'<div style="padding:16px 20px;border-top:1px solid var(--border)"><button class="btn-submit" style="border-radius:10px" onclick="applyToDrive('+d.id+')">📝 Apply for '+escLP(d.name)+'</button></div>'
+      +'</div>';
+  }).join("");
+}
+
+function renderLPApplyBox(){
+  var box=document.getElementById("lpApplyCompanies");
+  if(!box) return;
+  var active=lpDrives.filter(function(d){return d.active!==false;});
+  box.innerHTML=active.map(function(d,i){
+    return '<label class="checkbox-label"><input type="checkbox" name="applyingFor" value="'+d.id+'"><span>'+(i+1)+'. '+escLP(d.name)+'</span></label>';
+  }).join("");
+  if(active.length===0){
+    box.innerHTML='<p style="color:var(--muted);font-size:13px">No companies available yet. Check back soon!</p>';
+  }
+}
+
+function renderLPAdminList(){
+  var body=document.getElementById("lpDriveBody");
+  var cnt=document.getElementById("lpDriveCount");
+  if(!body) return;
+  var active=lpDrives.filter(function(d){return d.active!==false;});
+  if(cnt) cnt.textContent=active.length+"/"+lpDrives.length+" active";
+  body.innerHTML=lpDrives.map(function(d,i){
+    var posts=lpPosts(d)||(d.trades||[]).length||0;
+    var badge=(d.type||"").toLowerCase()==="job"?'style="background:rgba(74,222,128,.12);color:#4ade80"':'style="background:rgba(96,165,250,.12);color:#60a5fa"';
+    var st=d.active!==false?'style="color:#4ade80"':'style="color:var(--red)"';
+    return '<tr><td>'+(i+1)+'</td><td style="min-width:180px">'+escLP(d.name)+'</td>'
+      +'<td><span style="padding:3px 8px;border-radius:100px;font-size:11px;font-weight:600;'+badge.replace('style="','').replace('"','')+'">'+escLP(d.type||"")+'</span></td>'
+      +'<td>'+(posts||"0")+'</td><td>'+escLP(d.location||"")+'</td>'
+      +'<td '+st+'>'+(d.active!==false?"Active":"Hidden")+'</td>'
+      +'<td class="no-print" style="white-space:nowrap"><button class="print-btn" onclick="openLPDriveModal('+d.id+')">✏️</button> <button class="print-btn" onclick="delLPDrive('+d.id+')" style="color:var(--red)">🗑️</button></td></tr>';
+  }).join("");
+  if(!lpDrives.length) body.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--muted)">No companies yet — click Add Company</td></tr>';
+}
+
+function openLPDriveModal(id){
+  editingLPDriveId=(id==null)?null:id;
+  selectedLPDriveChipTrades=[];
+  ["ldName","ldSub","ldLocation","ldRole","ldRoleHighlight","ldSalaryAmount","ldSalaryPeriod","ldSalaryDetails","ldWebsite","ldNote"].forEach(function(n){ document.getElementById(n).value=""; });
+  document.getElementById("ldType").value="Apprenticeship";
+  document.getElementById("ldBenefits").value="";
+  document.getElementById("ldWorkLabel1").value=""; document.getElementById("ldWorkValue1").value="";
+  document.getElementById("ldWorkLabel2").value=""; document.getElementById("ldWorkValue2").value="";
+  document.getElementById("ldActive").checked=true;
+  renderLPTradeChips();
+  document.getElementById("lpDriveModalTitle").textContent="🏢 Add Company";
+  if(editingLPDriveId!=null){
+    var d=lpDrives.find(function(x){return x.id===editingLPDriveId;});
+    if(d){
+      document.getElementById("lpDriveModalTitle").textContent="✏️ Edit Company";
+      document.getElementById("ldName").value=d.name||"";
+      document.getElementById("ldSub").value=d.sub||"";
+      document.getElementById("ldType").value=d.type||"Apprenticeship";
+      document.getElementById("ldLocation").value=d.location||"";
+      document.getElementById("ldRole").value=d.role||"";
+      document.getElementById("ldRoleHighlight").value=d.roleHighlight||"";
+      document.getElementById("ldSalaryAmount").value=d.salaryAmount||"";
+      document.getElementById("ldSalaryPeriod").value=d.salaryPeriod||"";
+      document.getElementById("ldSalaryDetails").value=d.salaryDetails||"";
+      document.getElementById("ldWebsite").value=d.website||"";
+      document.getElementById("ldNote").value=d.note||"";
+      document.getElementById("ldBenefits").value=(d.benefits||[]).join("\n");
+      document.getElementById("ldWorkLabel1").value=d.workLabel1||"";
+      document.getElementById("ldWorkValue1").value=d.workValue1||"";
+      document.getElementById("ldWorkLabel2").value=d.workLabel2||"";
+      document.getElementById("ldWorkValue2").value=d.workValue2||"";
+      document.getElementById("ldActive").checked=d.active!==false;
+      selectedLPDriveChipTrades=(d.trades||[]).slice();
+      renderLPTradeChips();
+    }
+  }
+  document.getElementById("addDriveModal").classList.add("open");
+}
+
+function closeLPDriveModal(){ document.getElementById("addDriveModal").classList.remove("open"); }
+
+function addLPTradeChip(){
+  var v=(document.getElementById("ldTradeInput").value||"").trim();
+  if(!v) return;
+  var parts=v.split(",").map(function(s){return s.trim();}).filter(Boolean);
+  var t=parts[0]||"", c=parts.length>1?parseInt(parts[1],10)||0:0;
+  if(!t) return;
+  selectedLPDriveChipTrades.push({t:t,c:isNaN(c)?0:c});
+  document.getElementById("ldTradeInput").value="";
+  renderLPTradeChips();
+}
+function removeLPTradeChip(i){ selectedLPDriveChipTrades.splice(i,1); renderLPTradeChips(); }
+function renderLPTradeChips(){
+  var box=document.getElementById("ldTradeChips");
+  if(!box) return;
+  box.innerHTML=selectedLPDriveChipTrades.map(function(x,i){
+    return '<span style="display:inline-flex;align-items:center;gap:6px;background:var(--bg2);border:1px solid var(--border);border-radius:100px;padding:4px 10px;font-size:12px;color:var(--text)">'+escLP(x.t||"")+(x.c?' <b style="color:var(--accent)">'+x.c+'</b>':"")+'<button type="button" onclick="removeLPTradeChip('+i+')" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:12px">✕</button></span>';
+  }).join("");
+}
+
+function saveLPDrive(){
+  var g=function(n){ var el=document.getElementById(n); return el?el.value.trim():""; };
+  var name=g("ldName"), location=g("ldLocation");
+  if(!name){ showToast("Company name is required"); return; }
+  if(!location){ showToast("Location is required"); return; }
+  var entry={
+    id:editingLPDriveId!=null?editingLPDriveId:lpDriveNextId,
+    name:name,
+    sub:g("ldSub"),
+    type:document.getElementById("ldType").value,
+    location:location,
+    role:g("ldRole"),
+    roleHighlight:g("ldRoleHighlight"),
+    salaryAmount:g("ldSalaryAmount"),
+    salaryPeriod:g("ldSalaryPeriod"),
+    salaryDetails:g("ldSalaryDetails"),
+    website:g("ldWebsite"),
+    note:g("ldNote"),
+    trades:selectedLPDriveChipTrades.slice(),
+    benefits:(g("ldBenefits").split("\n")||[]).map(function(s){return s.trim();}).filter(Boolean),
+    workLabel1:g("ldWorkLabel1"), workValue1:g("ldWorkValue1"),
+    workLabel2:g("ldWorkLabel2"), workValue2:g("ldWorkValue2"),
+    active:document.getElementById("ldActive").checked,
+    updatedAt:new Date().toISOString()
+  };
+  var idx=lpDrives.findIndex(function(x){return x.id===entry.id;});
+  if(idx>-1) lpDrives[idx]=entry; else lpDrives.push(entry);
+  lpDrives.sort(function(a,b){return (a.id||0)-(b.id||0);});
+  lpDriveNextId=lpDrives.length?Math.max.apply(null,lpDrives.map(function(x){return x.id||0;}))+1:1;
+  persistLPDrives();
+  closeLPDriveModal();
+  renderLPDrivesPage();
+  renderLPApplyBox();
+  renderLPAdminList();
+  showToast("Company saved ☁️");
+}
+
+function persistLPDrives(){
+  lpLsSet(lpDrives);
+  var db=window._db;
+  if(db){
+    var obj={};
+    lpDrives.forEach(function(d){ obj["drv_"+d.id]=d; });
+    db.ref("iti_kiloi/drives").set(obj).catch(function(e){ console.error("drives save error",e); });
+  }
+}
+
+function delLPDrive(id){
+  if(!confirm("Delete this company from the placement page?")) return;
+  lpDrives=lpDrives.filter(function(x){return x.id!==id;});
+  lpDriveNextId=lpDrives.length?Math.max.apply(null,lpDrives.map(function(x){return x.id||0;}))+1:1;
+  persistLPDrives();
+  renderLPDrivesPage();
+  renderLPApplyBox();
+  renderLPAdminList();
+  showToast("Company removed");
+}
+
+function applyToDrive(id){
+  goToPage("form");
+  setTimeout(function(){
+    var cb=document.querySelector('[name="applyingFor"][value="'+id+'"]');
+    if(cb) cb.checked=true;
+  },60);
+}
+
+function setupLPDriveUI(){
+  loadLPDrives();
+}
 
 // ═══════════════════════════════════════════════
 // NAVIGATION
@@ -1764,7 +2459,7 @@ function renderDashboard(){
   document.getElementById("recentBody").innerHTML=[...scoped].reverse().slice(0,5).map(s=>`
     <tr><td><b>${s.name}</b></td><td>${s.trade}</td><td>${s.session}</td>
     <td><span class="badge b-${s.status.toLowerCase().replace(" ","-")}">${s.status}</span></td>
-    <td style="color:var(--muted)">${s.email||"—"}</td></tr>`).join("")||`<tr><td class="empty-td" colspan="5">No students found</td></tr>`;
+    <td style="color:var(--muted)">${s.category||"—"}</td></tr>`).join("")||`<tr><td class="empty-td" colspan="5">No students found</td></tr>`;
 
   // Trade-wise overview
   const tradeList=[...new Set(scoped.map(s=>s.trade))].sort();
@@ -1887,14 +2582,13 @@ function renderStudents(resetPage){
   document.getElementById("cntLabel").textContent=total+" students";
   const isAdmin=(window.currentUser||currentUser)?.role==="admin";
   const maskRoll=r=>isAdmin?r:(r?r.slice(0,3)+"***":"-");
-  const maskEmail=e=>isAdmin?e:(e?e[0]+"***@***":"-");
   // Update header for select mode
   const thead=document.getElementById("stuThead");
   if(thead){
     if(selectMode&&isAdmin){
-      thead.innerHTML=`<th style="width:36px"><input type="checkbox" id="chkAll" onchange="chkAllVisible(this)" style="width:15px;height:15px;cursor:pointer;accent-color:var(--red)"></th><th>#</th><th>Name</th><th>Reg. No.</th><th>Mobile</th><th>Trade</th><th>Session</th><th>Status</th><th>Email ID</th><th>Actions</th>`;
+      thead.innerHTML=`<th style="width:36px"><input type="checkbox" id="chkAll" onchange="chkAllVisible(this)" style="width:15px;height:15px;cursor:pointer;accent-color:var(--red)"></th><th>#</th><th>Name</th><th>Reg. No.</th><th>Mobile</th><th>Trade</th><th>Session</th><th>Status</th><th>Category</th><th>Actions</th>`;
     } else {
-      thead.innerHTML=`<th>#</th><th>Name</th><th>Reg. No.</th><th>Mobile</th><th>Trade</th><th>Session</th><th>Status</th><th>Email ID</th><th>Actions</th>`;
+      thead.innerHTML=`<th>#</th><th>Name</th><th>Reg. No.</th><th>Mobile</th><th>Trade</th><th>Session</th><th>Status</th><th>Category</th><th>Actions</th>`;
     }
   }
   document.getElementById("stuBody").innerHTML=paged.length?paged.map((s,i)=>{
@@ -1907,7 +2601,7 @@ function renderStudents(resetPage){
       <td style="font-size:12px;color:var(--muted)">${maskRoll(s.roll)}</td>
       <td>${s.mobile||"—"}</td><td>${s.trade}</td><td>${s.session}</td>
       <td><span class="badge b-${s.status.toLowerCase().replace(" ","-")}">${s.status}</span></td>
-      <td style="color:var(--muted)">${maskEmail(s.email)}</td>
+      <td style="color:var(--muted)">${s.category||"—"}</td>
       <td onclick="event.stopPropagation()"><div style="display:flex;gap:5px">
         <button class="btn-icon bi-view" onclick="viewStudent(${s.id})">👁️</button>
         ${!selectMode?`<button class="btn-icon bi-edit" onclick="editStudent(${s.id})">✏️</button>`:""}
@@ -1950,7 +2644,7 @@ function filterByStatus(status){
 function openAddModal(){
   editingId=null;
   document.getElementById("modalTitle").textContent="➕ Add Student";
-  ["fName","fRoll","fMobile","fAadhaar","fAddress","fCompany","fRemarks"].forEach(id=>document.getElementById(id).value="");
+  ["fName","fRoll","fMobile","fAadhaar","fAddress","fFather","fCatgory","fRemarks"].forEach(id=>document.getElementById(id).value="");
   rebuildStudentTradeSelect(trades[0]||"");
   rebuildStudentSessionSelect("2024-25");
   rebuildStudentStatusSelect("Placed");
@@ -2042,7 +2736,9 @@ function editStudent(id){
   rebuildStudentStatusSelect(s.status);
   document.getElementById("fSessionCustomBox").style.display="none";
   document.getElementById("fStatusCustomBox").style.display="none";
-  document.getElementById("fCompany").value=s.email||"";document.getElementById("fRemarks").value=s.remarks;
+  document.getElementById("fFather").value=s.father||"";
+  document.getElementById("fCatgory").value=s.category||"";
+  document.getElementById("fRemarks").value=s.remarks;
   document.getElementById("stuModal").classList.add("open");
 }
 
@@ -2050,11 +2746,11 @@ function viewStudent(id){
   const s=students.find(x=>x.id===id);if(!s)return;
   const isAdm=(window.currentUser||currentUser)?.role==="admin";
   const mRoll=r=>isAdm?r:(r?r.slice(0,3)+"***":"-");
-  const mEmail=e=>isAdm?e:(e?e[0]+"***@***":"-");
   document.getElementById("viewGrid").innerHTML=[
     ["Name",s.name],["Reg. No.",mRoll(s.roll)],["Mobile",s.mobile||"—"],["ID Number",s.aadhaar||"N/A"],
-    ["Address",s.address||"—"],["Trade",s.trade],["Session",s.session],
-    ["Email ID",mEmail(s.email)],["Remarks",s.remarks||"—"],
+    ["Father Name",s.father||"—"],["Address",s.address||"—"],["Category",s.category||"—"],
+    ["Trade",s.trade],["Session",s.session],
+    ["Remarks",s.remarks||"—"],
   ].map(([l,v])=>`<div class="detail-item"><div class="dl">${l}</div><div class="dv">${v}</div></div>`).join("")
   +`<div class="detail-item"><div class="dl">Status</div><div class="dv"><span class="badge b-${s.status.toLowerCase().replace(" ","-")}">${s.status}</span></div></div>`;
   document.getElementById("viewEditBtn").onclick=()=>{closeModal("viewModal");editStudent(id);};
@@ -2071,7 +2767,8 @@ function saveStudent(){
     trade:document.getElementById("fTrade2").value,
     session:document.getElementById("fSession2").value,
     status:document.getElementById("fStatus2").value,
-    email:document.getElementById("fCompany").value.trim(),
+    father:document.getElementById("fFather").value.trim(),
+    category:document.getElementById("fCatgory").value,
     remarks:document.getElementById("fRemarks").value.trim(),
   };
   if(editingId){
@@ -2190,11 +2887,10 @@ function printTable(data,title){
   if(!w){alert("Allow popups: Click lock icon in address bar → Site Settings → Allow Popups");return;}
   const isAdminPrint=(window.currentUser||currentUser)?.role==="admin";
   const mRollP=r=>isAdminPrint?r:(r?r.slice(0,3)+"***":"-");
-  const mEmailP=e=>isAdminPrint?e:(e&&e.length>0?e[0]+"***@***":"-");
-  const rows=data.map((s,i)=>`<tr><td>${i+1}</td><td><b>${s.name}</b></td><td>${mRollP(s.roll||"")}</td><td>${s.trade}</td><td>${s.session}</td><td style="color:${s.status==="Placed"?"#16a34a":s.status==="Self Employed"?"#0d9488":s.status==="Unemployed"?"#dc2626":"#d97706"};font-weight:700">${s.status}</td><td>${mEmailP(s.email||"")}</td><td>${s.mobile||"—"}</td></tr>`).join("");
+  const rows=data.map((s,i)=>`<tr><td>${i+1}</td><td><b>${s.name}</b></td><td>${mRollP(s.roll||"")}</td><td>${s.trade}</td><td>${s.session}</td><td style="color:${s.status==="Placed"?"#16a34a":s.status==="Self Employed"?"#0d9488":s.status==="Unemployed"?"#dc2626":"#d97706"};font-weight:700">${s.status}</td><td>${s.category||"—"}</td><td>${s.mobile||"—"}</td></tr>`).join("");
   w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${title}</title><style>${printCSS}</style></head><body>
   <div class="hdr"><h1>MYKILOI — PLACEMENT MANAGEMENT</h1><h2>${title}</h2><p>Date: ${new Date().toLocaleDateString("en-IN",{day:"2-digit",month:"long",year:"numeric"})}</p></div>
-  <table><thead><tr><th>#</th><th>Name</th><th>Reg. No.</th><th>Trade</th><th>Session</th><th>Status</th><th>Email ID</th><th>Mobile</th></tr></thead><tbody>${rows}</tbody></table>
+  <table><thead><tr><th>#</th><th>Name</th><th>Reg. No.</th><th>Trade</th><th>Session</th><th>Status</th><th>Category</th><th>Mobile</th></tr></thead><tbody>${rows}</tbody></table>
   <p style="text-align:right;margin-top:8px;font-size:11px;color:#666">Total: ${data.length} records</p>
   <div class="foot"><div class="sig">Principal</div><div class="sig">Placement Officer</div><div class="sig">Office Stamp</div></div>
   <script>setTimeout(()=>window.print(),600)<\/script></body></html>`);
@@ -2251,8 +2947,8 @@ function exportExcel(){
     const wb = XLSX.utils.book_new();
 
     // Sheet 1: Students
-    const headers = ["S.No","Name","Reg. No.","Mobile","ID Number","Address","Trade","Session","Status","Email ID","Remarks"];
-    const rows = students.map((s,i)=>[i+1,s.name,s.roll||"",s.mobile||"",s.aadhaar||"",s.address||"",s.trade,s.session,s.status,s.email||"",s.remarks||""]);
+    const headers = ["S.No","Name","Reg. No.","Mobile","ID Number","Address","Trade","Session","Status","Category","Remarks"];
+    const rows = students.map((s,i)=>[i+1,s.name,s.roll||"",s.mobile||"",s.aadhaar||"",s.address||"",s.trade,s.session,s.status,s.category||"",s.remarks||""]);
     const ws = XLSX.utils.aoa_to_sheet([headers,...rows]);
     // Column widths
     ws['!cols'] = [5,22,16,14,16,22,18,10,16,24,18].map(w=>({wch:w}));
@@ -2361,11 +3057,10 @@ function exportPDF(type){
 
       const isPdfAdmin=(window.currentUser||currentUser)?.role==="admin";
       const mRP=r=>isPdfAdmin?r:(r?r.slice(0,3)+"***":"-");
-      const mEP=e=>isPdfAdmin?e:(e&&e.length>0?e[0]+"***@***":"-");
-      const tableData = data.map((s,i)=>[i+1,s.name,mRP(s.roll||""),s.trade,s.session,s.status,mEP(s.email||""),s.mobile||""]);
+      const tableData = data.map((s,i)=>[i+1,s.name,mRP(s.roll||""),s.trade,s.session,s.status,s.category||"",s.mobile||""]);
       doc.autoTable({
         startY:22,
-        head:[["#","Name","Reg. No.","Trade","Session","Status","Email ID","Mobile"]],
+        head:[["#","Name","Reg. No.","Trade","Session","Status","Category","Mobile"]],
         body: tableData,
         headStyles:{fillColor:[245,158,11],textColor:[0,0,0],fontStyle:'bold',fontSize:8},
         bodyStyles:{fontSize:7.5,textColor:[40,40,40]},
@@ -2402,8 +3097,8 @@ function exportPDF(type){
 
 // ── CSV EXPORT ──
 function exportData(){
-  const headers=["S.No","Name","Reg. No.","Mobile","ID Number","Address","Trade","Session","Status","Email ID","Remarks"];
-  const rows=students.map((s,i)=>[i+1,s.name,s.roll||"",s.mobile||"",s.aadhaar||"",s.address||"",s.trade,s.session,s.status,s.email||"",s.remarks||""].map(v=>`"${String(v||"").replace(/"/g,'""')}"`));
+  const headers=["S.No","Name","Reg. No.","Mobile","ID Number","Address","Trade","Session","Status","Category","Remarks"];
+  const rows=students.map((s,i)=>[i+1,s.name,s.roll||"",s.mobile||"",s.aadhaar||"",s.address||"",s.trade,s.session,s.status,s.category||"",s.remarks||""].map(v=>`"${String(v||"").replace(/"/g,'""')}"`));
   const csv=[headers.join(","),...rows.map(r=>r.join(","))].join("\n");
   const a=document.createElement("a");
   a.href=URL.createObjectURL(new Blob(["\uFEFF"+csv],{type:"text/csv;charset=utf-8"}));
@@ -2488,7 +3183,7 @@ function processCSV(file){
       for(let c of line){if(c==='"'){inQ=!inQ;}else if(c===','&&!inQ){cols.push(cur.trim());cur="";}else cur+=c;}
       cols.push(cur.trim());
       if(cols.length>=2&&cols[0]&&!cols[0].toLowerCase().includes("total")&&!cols[0].toLowerCase().includes("name")){
-        students.push({id:nextId++,name:cols[0]||"",roll:cols[1]||"",mobile:cols[2]||"",aadhaar:cols[3]||"",address:cols[4]||"",trade:cols[5]||"Other",session:cols[6]||"2024-25",status:["Placed","Apprenticeship","Self Employed","Studying","Unemployed"].includes(cols[7])?cols[7]:"Unemployed",email:cols[8]||"",company:cols[9]||"",remarks:cols[10]||""});
+        students.push({id:nextId++,name:cols[0]||"",roll:cols[1]||"",mobile:cols[2]||"",aadhaar:cols[3]||"",address:cols[4]||"",trade:cols[5]||"Other",session:cols[6]||"2024-25",status:["Placed","Apprenticeship","Self Employed","Studying","Unemployed"].includes(cols[7])?cols[7]:"Unemployed",category:cols[8]||"",company:cols[9]||"",remarks:cols[10]||""});
         added++;
       }else skipped++;
     });
