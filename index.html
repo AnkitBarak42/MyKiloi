@@ -905,7 +905,7 @@ tr:hover td{background:rgba(255,255,255,.015)}
           </div>
           <div class="tbl-wrap">
             <table>
-              <thead><tr id="stuThead"><th>#</th><th>Name</th><th>Reg. No.</th><th>Mobile</th><th>Trade</th><th>Session</th><th>Status</th><th>Category</th><th>Actions</th></tr></thead>
+              <thead><tr id="stuThead"><th>#</th><th>Name</th><th>Father Name</th><th>Reg. No.</th><th>Mobile</th><th>Trade</th><th>Session</th><th>Status</th><th>Category</th><th>Actions</th></tr></thead>
               <tbody id="stuBody"></tbody>
             </table>
           </div>
@@ -2582,9 +2582,9 @@ function renderStudents(resetPage){
   const thead=document.getElementById("stuThead");
   if(thead){
     if(selectMode&&isAdmin){
-      thead.innerHTML=`<th style="width:36px"><input type="checkbox" id="chkAll" onchange="chkAllVisible(this)" style="width:15px;height:15px;cursor:pointer;accent-color:var(--red)"></th><th>#</th><th>Name</th><th>Reg. No.</th><th>Mobile</th><th>Trade</th><th>Session</th><th>Status</th><th>Category</th><th>Actions</th>`;
+      thead.innerHTML=`<th style="width:36px"><input type="checkbox" id="chkAll" onchange="chkAllVisible(this)" style="width:15px;height:15px;cursor:pointer;accent-color:var(--red)"></th><th>#</th><th>Name</th><th>Father Name</th><th>Reg. No.</th><th>Mobile</th><th>Trade</th><th>Session</th><th>Status</th><th>Category</th><th>Actions</th>`;
     } else {
-      thead.innerHTML=`<th>#</th><th>Name</th><th>Reg. No.</th><th>Mobile</th><th>Trade</th><th>Session</th><th>Status</th><th>Category</th><th>Actions</th>`;
+      thead.innerHTML=`<th>#</th><th>Name</th><th>Father Name</th><th>Reg. No.</th><th>Mobile</th><th>Trade</th><th>Session</th><th>Status</th><th>Category</th><th>Actions</th>`;
     }
   }
   document.getElementById("stuBody").innerHTML=paged.length?paged.map((s,i)=>{
@@ -2594,6 +2594,7 @@ function renderStudents(resetPage){
       ${chkCell}
       <td style="color:var(--muted)">${(stuPage-1)*STU_PER_PAGE+i+1}</td>
       <td><b>${s.name}</b></td>
+      <td style="font-size:12px;color:var(--muted)">${s.father||"—"}</td>
       <td style="font-size:12px;color:var(--muted)">${maskRoll(s.roll)}</td>
       <td>${s.mobile||"—"}</td><td>${s.trade}</td><td>${s.session}</td>
       <td><span class="badge b-${s.status.toLowerCase().replace(" ","-")}">${s.status}</span></td>
@@ -2604,7 +2605,7 @@ function renderStudents(resetPage){
         ${isAdmin&&!selectMode?`<button class="btn-icon bi-del" onclick="delStudent(${s.id})">🗑️</button>`:""}
       </div></td>
     </tr>`;
-  }).join(""):`<tr><td class="empty-td" colspan="${selectMode?10:9}">No students found</td></tr>`;
+  }).join(""):`<tr><td class="empty-td" colspan="${selectMode?11:10}">No students found</td></tr>`;
 
   // Pagination
   let pg='';
