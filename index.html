@@ -2324,10 +2324,20 @@ function getStats(list){
 }
 
 let dashSessionSelected=[]; // empty = All Sessions
+let dashSessionTouched=false; // becomes true once the user changes the filter manually
+
+function latestDSession(){
+  var all=[...new Set([...SESSIONS,...students.map(function(s){return s.session;})])].filter(Boolean).sort();
+  return all.length?all[all.length-1]:null;
+}
 
 function buildDSessionMenu(){
   const menu=document.getElementById("dSessionMenu");
   if(!menu) return;
+  if(!dashSessionTouched){
+    const latest=latestDSession();
+    if(latest) dashSessionSelected=[latest];
+  }
   const allSessions=[...new Set([...SESSIONS,...students.map(s=>s.session)])].filter(Boolean).sort();
   const allChecked=dashSessionSelected.length===0;
   menu.innerHTML=`<label style="display:flex;align-items:center;gap:8px;padding:7px 8px;cursor:pointer;font-weight:700;border-bottom:1px solid var(--border);margin-bottom:4px;font-size:13px">
@@ -2346,6 +2356,7 @@ function toggleDSessionDropdown(){
 }
 
 function toggleDSessAll(){
+  dashSessionTouched=true;
   dashSessionSelected=[];
   buildDSessionMenu();
   updateDSessionLabel();
@@ -2353,6 +2364,7 @@ function toggleDSessAll(){
 }
 
 function toggleDSessOne(cb){
+  dashSessionTouched=true;
   const v=cb.value;
   if(cb.checked){ if(!dashSessionSelected.includes(v)) dashSessionSelected.push(v); }
   else { dashSessionSelected=dashSessionSelected.filter(x=>x!==v); }
@@ -3529,6 +3541,9 @@ function renderProcessedRequests(){
               <span>👮 By Admin: <b style="color:var(--text)">${r.processedBy||"—"}</b></span>
             </div>
           </div>
+          <div style="display:flex;gap:8px">
+            <button onclick="deleteProcessedRequest('${un}')" style="padding:7px 14px;background:rgba(239,68,68,.12);color:var(--red);border:1px solid rgba(239,68,68,.3);border-radius:8px;cursor:pointer;font-size:12px;font-weight:700">🗑️ Delete Record</button>
+          </div>
         </div>
       </div>`;
     }).join("");
@@ -3541,6 +3556,21 @@ function renderProcessedRequests(){
   } else {
     const proc=JSON.parse(localStorage.getItem("iti_processed_requests")||"{}");
     showProcessed(proc);
+  }
+}
+
+function deleteProcessedRequest(un){
+  if(!currentUser||currentUser.role!=="admin") return;
+  if(!confirm("Delete this processed request record?")) return;
+  if(window._firebaseReady && window._db){
+    window._db.ref("iti_kiloi/processed_requests/"+un).remove().then(function(){
+      showToast("Deleted ✅"); renderProcessedRequests();
+    }).catch(function(e){ console.error(e); showToast("Delete error","err"); });
+  } else {
+    const proc=JSON.parse(localStorage.getItem("iti_processed_requests")||"{}");
+    delete proc[un];
+    localStorage.setItem("iti_processed_requests",JSON.stringify(proc));
+    showToast("Deleted ✅"); renderProcessedRequests();
   }
 }
 
