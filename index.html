@@ -905,7 +905,7 @@ tr:hover td{background:rgba(255,255,255,.015)}
           </div>
           <div class="tbl-wrap">
             <table>
-              <thead><tr id="stuThead"><th>#</th><th>Name</th><th>Father Name</th><th>Reg. No.</th><th>Mobile</th><th>Trade</th><th>Session</th><th>Status</th><th>Category</th><th>Actions</th></tr></thead>
+              <thead><tr id="stuThead"><th>#</th><th>Name</th><th>Father Name</th><th>Date of Birth</th><th>Reg. No.</th><th>Mobile</th><th>Trade</th><th>Session</th><th>Status</th><th>Category</th><th>Actions</th></tr></thead>
               <tbody id="stuBody"></tbody>
             </table>
           </div>
@@ -1284,6 +1284,7 @@ tr:hover td{background:rgba(255,255,255,.015)}
     </div>
     <div class="fg2"><label>Address</label><input id="fAddress" placeholder="Village/City, District"></div>
     <div class="fg2"><label>Father Name</label><input id="fFather" placeholder="Father's full name"></div>
+    <div class="fg2"><label>Date of Birth</label><input id="fDob" type="date"></div>
     <div class="form-grid">
       <div class="fg2"><label>Trade *</label>
         <select id="fTrade2"></select>
@@ -2630,9 +2631,9 @@ function renderStudents(resetPage){
   const thead=document.getElementById("stuThead");
   if(thead){
     if(selectMode&&isAdmin){
-      thead.innerHTML=`<th style="width:36px"><input type="checkbox" id="chkAll" onchange="chkAllVisible(this)" style="width:15px;height:15px;cursor:pointer;accent-color:var(--red)"></th><th>#</th><th>Name</th><th>Father Name</th><th>Reg. No.</th><th>Mobile</th><th>Trade</th><th>Session</th><th>Status</th><th>Category</th><th>Actions</th>`;
+      thead.innerHTML=`<th style="width:36px"><input type="checkbox" id="chkAll" onchange="chkAllVisible(this)" style="width:15px;height:15px;cursor:pointer;accent-color:var(--red)"></th><th>#</th><th>Name</th><th>Father Name</th><th>Date of Birth</th><th>Reg. No.</th><th>Mobile</th><th>Trade</th><th>Session</th><th>Status</th><th>Category</th><th>Actions</th>`;
     } else {
-      thead.innerHTML=`<th>#</th><th>Name</th><th>Father Name</th><th>Reg. No.</th><th>Mobile</th><th>Trade</th><th>Session</th><th>Status</th><th>Category</th><th>Actions</th>`;
+      thead.innerHTML=`<th>#</th><th>Name</th><th>Father Name</th><th>Date of Birth</th><th>Reg. No.</th><th>Mobile</th><th>Trade</th><th>Session</th><th>Status</th><th>Category</th><th>Actions</th>`;
     }
   }
   document.getElementById("stuBody").innerHTML=paged.length?paged.map((s,i)=>{
@@ -2643,6 +2644,7 @@ function renderStudents(resetPage){
       <td style="color:var(--muted)">${(stuPage-1)*STU_PER_PAGE+i+1}</td>
       <td><b>${s.name}</b></td>
       <td style="font-size:12px;color:var(--muted)">${s.father||"—"}</td>
+      <td style="font-size:12px;color:var(--muted)">${s.dob||"—"}</td>
       <td style="font-size:12px;color:var(--muted)">${maskRoll(s.roll)}</td>
       <td>${s.mobile||"—"}</td><td>${s.trade}</td><td>${s.session}</td>
       <td><span class="badge b-${s.status.toLowerCase().replace(" ","-")}">${s.status}</span></td>
@@ -2653,7 +2655,7 @@ function renderStudents(resetPage){
         ${isAdmin&&!selectMode?`<button class="btn-icon bi-del" onclick="delStudent(${s.id})">🗑️</button>`:""}
       </div></td>
     </tr>`;
-  }).join(""):`<tr><td class="empty-td" colspan="${selectMode?11:10}">No students found</td></tr>`;
+  }).join(""):`<tr><td class="empty-td" colspan="${selectMode?12:11}">No students found</td></tr>`;
 
   // Pagination
   let pg='';
@@ -2689,7 +2691,7 @@ function filterByStatus(status){
 function openAddModal(){
   editingId=null;
   document.getElementById("modalTitle").textContent="➕ Add Student";
-  ["fName","fRoll","fMobile","fAadhaar","fAddress","fFather","fCompany","fRemarks"].forEach(id=>document.getElementById(id).value="");
+  ["fName","fRoll","fMobile","fAadhaar","fAddress","fFather","fDob","fCompany","fRemarks"].forEach(id=>document.getElementById(id).value="");
   rebuildStudentTradeSelect(trades[0]||"");
   rebuildStudentSessionSelect("2024-25");
   rebuildStudentStatusSelect("Placed");
@@ -2782,6 +2784,7 @@ function editStudent(id){
   document.getElementById("fSessionCustomBox").style.display="none";
   document.getElementById("fStatusCustomBox").style.display="none";
   document.getElementById("fFather").value=s.father||"";
+  document.getElementById("fDob").value=s.dob||"";
   document.getElementById("fCompany").value=s.email||s.category||"";
   document.getElementById("fRemarks").value=s.remarks;
   document.getElementById("stuModal").classList.add("open");
@@ -2793,7 +2796,7 @@ function viewStudent(id){
   const mRoll=r=>isAdm?r:(r?r.slice(0,3)+"***":"-");
   document.getElementById("viewGrid").innerHTML=[
     ["Name",s.name],["Reg. No.",mRoll(s.roll)],["Mobile",s.mobile||"—"],["ID Number",s.aadhaar||"N/A"],
-    ["Father Name",s.father||"—"],["Address",s.address||"—"],["Category",s.email||s.category||"—"],
+    ["Father Name",s.father||"—"],["Date of Birth",s.dob||"—"],["Address",s.address||"—"],["Category",s.email||s.category||"—"],
     ["Trade",s.trade],["Session",s.session],
     ["Remarks",s.remarks||"—"],
   ].map(([l,v])=>`<div class="detail-item"><div class="dl">${l}</div><div class="dv">${v}</div></div>`).join("")
@@ -2814,6 +2817,7 @@ function saveStudent(){
     status:document.getElementById("fStatus2").value,
     email:document.getElementById("fCompany").value.trim(),
     father:document.getElementById("fFather").value.trim(),
+    dob:document.getElementById("fDob").value,
     remarks:document.getElementById("fRemarks").value.trim(),
   };
   if(editingId){
