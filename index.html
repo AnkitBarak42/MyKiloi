@@ -568,7 +568,6 @@ tr:hover td{background:rgba(255,255,255,.015)}
     <div class="lp-navbar-links" id="lpNavLinks">
       <a onclick="goToPage('drives')">Placement Drives</a>
       <a onclick="goToPage('contact')">Contact</a>
-      <button type="button" class="lp-btn-login-nav" onclick="showLogin()">🔐 Login</button>
     </div>
     <button class="lp-navbar-toggle" onclick="toggleLPNav()" aria-label="Toggle menu">☰</button>
   </nav>
@@ -2101,15 +2100,7 @@ function forceLogout(msg){
   currentUser=null; window.currentUser=null; selectedRole=null;
   if(document.getElementById("app")) document.getElementById("app").style.display="none";
   if(window.appScoped&&typeof window.appScoped==="function"){try{window.appScoped();}catch(e){}}
-  var lp=document.getElementById("landingPage");
-  if(lp) lp.style.display="block";
-  if(document.getElementById("loginScreen")) document.getElementById("loginScreen").style.display="none";
-  var lf=document.getElementById("loginForm");
-  if(lf) lf.style.display="none";
-  var rs=document.getElementById("roleSelect");
-  if(rs) rs.style.display="block";
-  try{goToPage("home");}catch(e){}
-  window.scrollTo({top:0,behavior:"auto"});
+  showLogin();
   if(msg) alert(msg);
 }
 
@@ -2119,16 +2110,8 @@ function doLogout(){
   try{localStorage.removeItem("iti_kiloi_session");}catch(e){}
   currentUser=null; window.currentUser=null; selectedRole=null;
   document.getElementById("app").style.display="none";
-  var lp=document.getElementById("landingPage");
-  if(lp) lp.style.display="block";
-  document.getElementById("loginScreen").style.display="none";
   document.getElementById("lUser").value="";document.getElementById("lPass").value="";
-  document.getElementById("loginForm").style.display="none";
-  document.getElementById("roleSelect").style.display="block";
-  document.getElementById("forgotBox").style.display="none";
-  document.getElementById("signUpBox").style.display="none";
-  try{goToPage("home");}catch(e){}
-  window.scrollTo({top:0,behavior:"auto"});
+  showLogin();
 }
 
 // ═══════════════════════════════════════════════
