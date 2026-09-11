@@ -559,7 +559,7 @@ tr:hover td{background:rgba(255,255,255,.015)}
 <body class="sb-open">
 
 <!-- LANDING PAGE -->
-<div id="landingPage">
+<div id="landingPage" style="display:none">
   <nav class="lp-navbar" id="lpNav">
     <div class="lp-navbar-brand" onclick="goToPage('home')">
       <div class="lp-navbar-logo">GK</div>
@@ -568,6 +568,7 @@ tr:hover td{background:rgba(255,255,255,.015)}
     <div class="lp-navbar-links" id="lpNavLinks">
       <a onclick="goToPage('drives')">Placement Drives</a>
       <a onclick="goToPage('contact')">Contact</a>
+      <a onclick="showLogin()" style="margin-left:4px" title="Admin Login">🔐</a>
     </div>
     <button class="lp-navbar-toggle" onclick="toggleLPNav()" aria-label="Toggle menu">☰</button>
   </nav>
@@ -830,7 +831,7 @@ tr:hover td{background:rgba(255,255,255,.015)}
   </div>
 
   <!-- LOADER -->
-  <div class="loader-overlay" id="lpLoader">
+  <div class="loader-overlay" id="lpLoader" style="display:none">
     <div class="loader-content">
       <div class="loader-icon">GK</div>
       <div class="loader-text">
@@ -852,8 +853,18 @@ tr:hover td{background:rgba(255,255,255,.015)}
 <script>
 (function(){
   try{
+    // #home shared link → always show public landing page
+    if(location.hash.includes("home")){
+      document.addEventListener("DOMContentLoaded",function(){
+        var lp=document.getElementById("landingPage");
+        if(lp) lp.style.display="block";
+        var ls=document.getElementById("loginScreen");
+        if(ls) ls.style.display="none";
+      });
+      return;
+    }
     var sess=JSON.parse(localStorage.getItem("iti_kiloi_session")||"null");
-    if(sess&&sess.username && !location.hash.includes("home")){
+    if(sess&&sess.username){
       document.addEventListener("DOMContentLoaded",function(){
         var lp=document.getElementById("landingPage");
         if(lp) lp.style.display="none";
@@ -873,7 +884,7 @@ tr:hover td{background:rgba(255,255,255,.015)}
 </div>
 
 <!-- LOGIN -->
-<div id="loginScreen" style="display:none">
+<div id="loginScreen">
   <div class="login-box">
     <div style="text-align:left;margin-bottom:8px">
       <button onclick="backToHome()" style="background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:13px;text-decoration:underline">← Back to Home</button>
