@@ -1565,6 +1565,14 @@ function restoreSession(){
     if(lp2) lp2.style.display="block";
     return;
   }
+  if((users[u].pwChangedAt||"")!==(sess.pwChangedAt||"")){
+    try{localStorage.removeItem("iti_kiloi_session");}catch(e){}
+    if(loader)loader.style.display="none";
+    alert("🔄 Password was changed. Please log in again.");
+    var lp2b=document.getElementById("landingPage");
+    if(lp2b) lp2b.style.display="block";
+    return;
+  }
   currentUser={username:u,...users[u]};
   window.currentUser=currentUser;
   if(loader)loader.style.display="none";
@@ -1629,7 +1637,18 @@ window.addEventListener("load",()=>{
       }
     });
     db.ref("iti_kiloi/users").on("value",snap=>{
-      if(snap.exists()){users=snap.val();if(currentUser)try{renderUsers();}catch(e){}}
+      if(snap.exists()){
+        users=snap.val();
+        if(currentUser){
+          const pwNow=users[currentUser.username]?users[currentUser.username].pwChangedAt||"":"";
+          const pwMine=currentUser.pwChangedAt||"";
+          if(pwNow!==pwMine){
+            forceLogout("Password was changed. You were logged out from all devices.");
+            return;
+          }
+          try{renderUsers();}catch(e){}
+        }
+      }
     });
     db.ref("iti_kiloi/trades").on("value",snap=>{
       if(snap.exists()){trades=snap.val();if(currentUser)try{renderTrades();}catch(e){}}
@@ -1822,10 +1841,28 @@ function doLogin(){
     document.getElementById("lErr").style.display="none";
     document.getElementById("lErr").textContent="❌ Invalid username or password!";
     // Save session — stays logged in until Logout is clicked
-    try{localStorage.setItem("iti_kiloi_session",JSON.stringify({username:u}));}catch(e){}
+    try{localStorage.setItem("iti_kiloi_session",JSON.stringify({username:u,pwChangedAt:users[u].pwChangedAt||""}));}catch(e){}
   } else document.getElementById("lErr").style.display="block";
 }
 document.addEventListener("keydown",e=>{if(e.key==="Enter"&&!currentUser) doLogin();});
+
+function forceLogout(msg){
+  try{
+    if(currentUser) logActivity("FORCE_LOGOUT", `${currentUser.name} logged out (password changed)`);
+    localStorage.removeItem("iti_kiloi_session");
+  }catch(e){}
+  currentUser=null; window.currentUser=null; selectedRole=null;
+  if(document.getElementById("app")) document.getElementById("app").style.display="none";
+  if(window.appScoped&&typeof window.appScoped==="function"){try{window.appScoped();}catch(e){}}
+  var lp=document.getElementById("landingPage");
+  if(lp) lp.style.display="block";
+  if(document.getElementById("loginScreen")) document.getElementById("loginScreen").style.display="none";
+  var lf=document.getElementById("loginForm");
+  if(lf) lf.style.display="none";
+  var rs=document.getElementById("roleSelect");
+  if(rs) rs.style.display="block";
+  if(msg) alert(msg);
+}
 
 function doLogout(){
   logActivity("LOGOUT", `${currentUser.name} logged out`);
@@ -3452,7 +3489,7 @@ function approveRequest(un){
       window._db.ref("iti_kiloi/pending_requests/"+un).once("value").then(snap=>{
         if(!snap.exists()) return;
         const r=snap.val();
-        users[un]={pass:r.pass,name:r.name,role:"staff",email:r.email,mobile:r.mobile,staffRole:r.role};
+        users[un]={pass:r.pass,name:r.name,role:"staff",email:r.email,mobile:r.mobile,staffRole:r.role,pwChangedAt:new Date().toISOString()};
         persistAll();
         const processed={...r, status:"approved", processedAt:new Date().toISOString(), processedBy:currentUser.username};
         window._db.ref("iti_kiloi/processed_requests/"+un).set(processed);
@@ -3613,8 +3650,11 @@ function saveUser(){
         role=document.getElementById("uRole").value;
   if(!un||!pass||!name){showToast("Sab fields zaroori hain!","err");return;}
   if(un.includes(" ")){showToast("Username mein space nahi hoga!","err");return;}
+  var oldRec=editingUN?users[editingUN]:null;
   if(editingUN&&editingUN!==un) delete users[editingUN];
-  users[un]={pass,name,role};
+  var pwChanged=oldRec?oldRec.pass!==pass:false;
+  var prev=oldRec?oldRec.pwChangedAt:"";
+  users[un]={pass,name,role,pwChangedAt:(pwChanged||!editingUN)?new Date().toISOString():prev};
   logActivity(editingUN?"EDIT_USER":"ADD_USER", `User "${un}" (${name}) ${editingUN?"update":"add"} kiya — Role: ${role}`);
   persistAll();closeModal("userModal");renderUsers();
   showToast(editingUN?"User updated successfully ✅":"New user created successfully ✅");
