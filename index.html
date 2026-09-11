@@ -760,35 +760,36 @@ tr:hover td{background:rgba(255,255,255,.015)}
       <button onclick="showLoginForm()" style="width:100%;margin-top:14px;padding:11px;background:transparent;border:1px solid var(--border);border-radius:10px;color:var(--muted);cursor:pointer;font-size:13px">← Back to Login</button>
     </div>
 
-    <!-- Sign Up Form -->
+    <!-- Sign Up / Student Registration Form -->
     <div id="signUpBox" style="display:none">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
         <button onclick="showLoginForm()" style="background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:18px;padding:0">←</button>
-        <span style="font-size:14px;font-weight:700">Request Staff Account</span>
+        <span style="font-size:14px;font-weight:700">Student Registration</span>
       </div>
-      <div class="fg"><label>Full Name *</label><input id="suName" placeholder="Your full name"></div>
-      <div class="fg"><label>Username *</label><input id="suUsername" placeholder="Choose a username"></div>
-      <div class="fg"><label>Mobile Number *</label><input id="suMobile" placeholder="10-digit mobile number" maxlength="10"></div>
-      <div class="fg"><label>Email ID *</label><input id="suEmail" placeholder="your@email.com"></div>
-      <div class="fg">
-        <label>Staff Role *</label>
-        <select id="suRole" onchange="toggleOtherRole(this.value)" style="width:100%;padding:11px 13px;background:var(--bg2);border:1px solid var(--border);border-radius:9px;color:var(--text);font-size:14px;outline:none">
-          <option value="">-- Select Role --</option>
-          <option>Instructor</option>
-          <option>Group Instructor</option>
-          <option>Vice Principal</option>
-          <option>Principal</option>
-          <option value="Other">Other</option>
+      <div class="fg"><label>Full Name *</label><input id="suName" required placeholder="Student full name"></div>
+      <div class="fg"><label>Father Name *</label><input id="suFather" required placeholder="Father's full name"></div>
+      <div class="fg"><label>Mobile Number *</label><input id="suMobile" required maxlength="10" placeholder="10-digit mobile number"></div>
+      <div class="fg"><label>Date of Birth *</label>
+        <div style="display:flex;gap:6px">
+          <input id="suDob" type="text" required placeholder="DD-MM-YYYY" maxlength="10" style="flex:1;min-width:0">
+          <button type="button" title="Pick from calendar" class="btn btn-secondary" style="padding:0 12px" onclick="openDobCal('suDobCal')">📅</button>
+          <input id="suDobCal" type="date" style="display:none" onchange="fDobCalPicked(this,'suDob')">
+        </div>
+      </div>
+      <div class="fg"><label>Email ID *</label><input id="suEmail" type="email" required placeholder="your@email.com"></div>
+      <div class="fg"><label>Category *</label><input id="suCompany" required placeholder="General / OBC / SC / ST / EWS"></div>
+      <div class="fg"><label>Address *</label><input id="suAddress" required placeholder="Village/City, District"></div>
+      <div class="fg"><label>Trade *</label><select id="suTrade" required></select></div>
+      <div class="fg"><label>Session *</label>
+        <select id="suSession" required>
+          <option>2020-21</option><option>2021-22</option><option>2022-23</option><option>2023-24</option><option>2024-25</option><option selected>2025-26</option>
         </select>
       </div>
-      <div class="fg" id="otherRoleBox" style="display:none"><label>Specify Role *</label><input id="suOtherRole" placeholder="Enter your post/designation"></div>
-      <div class="fg"><label>Password *</label><input id="suPass" type="password" placeholder="Create password"></div>
-      <div class="fg"><label>Confirm Password *</label><input id="suConfirmPass" type="password" placeholder="Repeat password"></div>
       <div class="err-box" id="suErr"></div>
       <div id="suSuccess" style="display:none;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);border-radius:8px;padding:10px 13px;font-size:13px;color:var(--green);margin-bottom:10px;text-align:center">
-        ✅ Request sent! Admin will approve your account.
+        ✅ Registration done! Your details are saved in the Student section.
       </div>
-      <button onclick="submitSignUp()" style="width:100%;padding:13px;background:linear-gradient(135deg,var(--blue),#1d4ed8);border:none;border-radius:10px;color:#fff;font-weight:900;font-size:15px;cursor:pointer;margin-top:4px">📩 Submit Request</button>
+      <button onclick="registerStudent()" style="width:100%;padding:13px;background:linear-gradient(135deg,var(--blue),#1d4ed8);border:none;border-radius:10px;color:#fff;font-weight:900;font-size:15px;cursor:pointer;margin-top:4px">📝 Submit Registration</button>
     </div>
   </div>
 </div>
@@ -905,7 +906,7 @@ tr:hover td{background:rgba(255,255,255,.015)}
           </div>
           <div class="tbl-wrap">
             <table>
-              <thead><tr id="stuThead"><th>#</th><th>Name</th><th>Father Name</th><th>Date of Birth</th><th>Reg. No.</th><th>Mobile</th><th>Trade</th><th>Session</th><th>Status</th><th>Category</th><th>Actions</th></tr></thead>
+              <thead><tr id="stuThead"><th>#</th><th>Name</th><th>Father Name</th><th>Date of Birth</th><th>Reg. No.</th><th>Mobile</th><th>Trade</th><th>Session</th><th>Status</th><th>Category</th><th>Email ID</th><th>Actions</th></tr></thead>
               <tbody id="stuBody"></tbody>
             </table>
           </div>
@@ -1277,20 +1278,26 @@ tr:hover td{background:rgba(255,255,255,.015)}
   <div class="modal">
     <div class="modal-title" id="modalTitle">➕ Add Student</div>
     <div class="form-grid">
-      <div class="fg2"><label>Full Name *</label><input id="fName" placeholder="Student full name"></div>
-      <div class="fg2"><label>Registration No. *</label><input id="fRoll" placeholder="e.g. REG/2024/001"></div>
-      <div class="fg2"><label>Mobile No</label><input id="fMobile" placeholder="10 digit" maxlength="10"></div>
+      <div class="fg2"><label>Full Name *</label><input id="fName" required placeholder="Student full name"></div>
+      <div class="fg2"><label>Registration No. *</label><input id="fRoll" required placeholder="e.g. REG/2024/001"></div>
+      <div class="fg2"><label>Mobile No *</label><input id="fMobile" required maxlength="10" placeholder="10 digit"></div>
       <div class="fg2"><label>ID Number</label><input id="fAadhaar" placeholder="ID / Roll Number" maxlength="14"></div>
     </div>
-    <div class="fg2"><label>Address</label><input id="fAddress" placeholder="Village/City, District"></div>
-    <div class="fg2"><label>Father Name</label><input id="fFather" placeholder="Father's full name"></div>
-    <div class="fg2"><label>Date of Birth</label><input id="fDob" type="date"></div>
+    <div class="fg2"><label>Address *</label><input id="fAddress" required placeholder="Village/City, District"></div>
+    <div class="fg2"><label>Father Name *</label><input id="fFather" required placeholder="Father's full name"></div>
+    <div class="fg2"><label>Date of Birth *</label>
+      <div style="display:flex;gap:6px">
+        <input id="fDob" type="text" required placeholder="DD-MM-YYYY" maxlength="10" style="flex:1;min-width:0">
+        <button type="button" title="Pick from calendar" class="btn btn-secondary" style="padding:0 12px" onclick="openDobCal('fDobCal')">📅</button>
+        <input id="fDobCal" type="date" style="display:none" onchange="fDobCalPicked(this,'fDob')">
+      </div>
+    </div>
     <div class="form-grid">
       <div class="fg2"><label>Trade *</label>
-        <select id="fTrade2"></select>
+        <select id="fTrade2" required></select>
       </div>
-      <div class="fg2"><label>Session</label>
-        <select id="fSession2" onchange="handleStudentSessionChange(this)">
+      <div class="fg2"><label>Session *</label>
+        <select id="fSession2" required onchange="handleStudentSessionChange(this)">
           <option>2020-21</option><option>2021-22</option><option>2022-23</option><option>2023-24</option><option selected>2024-25</option><option>2025-26</option>
           <option value="__custom__">➕ Custom Session...</option>
         </select>
@@ -1319,7 +1326,8 @@ tr:hover td{background:rgba(255,255,255,.015)}
           </div>
         </div>
       </div>
-      <div class="fg2"><label>Category</label><input id="fCompany" placeholder="General / OBC / SC / ST / EWS"></div>
+      <div class="fg2"><label>Category *</label><input id="fCompany" required placeholder="General / OBC / SC / ST / EWS"></div>
+      <div class="fg2"><label>Email ID</label><input id="fEmail" type="email" placeholder="student@example.com"></div>
     </div>
     <div class="fg2"><label>Remarks</label><input id="fRemarks" placeholder="Any notes..."></div>
     <div class="modal-foot">
@@ -1746,76 +1754,66 @@ function showForgotPassword(){
 function showSignUp(){
   document.getElementById("loginForm").style.display = "none";
   document.getElementById("signUpBox").style.display = "block";
+  fillSignUpTrades();
 }
 
+function fillSignUpTrades(){
+  const sel=document.getElementById("suTrade");
+  if(!sel) return;
+  sel.innerHTML=(trades&&trades.length?trades:DEFAULT_TRADES).map(t=>`<option value="${t}">${t}</option>`).join("");
+}
 function toggleOtherRole(val){
-  document.getElementById("otherRoleBox").style.display = val === "Other" ? "block" : "none";
+  const box=document.getElementById("otherRoleBox");
+  if(box) box.style.display = val === "Other" ? "block" : "none";
 }
 
-function submitSignUp(){
-  const name=document.getElementById("suName").value.trim();
-  const uname=document.getElementById("suUsername").value.trim();
-  const mobile=document.getElementById("suMobile").value.trim();
-  const email=document.getElementById("suEmail").value.trim();
-  const role=document.getElementById("suRole").value;
-  const otherRole=document.getElementById("suOtherRole").value.trim();
-  const pass=document.getElementById("suPass").value;
-  const confirmPass=document.getElementById("suConfirmPass").value;
+function registerStudent(){
   const errEl=document.getElementById("suErr");
-
   errEl.style.display="none";
+  const name=document.getElementById("suName").value.trim();
+  const father=document.getElementById("suFather").value.trim();
+  const mobile=document.getElementById("suMobile").value.trim();
+  const dob=normalizeDob(document.getElementById("suDob").value);
+  const emailId=document.getElementById("suEmail").value.trim();
+  const company=document.getElementById("suCompany").value.trim();
+  const address=document.getElementById("suAddress").value.trim();
+  const trade=document.getElementById("suTrade").value;
+  const session=document.getElementById("suSession").value;
 
-  if(!name||!uname||!mobile||!email||!role||!pass){
-    errEl.textContent="❌ All fields are required!"; errEl.style.display="block"; return;
-  }
-  if(role==="Other"&&!otherRole){
-    errEl.textContent="❌ Please specify your role!"; errEl.style.display="block"; return;
+  const missing=[];
+  if(!name) missing.push("Full Name");
+  if(!father) missing.push("Father Name");
+  if(!mobile) missing.push("Mobile Number");
+  if(!dob) missing.push("Date of Birth");
+  if(!emailId) missing.push("Email ID");
+  if(!company) missing.push("Category");
+  if(!address) missing.push("Address");
+  if(!trade) missing.push("Trade");
+  if(!session) missing.push("Session");
+  if(missing.length){
+    errEl.textContent="❌ Please fill the required fields: "+missing.join(", "); errEl.style.display="block"; return;
   }
   if(mobile.length!==10||isNaN(mobile)){
     errEl.textContent="❌ Enter valid 10-digit mobile number!"; errEl.style.display="block"; return;
   }
-  if(pass!==confirmPass){
-    errEl.textContent="❌ Passwords do not match!"; errEl.style.display="block"; return;
-  }
-  if(pass.length<6){
-    errEl.textContent="❌ Password must be at least 6 characters!"; errEl.style.display="block"; return;
-  }
-  if(users[uname]){
-    errEl.textContent="❌ Username already exists!"; errEl.style.display="block"; return;
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailId)){
+    errEl.textContent="❌ Enter a valid email ID!"; errEl.style.display="block"; return;
   }
 
-  // Save to Firebase pending requests
-  const req = {
-    name, username:uname, mobile, email,
-    role: role==="Other"?otherRole:role,
-    pass, status:"pending",
-    requestedAt: new Date().toISOString()
-  };
-
-  if(window._firebaseReady && window._db){
-    window._db.ref("iti_kiloi/pending_requests/"+uname).set(req)
-      .then(()=>{
-        document.getElementById("suSuccess").style.display="block";
-        document.getElementById("suErr").style.display="none";
-        setTimeout(()=>{ showLoginForm(); document.getElementById("suSuccess").style.display="none"; resetSignUpForm(); }, 3000);
-      })
-      .catch(e=>{ errEl.textContent="❌ Error: "+e.message; errEl.style.display="block"; });
-  } else {
-    // Fallback localStorage
-    const pending = JSON.parse(localStorage.getItem("iti_pending_requests")||"{}");
-    pending[uname] = req;
-    localStorage.setItem("iti_pending_requests", JSON.stringify(pending));
-    document.getElementById("suSuccess").style.display="block";
-    setTimeout(()=>{ showLoginForm(); document.getElementById("suSuccess").style.display="none"; resetSignUpForm(); }, 3000);
-  }
+  const id=nextId++;
+  students.push({id, name, roll:"SR-"+id, father, dob, mobile, address, trade, session, email:company, emailId, status:"Studying", remarks:"Registered from website", registeredAt:new Date().toISOString()});
+  persistAll();
+  try{logActivity("ADD_STUDENT", `"${name}" (SR-${id}) registered from website — Trade: ${trade}, Status: Studying`);}catch(e){}
+  document.getElementById("suSuccess").style.display="block";
+  document.getElementById("suErr").style.display="none";
+  setTimeout(()=>{ showLoginForm(); document.getElementById("suSuccess").style.display="none"; resetSignUpForm(); }, 3000);
 }
 
 function resetSignUpForm(){
-  ["suName","suUsername","suMobile","suEmail","suPass","suConfirmPass","suOtherRole"].forEach(id=>{
+  ["suName","suFather","suMobile","suDob","suEmail","suCompany","suAddress"].forEach(id=>{
     const el=document.getElementById(id); if(el) el.value="";
   });
-  document.getElementById("suRole").value="";
-  document.getElementById("otherRoleBox").style.display="none";
+  const sess=document.getElementById("suSession"); if(sess) sess.value=SESSIONS.slice(-1)[0]||"2025-26";
 }
 
 function doLogin(){
@@ -2631,9 +2629,9 @@ function renderStudents(resetPage){
   const thead=document.getElementById("stuThead");
   if(thead){
     if(selectMode&&isAdmin){
-      thead.innerHTML=`<th style="width:36px"><input type="checkbox" id="chkAll" onchange="chkAllVisible(this)" style="width:15px;height:15px;cursor:pointer;accent-color:var(--red)"></th><th>#</th><th>Name</th><th>Father Name</th><th>Date of Birth</th><th>Reg. No.</th><th>Mobile</th><th>Trade</th><th>Session</th><th>Status</th><th>Category</th><th>Actions</th>`;
+      thead.innerHTML=`<th style="width:36px"><input type="checkbox" id="chkAll" onchange="chkAllVisible(this)" style="width:15px;height:15px;cursor:pointer;accent-color:var(--red)"></th><th>#</th><th>Name</th><th>Father Name</th><th>Date of Birth</th><th>Reg. No.</th><th>Mobile</th><th>Trade</th><th>Session</th><th>Status</th><th>Category</th><th>Email ID</th><th>Actions</th>`;
     } else {
-      thead.innerHTML=`<th>#</th><th>Name</th><th>Father Name</th><th>Date of Birth</th><th>Reg. No.</th><th>Mobile</th><th>Trade</th><th>Session</th><th>Status</th><th>Category</th><th>Actions</th>`;
+      thead.innerHTML=`<th>#</th><th>Name</th><th>Father Name</th><th>Date of Birth</th><th>Reg. No.</th><th>Mobile</th><th>Trade</th><th>Session</th><th>Status</th><th>Category</th><th>Email ID</th><th>Actions</th>`;
     }
   }
   document.getElementById("stuBody").innerHTML=paged.length?paged.map((s,i)=>{
@@ -2648,14 +2646,15 @@ function renderStudents(resetPage){
       <td style="font-size:12px;color:var(--muted)">${maskRoll(s.roll)}</td>
       <td>${s.mobile||"—"}</td><td>${s.trade}</td><td>${s.session}</td>
       <td><span class="badge b-${s.status.toLowerCase().replace(" ","-")}">${s.status}</span></td>
-      <td style="color:var(--muted)">${s.email||s.category||"—"}</td>
+<td style="color:var(--muted)">${s.email||s.category||"—"}</td>
+      <td style="font-size:12px;color:var(--muted)">${s.emailId||"—"}</td>
       <td onclick="event.stopPropagation()"><div style="display:flex;gap:5px">
         <button class="btn-icon bi-view" onclick="viewStudent(${s.id})">👁️</button>
         ${!selectMode?`<button class="btn-icon bi-edit" onclick="editStudent(${s.id})">✏️</button>`:""}
         ${isAdmin&&!selectMode?`<button class="btn-icon bi-del" onclick="delStudent(${s.id})">🗑️</button>`:""}
       </div></td>
     </tr>`;
-  }).join(""):`<tr><td class="empty-td" colspan="${selectMode?12:11}">No students found</td></tr>`;
+  }).join(""):`<tr><td class="empty-td" colspan="${selectMode?13:12}">No students found</td></tr>`;
 
   // Pagination
   let pg='';
@@ -2691,7 +2690,7 @@ function filterByStatus(status){
 function openAddModal(){
   editingId=null;
   document.getElementById("modalTitle").textContent="➕ Add Student";
-  ["fName","fRoll","fMobile","fAadhaar","fAddress","fFather","fDob","fCompany","fRemarks"].forEach(id=>document.getElementById(id).value="");
+  ["fName","fRoll","fMobile","fAadhaar","fAddress","fFather","fDob","fCompany","fEmail","fRemarks"].forEach(id=>document.getElementById(id).value="");
   rebuildStudentTradeSelect(trades[0]||"");
   rebuildStudentSessionSelect("2024-25");
   rebuildStudentStatusSelect("Placed");
@@ -2785,6 +2784,7 @@ function editStudent(id){
   document.getElementById("fStatusCustomBox").style.display="none";
   document.getElementById("fFather").value=s.father||"";
   document.getElementById("fDob").value=s.dob||"";
+  document.getElementById("fEmail").value=s.emailId||"";
   document.getElementById("fCompany").value=s.email||s.category||"";
   document.getElementById("fRemarks").value=s.remarks;
   document.getElementById("stuModal").classList.add("open");
@@ -2796,7 +2796,7 @@ function viewStudent(id){
   const mRoll=r=>isAdm?r:(r?r.slice(0,3)+"***":"-");
   document.getElementById("viewGrid").innerHTML=[
     ["Name",s.name],["Reg. No.",mRoll(s.roll)],["Mobile",s.mobile||"—"],["ID Number",s.aadhaar||"N/A"],
-    ["Father Name",s.father||"—"],["Date of Birth",s.dob||"—"],["Address",s.address||"—"],["Category",s.email||s.category||"—"],
+    ["Father Name",s.father||"—"],["Date of Birth",s.dob||"—"],["Address",s.address||"—"],["Email ID",s.emailId||"—"],["Category",s.email||s.category||"—"],
     ["Trade",s.trade],["Session",s.session],
     ["Remarks",s.remarks||"—"],
   ].map(([l,v])=>`<div class="detail-item"><div class="dl">${l}</div><div class="dv">${v}</div></div>`).join("")
@@ -2805,19 +2805,57 @@ function viewStudent(id){
   document.getElementById("viewModal").classList.add("open");
 }
 
+function openDobCal(calId){
+  const c=document.getElementById(calId);
+  if(!c) return;
+  if(c.showPicker){ try{ c.showPicker(); return; }catch(e){} }
+  c.click();
+}
+function fDobCalPicked(el,tid){
+  const t=document.getElementById(tid);
+  if(t&&el.value) t.value=el.value;
+}
+function normalizeDob(v){
+  v=(v||"").toString().trim(); if(!v) return "";
+  const m1=v.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+  if(m1) return m1[1]+"-"+("0"+m1[2]).slice(-2)+"-"+("0"+m1[3]).slice(-2);
+  const m2=v.match(/^(\d{1,2})-(\d{1,2})-(\d{4})$/);
+  if(m2) return m2[3]+"-"+("0"+m2[2]).slice(-2)+"-"+("0"+m2[1]).slice(-2);
+  return v;
+}
+
 function saveStudent(){
   const name=document.getElementById("fName").value.trim(),roll=document.getElementById("fRoll").value.trim();
-  if(!name||!roll){showToast("Name and Registration No. are required!","err");return;}
+  const father=document.getElementById("fFather").value.trim();
+  const mobile=document.getElementById("fMobile").value.trim();
+  const dob=normalizeDob(document.getElementById("fDob").value);
+  const emailC=document.getElementById("fCompany").value.trim();
+  const address=document.getElementById("fAddress").value.trim();
+  const trade=document.getElementById("fTrade2").value;
+  const session=document.getElementById("fSession2").value;
+  const missing=[];
+  if(!name) missing.push("Full Name");
+  if(!roll) missing.push("Registration No.");
+  if(!father) missing.push("Father Name");
+  if(!mobile) missing.push("Mobile No");
+  if(!dob) missing.push("Date of Birth");
+  if(!emailC) missing.push("Category");
+  if(!address) missing.push("Address");
+  if(!trade) missing.push("Trade");
+  if(!session) missing.push("Session");
+  if(missing.length){showToast("❌ Required: "+missing.join(", "),"err");return;}
+  if(mobile.length!==10||isNaN(mobile)){showToast("❌ Enter valid 10-digit mobile number!","err");return;}
   const data={name,roll,
-    mobile:document.getElementById("fMobile").value.trim(),
+    mobile,
     aadhaar:document.getElementById("fAadhaar").value.trim(),
-    address:document.getElementById("fAddress").value.trim(),
-    trade:document.getElementById("fTrade2").value,
-    session:document.getElementById("fSession2").value,
+    address,
+    trade,
+    session,
     status:document.getElementById("fStatus2").value,
-    email:document.getElementById("fCompany").value.trim(),
-    father:document.getElementById("fFather").value.trim(),
-    dob:document.getElementById("fDob").value,
+    email:emailC,
+    father,
+    dob,
+    emailId:document.getElementById("fEmail").value.trim(),
     remarks:document.getElementById("fRemarks").value.trim(),
   };
   if(editingId){
