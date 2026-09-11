@@ -208,16 +208,25 @@ tr:hover td{background:rgba(255,255,255,.015)}
 .toast.err{border-left:4px solid var(--red)}
 
 /* ── HAMBURGER ── */
-.ham{display:none;position:fixed;top:10px;left:10px;z-index:200;background:var(--card);border:1px solid var(--border);border-radius:9px;padding:8px 11px;font-size:18px;cursor:pointer;color:var(--text)}
+.ham{display:flex;align-items:center;justify-content:center;position:fixed;top:10px;left:10px;z-index:300;background:var(--card);border:1px solid var(--border);border-radius:9px;padding:8px 11px;font-size:16px;cursor:pointer;color:var(--text);line-height:1}
 .overlay-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:99}
-.overlay-bg.open{display:block}
+
+/* ── DESKTOP SIDEBAR TOGGLE ── */
+@media(min-width:721px){
+  .sidebar{transform:translateX(-100%)}
+  body.sb-open .sidebar{transform:translateX(0)}
+  .main{margin-left:0}
+  body.sb-open .main{margin-left:220px}
+  body.sb-open .ham{left:232px}
+}
 
 /* ── MOBILE ── */
 @media(max-width:720px){
   .sidebar{transform:translateX(-100%)}
   .sidebar.open{transform:translateX(0)}
   .main{margin-left:0;padding:14px;padding-top:50px}
-  .ham{display:block}
+  .ham{display:flex}
+  .overlay-bg.open{display:block}
   .form-grid{grid-template-columns:1fr}
   .stats-grid{grid-template-columns:repeat(2,1fr)}
   th,td{padding:8px 10px;font-size:12px}
@@ -266,7 +275,7 @@ tr:hover td{background:rgba(255,255,255,.015)}
 .print-btn:hover{opacity:.85}
 </style>
 </head>
-<body>
+<body class="sb-open">
 
 <div id="appLoader" style="display:none;position:fixed;inset:0;background:#070b12;z-index:9999;align-items:center;justify-content:center;flex-direction:column;gap:16px">
   <div style="width:48px;height:48px;border:4px solid #1e2535;border-top-color:#f59e0b;border-radius:50%;animation:spin 0.8s linear infinite"></div>
@@ -381,7 +390,7 @@ tr:hover td{background:rgba(255,255,255,.015)}
 
 <!-- APP -->
 <div id="app">
-  <button class="ham" onclick="toggleSidebar()">☰</button>
+  <button class="ham" onclick="toggleSidebar()">⋮</button>
   <div class="overlay-bg" id="overlayBg" onclick="closeSidebar()"></div>
 
   <div class="layout">
@@ -1426,7 +1435,14 @@ function showPage(name){
   if(name==="users"){ renderUsers(); renderPendingRequests(); renderProcessedRequests(); }
   if(name==="jobfair"){ loadJobFair(); }
 }
-function toggleSidebar(){document.getElementById("sidebar").classList.toggle("open");document.getElementById("overlayBg").classList.toggle("open");}
+function toggleSidebar(){
+  if(window.innerWidth<=720){
+    document.getElementById("sidebar").classList.toggle("open");
+    document.getElementById("overlayBg").classList.toggle("open");
+  } else {
+    document.body.classList.toggle("sb-open");
+  }
+}
 function closeSidebar(){document.getElementById("sidebar").classList.remove("open");document.getElementById("overlayBg").classList.remove("open");}
 
 // ═══════════════════════════════════════════════
