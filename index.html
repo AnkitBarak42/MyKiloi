@@ -2363,17 +2363,16 @@ function getStats(list){
 let dashSessionSelected=[]; // empty = All Sessions
 let dashSessionTouched=false; // becomes true once the user changes the filter manually
 
-function latestDSession(){
+function latestDSessions(){
   var all=[...new Set([...SESSIONS,...students.map(function(s){return s.session;})])].filter(Boolean).sort();
-  return all.length?all[all.length-1]:null;
+  return all.slice(-2);
 }
 
 function buildDSessionMenu(){
   const menu=document.getElementById("dSessionMenu");
   if(!menu) return;
   if(!dashSessionTouched){
-    const latest=latestDSession();
-    if(latest) dashSessionSelected=[latest];
+    dashSessionSelected=latestDSessions();
   }
   const allSessions=[...new Set([...SESSIONS,...students.map(s=>s.session)])].filter(Boolean).sort();
   const allChecked=dashSessionSelected.length===0;
