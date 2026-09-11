@@ -742,7 +742,7 @@ tr:hover td{background:rgba(255,255,255,.015)}
       <button onclick="backToHome()" style="background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:13px;text-decoration:underline">← Back to Home</button>
     </div>
     <div class="login-logo">
-      <h1>My<span>Kiloi</span></h1>
+      <h1>GITI <span>Kiloi</span></h1>
       <p>Unofficial Student App — Not a Govt. Portal</p>
     </div>
 
@@ -849,7 +849,7 @@ tr:hover td{background:rgba(255,255,255,.015)}
     <!-- SIDEBAR -->
     <div class="sidebar" id="sidebar">
       <div class="sb-logo">
-        <div><h2>My<span>Kiloi</span></h2><p>Placement System</p></div>
+        <div><h2>GITI <span>Kiloi</span></h2><p>Placement System</p></div>
       </div>
       <div class="sb-user">
         <div class="sb-avatar" id="sbAvatar">A</div>
@@ -1945,13 +1945,16 @@ function forceLogout(msg){
   if(lf) lf.style.display="none";
   var rs=document.getElementById("roleSelect");
   if(rs) rs.style.display="block";
+  try{goToPage("home");}catch(e){}
+  window.scrollTo({top:0,behavior:"auto"});
   if(msg) alert(msg);
 }
 
 function doLogout(){
+  if(!currentUser) return;
   logActivity("LOGOUT", `${currentUser.name} logged out`);
   try{localStorage.removeItem("iti_kiloi_session");}catch(e){}
-  currentUser=null; selectedRole=null;
+  currentUser=null; window.currentUser=null; selectedRole=null;
   document.getElementById("app").style.display="none";
   var lp=document.getElementById("landingPage");
   if(lp) lp.style.display="block";
@@ -1961,6 +1964,8 @@ function doLogout(){
   document.getElementById("roleSelect").style.display="block";
   document.getElementById("forgotBox").style.display="none";
   document.getElementById("signUpBox").style.display="none";
+  try{goToPage("home");}catch(e){}
+  window.scrollTo({top:0,behavior:"auto"});
 }
 
 // ═══════════════════════════════════════════════
