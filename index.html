@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
@@ -70,7 +70,7 @@ input,select,textarea,button{font-family:inherit}
 #offlineBanner.show{display:block}
 
 /* ── LOGIN ── */
-#loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px;background:radial-gradient(ellipse at 50% 0%,rgba(245,158,11,.08) 0%,transparent 60%)}
+#loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px;background:linear-gradient(180deg,rgba(2,6,16,.78),rgba(2,6,16,.92)),url('ITI.jpeg') center/cover no-repeat fixed}
 .login-box{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:36px 28px;width:380px;max-width:100%;box-shadow:0 0 100px rgba(0,0,0,.8)}
 .login-logo{text-align:center;margin-bottom:28px}
 .logo-circle{width:80px;height:80px;border-radius:20px;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;margin-bottom:12px;box-shadow:0 0 30px rgba(245,158,11,.3);background:rgba(245,158,11,.15);border:2px solid rgba(245,158,11,.3)}
@@ -422,6 +422,91 @@ tr:hover td{background:rgba(255,255,255,.015)}
   .form-note{padding:12px 14px;font-size:13px}
 }
 
+/* ── HOME (gov-portal style: banner hero + ticker + notice board) ── */
+.hero-section{min-height:82vh}
+.hero-bg{position:absolute;inset:0;background-size:cover;background-position:center}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(2,6,16,.64) 0%,rgba(2,6,16,.38) 45%,rgba(2,6,16,.9) 100%)}
+.hero-inner{position:relative;z-index:2;width:100%;flex-direction:column;align-items:center;text-align:center;display:flex}
+.hero-foot{position:relative;z-index:2;margin-top:30px;color:rgba(255,255,255,.62);font-size:11.5px;letter-spacing:2.5px;text-transform:uppercase;font-weight:600;font-family:var(--font-english)}
+.hero-foot b{color:#fbbf24;font-weight:700}
+.hp-ticker{position:relative;z-index:5;background:#0b0f1a;border-bottom:1px solid var(--border);flex-wrap:nowrap;display:flex;align-items:center;overflow:hidden}
+.hp-ticker-label{background:linear-gradient(135deg,#f59e0b,#d97706);color:#0f172a;flex:0 0 auto;padding:11px 20px;font-size:13px;font-weight:800;letter-spacing:.5px;white-space:nowrap}
+.hp-ticker-track{flex:1;overflow:hidden;white-space:nowrap}
+.hp-ticker-inner{display:inline-block;padding:11px 0;animation:lpTicker 30s linear infinite;color:var(--light);font-size:13.5px;font-weight:500}
+.hp-ticker:hover .hp-ticker-inner{animation-play-state:paused}
+.hp-ticker-inner .sep{margin:0 24px;color:rgba(245,158,11,.6)}
+.hp-ticker-inner b{color:#fbbf24;font-weight:600}
+@keyframes lpTicker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.hp-main{max-width:1180px;margin:0 auto;padding:72px 24px 56px;grid-template-columns:1fr 340px;gap:44px;display:grid}
+.hp-sec-head{margin-bottom:26px}
+.hp-label{color:var(--accent);text-transform:uppercase;letter-spacing:2.5px;justify-content:center;align-items:center;gap:9px;margin-bottom:12px;font-size:12px;font-weight:700;display:flex}
+.hp-label::before,.hp-label::after{content:"";background:var(--accent);width:28px;height:1.5px;display:inline-block;opacity:.7}
+.hp-title{color:#fff;text-align:center;margin-bottom:12px;font-size:32px;font-weight:800;line-height:1.3}
+.hp-title .hp-accent{color:rgba(245,158,11,.95)}
+.hp-desc{color:var(--muted);text-align:center;max-width:640px;margin:0 auto;font-size:15px;line-height:1.8}
+.hp-features{gap:16px;margin-top:38px;grid-template-columns:repeat(2,1fr);display:grid}
+.hp-feature{cursor:pointer;background:var(--card);border:1px solid var(--border);border-radius:14px;gap:14px;align-items:flex-start;padding:20px;display:flex;transition:transform .25s,border-color .25s,box-shadow .25s}
+.hp-feature:hover{transform:translateY(-2px);border-color:rgba(245,158,11,.4);box-shadow:0 8px 16px rgba(0,0,0,.35)}
+.hp-feature-icon{background:rgba(245,158,11,.12);border-radius:10px;width:46px;height:46px;flex:0 0 auto;justify-content:center;align-items:center;font-size:21px;display:flex}
+.hp-feature h4{color:#fff;margin-bottom:4px;font-size:15px;font-weight:700}
+.hp-feature p{color:var(--muted);font-size:13px;line-height:1.55}
+.hp-notice{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;position:sticky;top:84px;align-self:start;box-shadow:0 8px 16px rgba(0,0,0,.3)}
+.hp-notice-head{border-bottom:1px solid var(--border);background:var(--bg2);align-items:center;gap:10px;padding:15px 18px;font-size:15px;font-weight:700;color:#fff;display:flex}
+.hp-notice-head .dot{border-radius:50%;background:#22c55e;width:9px;height:9px;box-shadow:0 0 0 3px rgba(34,197,94,.2);flex:0 0 auto}
+.hp-notice-head .cnt{color:var(--accent);font-size:12px;font-weight:800;margin-left:auto;background:rgba(245,158,11,.12);border-radius:100px;padding:2px 9px}
+.hp-notice-body{max-height:390px;overflow:hidden;flex-direction:column;display:flex}
+.hp-notice-item{border-bottom:1px solid var(--border);gap:12px;align-items:flex-start;padding:14px 18px;display:flex;transition:background .2s}
+.hp-notice-item:last-child{border-bottom:none}
+.hp-notice-item:hover{background:var(--bg2)}
+.hp-notice-item-icon{background:rgba(245,158,11,.12);border-radius:8px;width:40px;height:40px;flex:0 0 auto;justify-content:center;align-items:center;font-size:18px;display:flex}
+.hp-notice-item h5{color:#fff;margin-bottom:3px;font-size:13.5px;font-weight:600;line-height:1.4}
+.hp-notice-item p{color:var(--muted);font-size:12.5px;line-height:1.55}
+.hp-notice-item p b{color:#fbbf24;font-weight:600}
+.hp-notice-more{background:var(--bg2);border-top:1px solid var(--border);color:var(--accent);text-align:center;padding:13px;font-size:13px;font-weight:600;cursor:pointer;transition:color .2s,background .2s;display:block}
+.hp-notice-more:hover{background:var(--bg);color:#fbbf24}
+@media(max-width:960px){
+  .hp-main{grid-template-columns:1fr;max-width:720px;gap:36px}
+  .hp-notice{position:static}
+}
+@media(max-width:768px){
+  .hero-section{min-height:88vh}
+  .hp-main{padding:48px 20px 40px}
+  .hp-title{font-size:26px}
+  .hp-features{grid-template-columns:1fr;gap:12px;margin-top:28px}
+  .hp-ticker-label{font-size:12px;padding:10px 14px}
+  .hero-foot{font-size:10px;letter-spacing:1.5px}
+}
+
+/* ── SHARE LINK (shareable / whatsapp / copyable) ── */
+#lpPage-home{position:relative}
+.lp-share-wrap{position:absolute;top:82px;right:24px;z-index:60}
+.lp-share-btn{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.22);color:#fff;font-size:13px;font-weight:600;padding:9px 16px;border-radius:100px;cursor:pointer;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);transition:all .2s;font-family:var(--font-english),var(--font-hindi),sans-serif}
+.lp-share-btn:hover{background:rgba(245,158,11,.2);border-color:rgba(245,158,11,.5)}
+.lp-share-panel{display:none;position:absolute;top:calc(100% + 8px);right:0;width:300px;background:var(--card);border:1px solid var(--border);border-radius:14px;box-shadow:0 12px 24px rgba(0,0,0,.5);padding:16px;z-index:70}
+.lp-share-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;color:#fff;font-size:14px;font-weight:700}
+.lp-share-head button{background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px;padding:2px 4px}
+.lp-share-head button:hover{color:#fff}
+.lp-share-input{width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:12px;padding:9px 10px;font-family:var(--font-english),sans-serif;margin-bottom:12px;box-sizing:border-box}
+.lp-share-actions{display:flex;gap:8px}
+.lp-share-wa,.lp-share-copy{flex:1;justify-content:center;align-items:center;gap:6px;padding:10px;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;display:inline-flex;border:none;transition:opacity .2s;font-family:var(--font-english),var(--font-hindi),sans-serif}
+.lp-share-wa{background:#25d366;color:#0b3d20}
+.lp-share-wa:hover{opacity:.9}
+.lp-share-copy{background:var(--bg2);border:1px solid var(--border);color:#fff}
+.lp-share-copy:hover{background:rgba(245,158,11,.15);border-color:rgba(245,158,11,.4)}
+@media(max-width:768px){
+  .lp-share-wrap{top:74px;right:14px}
+  .lp-share-panel{width:280px;position:fixed;left:50%;top:130px;transform:translateX(-50%)}
+}
+
+/* ── SUB-PAGE BANNER (image header) ── */
+.sub-hero{position:relative;height:200px;background-size:cover;background-position:center;overflow:hidden}
+.sub-hero-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(2,6,16,.55),rgba(2,6,16,.82))}
+.sub-hero-title{position:relative;z-index:2;color:#fff;text-align:center;font-size:34px;font-weight:800;letter-spacing:.5px;top:50%;left:50%;transform:translate(-50%,-50%)}
+@media(max-width:768px){
+  .sub-hero{height:150px}
+  .sub-hero-title{font-size:24px}
+}
+
 /* ── FOOTER ── */
 .footer{background:var(--primary-900);color:var(--primary-300);padding:60px 24px 32px;font-family:var(--font-hindi)}
 .footer-content{max-width:1000px;margin:0 auto}
@@ -480,9 +565,7 @@ tr:hover td{background:rgba(255,255,255,.015)}
     </div>
     <div class="lp-navbar-links" id="lpNavLinks">
       <a onclick="goToPage('drives')">Placement Drives</a>
-      <a onclick="goToPage('form')">Registration</a>
       <a onclick="goToPage('contact')">Contact</a>
-      <a class="lp-navbar-cta" onclick="goToPage('form')">Apply Now</a>
       <button type="button" class="lp-btn-login-nav" onclick="showLogin()">🔐 Login</button>
     </div>
     <button class="lp-navbar-toggle" onclick="toggleLPNav()" aria-label="Toggle menu">☰</button>
@@ -491,15 +574,69 @@ tr:hover td{background:rgba(255,255,255,.015)}
   <!-- PAGE: HOME -->
   <div class="lp-page" id="lpPage-home">
 
-  <!-- HERO -->
-  <section class="hero-section" id="lp-hero">
-    <div class="hero-badge"><div class="hero-badge-dot"></div><span>Registration Open</span></div>
-    <h1 class="hero-title">Govt. ITI Kiloi<br><span class="hero-title-accent">Campus Placement Drive</span></h1>
-    <p class="hero-subtitle">Apprenticeship and job opportunities at reputed companies.<br>Register now and secure your future.</p>
-    <div class="hero-actions">
-      <a class="btn-primary" onclick="goToPage('form')">📝 Apply Now</a>
-      <a class="btn-secondary" onclick="goToPage('drives')">📋 View Details</a>
+  <!-- SHARE LINK -->
+  <div class="lp-share-wrap">
+    <button type="button" class="lp-share-btn" onclick="toggleLpShare()">🔗 Share</button>
+    <div class="lp-share-panel" id="lpSharePanel">
+      <div class="lp-share-head"><span>Share this page</span><button type="button" onclick="toggleLpShare(false)">✕</button></div>
+      <input class="lp-share-input" id="lpShareInput" type="text" readonly onclick="this.select()">
+      <div class="lp-share-actions">
+        <button type="button" class="lp-share-wa" onclick="shareLpWhatsApp()">💬 WhatsApp</button>
+        <button type="button" class="lp-share-copy" id="lpShareCopyBtn" onclick="copyLpLink()">📋 Copy Link</button>
+      </div>
     </div>
+  </div>
+
+  <!-- HERO (banner image background) -->
+  <section class="hero-section" id="lp-hero">
+    <div class="hero-bg" style="background-image:url('ITI.jpeg')"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-inner">
+      <div class="hero-actions">
+        <a class="btn-primary" onclick="goToPage('drives')">📝 Apply Now</a>
+        <a class="btn-secondary" onclick="goToPage('form')">📋 Registration</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- BREAKING NEWS TICKER -->
+  <div class="hp-ticker">
+    <span class="hp-ticker-label">📢 Notice</span>
+    <div class="hp-ticker-track" id="lpTickerTrack"></div>
+  </div>
+
+  <!-- WELCOME + NOTICE BOARD -->
+  <section class="hp-main">
+    <div class="hp-content">
+      <div class="hp-sec-head">
+        <span class="hp-label">Welcome to</span>
+        <h2 class="hp-title">Govt. ITI Kiloi <span class="hp-accent">(Haryana)</span></h2>
+        <p class="hp-desc">Connecting students with reputed companies through campus placements and apprenticeship training. Browse the latest drives, check eligibility and register for your future.</p>
+      </div>
+      <div class="hp-features">
+        <div class="hp-feature" onclick="goToPage('drives')">
+          <div class="hp-feature-icon">🏢</div>
+          <div><h4>Placement Drives</h4><p>Job openings from reputed companies at the campus.</p></div>
+        </div>
+        <div class="hp-feature" onclick="goToPage('drives')">
+          <div class="hp-feature-icon">🛠️</div>
+          <div><h4>Apprenticeship</h4><p>Hands-on training with industry stipend support.</p></div>
+        </div>
+        <div class="hp-feature" onclick="goToPage('form')">
+          <div class="hp-feature-icon">📝</div>
+          <div><h4>Student Registration</h4><p>Fill the form and apply for your preferred drive.</p></div>
+        </div>
+        <div class="hp-feature" onclick="goToPage('contact')">
+          <div class="hp-feature-icon">📞</div>
+          <div><h4>Contact Help Desk</h4><p>Support for registration and placement queries.</p></div>
+        </div>
+      </div>
+    </div>
+    <aside class="hp-notice">
+      <div class="hp-notice-head"><span class="dot"></span>Notice Board <span class="cnt" id="lpNoticeCount"></span></div>
+      <div class="hp-notice-body" id="lpNoticeBoard"></div>
+      <div class="hp-notice-more" onclick="goToPage('drives')">View All Drives →</div>
+    </aside>
   </section>
 
   <!-- STATS -->
@@ -515,6 +652,10 @@ tr:hover td{background:rgba(255,255,255,.015)}
 
   <!-- PAGE: PLACEMENT DRIVES -->
   <div class="lp-page sub" id="lpPage-drives" style="display:none">
+    <div class="sub-hero" style="background-image:url('ITI.jpeg')">
+      <div class="sub-hero-overlay"></div>
+      <h2 class="sub-hero-title">Placement Drives</h2>
+    </div>
     <div class="lp-topbar"><button type="button" class="lp-back-btn" onclick="goToPage('home')">← Back to Home</button></div>
   <!-- PLACEMENT DRIVES -->
   <section class="section" id="lp-drives">
@@ -532,6 +673,10 @@ tr:hover td{background:rgba(255,255,255,.015)}
 
   <!-- PAGE: REGISTRATION -->
   <div class="lp-page sub" id="lpPage-form" style="display:none">
+    <div class="sub-hero" style="background-image:url('ITI.jpeg')">
+      <div class="sub-hero-overlay"></div>
+      <h2 class="sub-hero-title">Student Registration</h2>
+    </div>
     <div class="lp-topbar"><button type="button" class="lp-back-btn" onclick="goToPage('home')">← Back to Home</button></div>
   <!-- REGISTRATION FORM -->
   <section class="section form-section" id="lp-form">
@@ -653,6 +798,10 @@ tr:hover td{background:rgba(255,255,255,.015)}
 
   <!-- PAGE: CONTACT -->
   <div class="lp-page sub" id="lpPage-contact" style="display:none">
+    <div class="sub-hero" style="background-image:url('ITI.jpeg')">
+      <div class="sub-hero-overlay"></div>
+      <h2 class="sub-hero-title">Contact Us</h2>
+    </div>
     <div class="lp-topbar"><button type="button" class="lp-back-btn" onclick="goToPage('home')">← Back to Home</button></div>
   <!-- CONTACT -->
   <section class="section" id="lp-contact">
@@ -2001,6 +2150,36 @@ function toggleLPNav(){
 function closeLPNav(){
   document.getElementById("lpNavLinks").classList.remove("open");
 }
+function lpShareUrl(){
+  try{ return location.href.split("#")[0].split("?")[0]; }catch(e){ return window.location.origin; }
+}
+function toggleLpShare(force){
+  var p=document.getElementById("lpSharePanel"); if(!p) return;
+  var show=typeof force==="boolean"?force:p.style.display==="none";
+  p.style.display=show?"block":"none";
+  if(show){
+    var inp=document.getElementById("lpShareInput"); if(inp){ inp.value=lpShareUrl(); inp.focus(); inp.select(); }
+  }
+}
+function copyLpLink(){
+  var text=lpShareUrl();
+  var btn=document.getElementById("lpShareCopyBtn");
+  var done=function(){ if(btn){ btn.textContent="✅ Copied!"; setTimeout(function(){btn.textContent="📋 Copy Link";},1600); } };
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(function(){done();},function(){ lpShareFallbackCopy(text); done(); });
+  } else { lpShareFallbackCopy(text); done(); }
+}
+function lpShareFallbackCopy(text){
+  try{
+    var inp=document.getElementById("lpShareInput");
+    inp.value=text; inp.style.display="block"; inp.focus(); inp.select();
+    document.execCommand("copy");
+  }catch(e){}
+}
+function shareLpWhatsApp(){
+  var msg="🎓 Govt. ITI Kiloi — Campus Placement Drive\nRegistration open for students.\nVisit: "+lpShareUrl();
+  window.open("https://wa.me/?text="+encodeURIComponent(msg),"_blank","noopener,noreferrer");
+}
 window.addEventListener("scroll",function(){
   var nav=document.getElementById("lpNav");
   if(nav) nav.classList.toggle("scrolled",window.pageYOffset>10);
@@ -2026,6 +2205,7 @@ let selectedLPDriveChipTrades=[];
 document.addEventListener("DOMContentLoaded",function(){
   runLPLoader();
   setupLPDriveUI();
+  renderLPHp();
   var form=document.getElementById("lpRegForm");
   if(!form) return;
   var trSel=document.getElementById("lpTradeSel");
@@ -2150,6 +2330,7 @@ function loadLPDrives(){
     renderLPDrivesPage();
     renderLPApplyBox();
     renderLPAdminList();
+    renderLPHp();
   };
   var fromObj=function(obj){
     if(obj && typeof obj==="object") return Object.keys(obj).map(function(k){return obj[k];});
@@ -2167,6 +2348,43 @@ function loadLPDrives(){
 function lpPosts(d){
   var n=0; (d.trades||[]).forEach(function(t){ n+=(parseInt(t.c,10)||0); });
   return n;
+}
+function renderLPHp(){
+  var active=lpDrives.filter(function(d){return d&&d.active!==false;});
+  var lines=active.map(function(d){
+    var s=escLP(d.name||"Placement Drive");
+    if(d.type) s+=" · "+escLP(d.type);
+    var n=lpPosts(d); if(n) s+=" · "+n+" posts";
+    if(d.salaryAmount) s+=" · "+escLP(d.salaryAmount);
+    return s;
+  });
+  var ticker=document.getElementById("lpTickerTrack");
+  if(ticker){
+    if(lines.length){
+      var html=lines.map(function(s){return "<b>🔔 "+s+"</b><span class=\"sep\">✦</span>";}).join(" ");
+      ticker.innerHTML='<span class="hp-ticker-inner">'+html+html+'</span>';
+    } else {
+      ticker.innerHTML='<span class="hp-ticker-inner"><b>🎉 Campus Placement Drive 2025-26 is open</b><span class="sep">✦</span></span>';
+    }
+  }
+  var cnt=document.getElementById("lpNoticeCount");
+  if(cnt) cnt.textContent=lines.length>0?lines.length+" live":"";
+  var nb=document.getElementById("lpNoticeBoard");
+  if(nb){
+    if(lines.length){
+      nb.innerHTML=active.slice(0,7).map(function(d){
+        var rows=[];
+        if(d.type) rows.push("<b>"+escLP(d.type)+"</b>");
+        var n=lpPosts(d); if(n) rows.push(n+" posts");
+        if(d.location) rows.push(escLP(d.location));
+        if(d.salaryAmount) rows.push("💰 "+escLP(d.salaryAmount)+(d.salaryPeriod?(" "+escLP(d.salaryPeriod)):""));
+        var icon=(d.type||"").toLowerCase()==="job"?"💼":"🛠️";
+        return '<div class="hp-notice-item"><div class="hp-notice-item-icon">'+icon+'</div><div><h5>'+escLP(d.name||"Placement Drive")+'</h5>'+(rows.length?'<p>'+rows.join(" &nbsp;·&nbsp; ")+'</p>':"")+'</div></div>';
+      }).join("");
+    } else {
+      nb.innerHTML='<div class="hp-notice-item"><div class="hp-notice-item-icon">📌</div><div><h5>New Placement Drive Coming Soon</h5><p>Details will be announced here. Stay tuned!</p></div></div>';
+    }
+  }
 }
 
 function renderLPDrivesPage(){
