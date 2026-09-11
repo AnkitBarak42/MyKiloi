@@ -549,25 +549,14 @@ tr:hover td{background:rgba(255,255,255,.015)}
             <span class="form-error" data-err="name"></span>
           </div>
           <div class="form-group">
-            <label class="form-label">Session <span class="required">*</span></label>
-            <input class="form-input" type="text" name="session" placeholder="e.g. 2023-2025">
-            <span class="form-error" data-err="session"></span>
+            <label class="form-label">Registration No.</label>
+            <input class="form-input" type="text" name="roll" placeholder="e.g. REG/2024/001 (optional)">
+            <span class="form-error" data-err="roll"></span>
           </div>
           <div class="form-group">
-            <label class="form-label">Gender <span class="required">*</span></label>
-            <div class="radio-group">
-              <label class="radio-label"><input type="radio" name="gender" value="Male"><span>Male</span></label>
-              <label class="radio-label"><input type="radio" name="gender" value="Female"><span>Female</span></label>
-            </div>
-            <span class="form-error" data-err="gender"></span>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Trade <span class="required">*</span></label>
-            <select class="form-select" name="trade">
-              <option value="">-- Select trade --</option>
-              <option>RAC</option><option>Machinist</option><option>Welder</option><option>Fitter</option><option>Electronics Mechanic</option><option>Turner</option><option>Electrician</option><option>Tool &amp; Die Maker</option><option>Plumber</option><option>Dress Making (DM)</option><option>Sewing Technology (ST)</option><option>Wireman</option>
-            </select>
-            <span class="form-error" data-err="trade"></span>
+            <label class="form-label">Father Name <span class="required">*</span></label>
+            <input class="form-input" type="text" name="father" placeholder="Father's full name">
+            <span class="form-error" data-err="father"></span>
           </div>
           <div class="form-group">
             <label class="form-label">Mobile Number <span class="required">*</span></label>
@@ -575,32 +564,69 @@ tr:hover td{background:rgba(255,255,255,.015)}
             <span class="form-error" data-err="mobile"></span>
           </div>
           <div class="form-group">
-            <label class="form-label">Email ID</label>
+            <label class="form-label">ID Number</label>
+            <input class="form-input" type="text" name="aadhaar" placeholder="ID / Roll Number" maxlength="14">
+            <span class="form-error" data-err="aadhaar"></span>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Date of Birth <span class="required">*</span></label>
+            <div style="display:flex;gap:8px;align-items:center">
+              <input class="form-input" type="text" name="dob" id="lpRegDob" placeholder="DD-MM-YYYY" maxlength="10" style="flex:1;min-width:0">
+              <button type="button" title="Pick from calendar" style="padding:10px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:9px;cursor:pointer;font-size:15px;flex:0 0 auto" onclick="openDobCal('lpDobCal')">📅</button>
+              <input class="form-input" type="date" id="lpDobCal" onchange="fDobCalPicked(this,'lpRegDob')" style="width:1px;height:1px;opacity:0;border:0;padding:0;position:absolute;pointer-events:none">
+            </div>
+            <span class="form-error" data-err="dob"></span>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email ID <span class="required">*</span></label>
             <input class="form-input" type="email" name="email" placeholder="example@email.com">
             <span class="form-error" data-err="email"></span>
           </div>
-          <div class="form-divider"></div>
+          <div class="form-group">
+            <label class="form-label">Category <span class="required">*</span></label>
+            <input class="form-input" type="text" name="category" placeholder="General / OBC / SC / ST / EWS">
+            <span class="form-error" data-err="category"></span>
+          </div>
           <div class="form-group full-width">
-            <label class="form-label">Have you completed apprenticeship? <span class="required">*</span></label>
-            <div class="radio-group">
-              <label class="radio-label"><input type="radio" name="apprenticeshipDone" value="Yes"><span>Yes</span></label>
-              <label class="radio-label"><input type="radio" name="apprenticeshipDone" value="No"><span>No</span></label>
+            <label class="form-label">Address <span class="required">*</span></label>
+            <input class="form-input" type="text" name="address" placeholder="Village/City, District">
+            <span class="form-error" data-err="address"></span>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Trade <span class="required">*</span></label>
+            <select class="form-select" name="trade" id="lpTradeSel">
+              <option value="">-- Select trade --</option>
+            </select>
+            <span class="form-error" data-err="trade"></span>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Session <span class="required">*</span></label>
+            <select class="form-select" name="session" id="lpSessionSel" onchange="handleLPSessionSel(this)">
+              <option>2020-21</option><option>2021-22</option><option>2022-23</option><option>2023-24</option><option>2024-25</option><option selected>2025-26</option>
+              <option value="__custom__">➕ Custom Session...</option>
+            </select>
+            <div id="lpSessionCustomBox" style="display:none;margin-top:8px">
+              <input class="form-input" id="lpSessionInput" placeholder="e.g. 2026-27" maxlength="7" onkeydown="if(event.key==='Enter')confirmLPSession()">
+              <div style="display:flex;gap:8px;margin-top:6px">
+                <button type="button" class="btn btn-primary btn-sm" onclick="confirmLPSession()">✅ Add</button>
+                <button type="button" class="btn btn-secondary btn-sm" onclick="cancelLPSession()">Cancel</button>
+              </div>
             </div>
-            <span class="form-error" data-err="apprenticeshipDone"></span>
+            <span class="form-error" data-err="session"></span>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Status</label>
+            <select class="form-select" name="status">
+              <option>Placed</option><option>Apprenticeship</option><option>Self Employed</option><option selected>Studying</option><option>Unemployed</option>
+            </select>
+            <span class="form-error" data-err="status"></span>
           </div>
           <div class="form-group full-width">
-            <label class="form-label">Confirmation <span class="required">*</span></label>
-            <div class="checkbox-group">
-              <label class="checkbox-label"><input type="checkbox" name="readAllDetails"><span>I have carefully read the details of all the companies mentioned above.</span></label>
-            </div>
-            <span class="form-error" data-err="readAllDetails"></span>
+            <label class="form-label">Remarks</label>
+            <input class="form-input" type="text" name="remarks" placeholder="Any notes...">
+            <span class="form-error" data-err="remarks"></span>
           </div>
-          <div class="form-group full-width">
-            <label class="form-label">Which company would you like to apply for? <span class="required">*</span></label>
-            <div class="checkbox-group" id="lpApplyCompanies"></div>
-            <span class="form-error" data-err="applyingFor"></span>
-          </div>
-          <div class="form-note"><span class="note-icon">⚠️</span><span>Please fill the correct information. Your application may be rejected if the details are wrong. After submitting the form, please join the WhatsApp group.</span></div>
+          <div class="form-note"><span class="note-icon">⚠️</span><span>Please fill the correct information. Your registration is saved in the Student section. After submitting the form, please join the WhatsApp group.</span></div>
           <div class="form-submit-area">
             <button type="submit" class="btn-submit" id="lpSubmitBtn">Submit Form</button>
           </div>
@@ -769,6 +795,8 @@ tr:hover td{background:rgba(255,255,255,.015)}
       <div class="fg"><label>Full Name *</label><input id="suName" required placeholder="Student full name"></div>
       <div class="fg"><label>Father Name *</label><input id="suFather" required placeholder="Father's full name"></div>
       <div class="fg"><label>Mobile Number *</label><input id="suMobile" required maxlength="10" placeholder="10-digit mobile number"></div>
+      <div class="fg"><label>Registration No.</label><input id="suRoll" placeholder="e.g. REG/2024/001"></div>
+      <div class="fg"><label>ID Number</label><input id="suAadhaar" placeholder="ID / Roll Number" maxlength="14"></div>
       <div class="fg"><label>Date of Birth *</label>
         <div style="display:flex;gap:6px">
           <input id="suDob" type="text" required placeholder="DD-MM-YYYY" maxlength="10" style="flex:1;min-width:0">
@@ -781,10 +809,26 @@ tr:hover td{background:rgba(255,255,255,.015)}
       <div class="fg"><label>Address *</label><input id="suAddress" required placeholder="Village/City, District"></div>
       <div class="fg"><label>Trade *</label><select id="suTrade" required></select></div>
       <div class="fg"><label>Session *</label>
-        <select id="suSession" required>
+        <select id="suSession" required onchange="handleSUSessionSel(this)">
           <option>2020-21</option><option>2021-22</option><option>2022-23</option><option>2023-24</option><option>2024-25</option><option selected>2025-26</option>
+          <option value="__custom__">➕ Custom Session...</option>
+        </select>
+        <div id="suSessionCustomBox" style="display:none;margin-top:6px">
+          <input id="suSessionInput" placeholder="e.g. 2026-27" maxlength="7"
+            style="width:100%;padding:9px 11px;background:var(--bg2);border:1px solid var(--accent);border-radius:8px;color:var(--text);font-size:13px;outline:none"
+            onkeydown="if(event.key==='Enter')confirmSUSession()">
+          <div style="display:flex;gap:6px;margin-top:5px">
+            <button type="button" class="btn btn-primary btn-sm" onclick="confirmSUSession()">✅ Add</button>
+            <button type="button" class="btn btn-secondary btn-sm" onclick="cancelSUSession()">Cancel</button>
+          </div>
+        </div>
+      </div>
+      <div class="fg"><label>Status</label>
+        <select id="suStatus">
+          <option>Placed</option><option>Apprenticeship</option><option>Self Employed</option><option selected>Studying</option><option>Unemployed</option>
         </select>
       </div>
+      <div class="fg"><label>Remarks</label><input id="suRemarks" placeholder="Any notes..."></div>
       <div class="err-box" id="suErr"></div>
       <div id="suSuccess" style="display:none;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);border-radius:8px;padding:10px 13px;font-size:13px;color:var(--green);margin-bottom:10px;text-align:center">
         ✅ Registration done! Your details are saved in the Student section.
@@ -1789,7 +1833,7 @@ function registerStudent(){
   if(!company) missing.push("Category");
   if(!address) missing.push("Address");
   if(!trade) missing.push("Trade");
-  if(!session) missing.push("Session");
+  if(!session||session==="__custom__") missing.push("Session");
   if(missing.length){
     errEl.textContent="❌ Please fill the required fields: "+missing.join(", "); errEl.style.display="block"; return;
   }
@@ -1801,19 +1845,25 @@ function registerStudent(){
   }
 
   const id=nextId++;
-  students.push({id, name, roll:"SR-"+id, father, dob, mobile, address, trade, session, email:company, emailId, status:"Studying", remarks:"Registered from website", registeredAt:new Date().toISOString()});
+  const suRoll=document.getElementById("suRoll").value.trim();
+  const suAadhaar=document.getElementById("suAadhaar").value.trim();
+  const suStatus=document.getElementById("suStatus").value||"Studying";
+  const suRemarks=document.getElementById("suRemarks").value.trim();
+  students.push({id, name, roll:suRoll||("SR-"+id), father, dob, mobile, aadhaar:suAadhaar, address, trade, session, email:company, emailId, status:suStatus, remarks:suRemarks, registeredAt:new Date().toISOString()});
   persistAll();
-  try{logActivity("ADD_STUDENT", `"${name}" (SR-${id}) registered from website — Trade: ${trade}, Status: Studying`);}catch(e){}
+  try{logActivity("ADD_STUDENT", `"${name}" (${suRoll||("SR-"+id)}) registered from website — Trade: ${trade}, Status: ${suStatus}`);}catch(e){}
   document.getElementById("suSuccess").style.display="block";
   document.getElementById("suErr").style.display="none";
   setTimeout(()=>{ showLoginForm(); document.getElementById("suSuccess").style.display="none"; resetSignUpForm(); }, 3000);
 }
 
 function resetSignUpForm(){
-  ["suName","suFather","suMobile","suDob","suEmail","suCompany","suAddress"].forEach(id=>{
+  ["suName","suFather","suMobile","suRoll","suAadhaar","suDob","suEmail","suCompany","suAddress","suRemarks"].forEach(id=>{
     const el=document.getElementById(id); if(el) el.value="";
   });
   const sess=document.getElementById("suSession"); if(sess) sess.value=SESSIONS.slice(-1)[0]||"2025-26";
+  const scBox=document.getElementById("suSessionCustomBox"); if(scBox) scBox.style.display="none";
+  const sts=document.getElementById("suStatus"); if(sts) sts.value="Studying";
 }
 
 function doLogin(){
@@ -1938,30 +1988,33 @@ document.addEventListener("DOMContentLoaded",function(){
   setupLPDriveUI();
   var form=document.getElementById("lpRegForm");
   if(!form) return;
+  var trSel=document.getElementById("lpTradeSel");
+  if(trSel){
+    var trOpts=(trades&&trades.length?trades:DEFAULT_TRADES);
+    trSel.innerHTML='<option value="">-- Select trade --</option>'+trOpts.map(function(t){return '<option value="'+t+'">'+t+'</option>';}).join("");
+  }
   var btn=document.getElementById("lpSubmitBtn");
   form.addEventListener("submit",function(e){
     e.preventDefault();
     var errs={};
     var f={};
-    ["name","session","mobile","email"].forEach(function(n){
+    ["name","roll","father","mobile","dob","aadhaar","email","category","address","session","remarks"].forEach(function(n){
       var el=form.querySelector('[name="'+n+'"]');
       f[n]=(el&&el.value?el.value:"").trim();
     });
-    f.gender=(form.querySelector('[name="gender"]:checked')||{}).value||"";
     f.trade=(form.querySelector('[name="trade"]')||{}).value||"";
-    f.apprenticeshipDone=(form.querySelector('[name="apprenticeshipDone"]:checked')||{}).value||"";
-    f.readAllDetails=!!form.querySelector('[name="readAllDetails"]').checked;
-    f.applyingFor=[].map.call(form.querySelectorAll('[name="applyingFor"]:checked'),function(c){return c.value;});
+    f.status=(form.querySelector('[name="status"]')||{}).value||"Studying";
 
     if(!f.name) errs.name="Name is required";
-    if(!f.gender) errs.gender="Select gender";
-    if(!f.trade) errs.trade="Select trade";
-    if(!f.session) errs.session="Session is required";
+    if(!f.father) errs.father="Father name is required";
     if(!/^[6-9]\d{9}$/.test(f.mobile)) errs.mobile="Enter a valid 10-digit mobile number";
+    if(!f.dob) errs.dob="Date of birth is required";
+    if(!f.email) errs.email="Email ID is required";
     if(f.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email)) errs.email="Enter a valid email";
-    if(!f.apprenticeshipDone) errs.apprenticeshipDone="Please select this";
-    if(!f.readAllDetails) errs.readAllDetails="Please read all company details and check this box";
-    if(f.applyingFor.length===0) errs.applyingFor="Select at least one company";
+    if(!f.category) errs.category="Category is required";
+    if(!f.address) errs.address="Address is required";
+    if(!f.trade) errs.trade="Select trade";
+    if(!f.session||f.session==="__custom__") errs.session="Session is required";
 
     form.querySelectorAll(".form-error").forEach(function(s){s.textContent="";});
     Object.keys(errs).forEach(function(k){
@@ -1970,34 +2023,56 @@ document.addEventListener("DOMContentLoaded",function(){
     });
     if(Object.keys(errs).length>0) return;
 
-    var payload={
-      name:f.name, gender:f.gender, trade:f.trade, session:f.session,
-      mobile:f.mobile, email:f.email, apprenticeshipDone:f.apprenticeshipDone,
-      readAllDetails:f.readAllDetails,
-      applyingFor:f.applyingFor.map(function(v){var d=lpDrives.find(function(x){return String(x.id)===String(v);}); return d?d.name:"Company "+v;}),
-      createdAt:new Date().toISOString()
-    };
-    btn.disabled=true;
-    btn.innerHTML='<div class="spinner"></div> Submitting...';
-    var db=window._db;
-    if(db){
-      db.ref("iti_kiloi/registrations").push(payload).then(function(){
-        form.reset();
-        document.getElementById("lpRegSuccess").style.display="flex";
-      }).catch(function(err2){
-        console.error("Submission error:",err2);
-        alert("Something went wrong. Please try again.");
-      }).finally(function(){
-        btn.disabled=false;
-        btn.textContent="Submit Form";
-      });
-    }else{
-      alert("Something went wrong. Please try again.");
-      btn.disabled=false;
-      btn.textContent="Submit Form";
-    }
+    var id=(typeof nextId==="number")?nextId:students.length+1;
+    if(typeof nextId==="number") nextId=id+1;
+    var dob=(typeof normalizeDob==="function")?normalizeDob(f.dob):f.dob;
+    var st={id:id,name:f.name,roll:(f.roll||"SR-"+id),father:f.father,aadhaar:f.aadhaar,mobile:f.mobile,dob:dob,address:f.address,trade:f.trade,session:f.session,email:f.category,emailId:f.email,status:f.status,remarks:f.remarks,registeredAt:new Date().toISOString()};
+    if(window.currentUser) st.registeredBy=window.currentUser.username;
+    students.push(st);
+    if(typeof persistAll==="function"){ try{persistAll();}catch(e2){} }
+    if(typeof logActivity==="function"){ try{logActivity("ADD_STUDENT", '"'+f.name+'" (SR-'+id+') registered from website — Trade: '+f.trade+', Status: Studying');}catch(e3){} }
+    form.reset();
+    document.getElementById("lpRegSuccess").style.display="flex";
   });
 });
+function handleLPSessionSel(sel){
+  var box=document.getElementById("lpSessionCustomBox");
+  if(box) box.style.display=(sel&&sel.value==="__custom__")?"block":"none";
+  if(sel&&sel.value==="__custom__"){ var inp=document.getElementById("lpSessionInput"); if(inp) inp.focus(); }
+}
+function confirmLPSession(){
+  var v=((document.getElementById("lpSessionInput")||{}).value||"").trim();
+  if(!v){ alert("Please enter the session (e.g. 2026-27)"); return; }
+  var sel=document.getElementById("lpSessionSel");
+  if(sel) sel.value=v;
+  var box=document.getElementById("lpSessionCustomBox");
+  if(box) box.style.display="none";
+}
+function cancelLPSession(){
+  var sel=document.getElementById("lpSessionSel");
+  if(sel&&sel.value==="__custom__") sel.value=SESSIONS[SESSIONS.length-1]||"2025-26";
+  var box=document.getElementById("lpSessionCustomBox");
+  if(box) box.style.display="none";
+}
+function handleSUSessionSel(sel){
+  var box=document.getElementById("suSessionCustomBox");
+  if(box) box.style.display=(sel&&sel.value==="__custom__")?"block":"none";
+  if(sel&&sel.value==="__custom__"){ var inp=document.getElementById("suSessionInput"); if(inp) inp.focus(); }
+}
+function confirmSUSession(){
+  var v=((document.getElementById("suSessionInput")||{}).value||"").trim();
+  if(!v){ alert("Please enter the session (e.g. 2026-27)"); return; }
+  var sel=document.getElementById("suSession");
+  if(sel) sel.value=v;
+  var box=document.getElementById("suSessionCustomBox");
+  if(box) box.style.display="none";
+}
+function cancelSUSession(){
+  var sel=document.getElementById("suSession");
+  if(sel&&sel.value==="__custom__") sel.value=SESSIONS[SESSIONS.length-1]||"2025-26";
+  var box=document.getElementById("suSessionCustomBox");
+  if(box) box.style.display="none";
+}
 function closeRegSuccess(){
   var o=document.getElementById("lpRegSuccess");
   if(o) o.style.display="none";
