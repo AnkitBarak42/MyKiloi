@@ -558,291 +558,6 @@ tr:hover td{background:rgba(255,255,255,.015)}
 </head>
 <body class="sb-open">
 
-<!-- LANDING PAGE -->
-<div id="landingPage" style="display:none">
-  <nav class="lp-navbar" id="lpNav">
-    <div class="lp-navbar-brand" onclick="goToPage('home')">
-      <div class="lp-navbar-logo">GK</div>
-      <span class="lp-navbar-title">GITI Kiloi</span>
-    </div>
-    <div class="lp-navbar-links" id="lpNavLinks">
-      <a onclick="goToPage('drives')">Placement Drives</a>
-      <a onclick="goToPage('contact')">Contact</a>
-      <a onclick="showLogin()" style="margin-left:4px" title="Admin Login">🔐</a>
-    </div>
-    <button class="lp-navbar-toggle" onclick="toggleLPNav()" aria-label="Toggle menu">☰</button>
-  </nav>
-
-  <!-- PAGE: HOME -->
-  <div class="lp-page" id="lpPage-home">
-
-  <!-- HERO (banner image background) -->
-  <section class="hero-section" id="lp-hero">
-    <div class="hero-bg" style="background-image:url('ITI.jpeg')"></div>
-    <div class="hero-overlay"></div>
-    <div class="hero-inner">
-      <div class="hero-actions">
-        <a class="btn-primary" onclick="goToPage('drives')">📝 Apply Now</a>
-        <a class="btn-secondary" onclick="goToPage('form')">📋 Registration</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- BREAKING NEWS TICKER -->
-  <div class="hp-ticker">
-    <span class="hp-ticker-label">📢 Notice</span>
-    <div class="hp-ticker-track" id="lpTickerTrack"></div>
-  </div>
-
-  <!-- WELCOME + NOTICE BOARD -->
-  <section class="hp-main">
-    <div class="hp-content">
-      <div class="hp-sec-head">
-        <span class="hp-label">Welcome to</span>
-        <h2 class="hp-title">Govt. ITI Kiloi <span class="hp-accent">(Haryana)</span></h2>
-        <p class="hp-desc">Connecting students with reputed companies through campus placements and apprenticeship training. Browse the latest drives, check eligibility and register for your future.</p>
-      </div>
-      <div class="hp-features">
-        <div class="hp-feature" onclick="goToPage('drives')">
-          <div class="hp-feature-icon">🏢</div>
-          <div><h4>Placement Drives</h4><p>Job openings from reputed companies at the campus.</p></div>
-        </div>
-        <div class="hp-feature" onclick="goToPage('drives')">
-          <div class="hp-feature-icon">🛠️</div>
-          <div><h4>Apprenticeship</h4><p>Hands-on training with industry stipend support.</p></div>
-        </div>
-        <div class="hp-feature" onclick="goToPage('form')">
-          <div class="hp-feature-icon">📝</div>
-          <div><h4>Student Registration</h4><p>Fill the form and apply for your preferred drive.</p></div>
-        </div>
-        <div class="hp-feature" onclick="goToPage('contact')">
-          <div class="hp-feature-icon">📞</div>
-          <div><h4>Contact Help Desk</h4><p>Support for registration and placement queries.</p></div>
-        </div>
-      </div>
-    </div>
-    <aside class="hp-notice">
-      <div class="hp-notice-head"><span class="dot"></span>Notice Board <span class="cnt" id="lpNoticeCount"></span></div>
-      <div class="hp-notice-body" id="lpNoticeBoard"></div>
-      <div class="hp-notice-more" onclick="goToPage('drives')">View All Drives →</div>
-    </aside>
-  </section>
-
-  <!-- STATS -->
-  <section class="stats-bar">
-    <div class="stats-container">
-      <div class="stat-item"><div class="stat-number">500<span class="accent">+</span></div><div class="stat-label">Total Posts</div></div>
-      <div class="stat-item"><div class="stat-number">3</div><div class="stat-label">Companies</div></div>
-      <div class="stat-item"><div class="stat-number">₹24,300</div><div class="stat-label">Max Salary/Month</div></div>
-      <div class="stat-item"><div class="stat-number">₹18,000</div><div class="stat-label">Stipend/Month</div></div>
-    </div>
-  </section>
-  </div>
-
-  <!-- PAGE: PLACEMENT DRIVES -->
-  <div class="lp-page sub" id="lpPage-drives" style="display:none">
-    <div class="sub-hero" style="background-image:url('ITI.jpeg')">
-      <div class="sub-hero-overlay"></div>
-      <h2 class="sub-hero-title">Placement Drives</h2>
-    </div>
-    <div class="lp-topbar"><button type="button" class="lp-back-btn" onclick="goToPage('home')">← Back to Home</button></div>
-  <!-- PLACEMENT DRIVES -->
-  <section class="section" id="lp-drives">
-    <div class="section-header">
-      <div class="section-label">Placement Drives</div>
-      <h2 class="section-title">Available Placement Drives</h2>
-      <p class="section-desc">Read the details of the companies below carefully and apply as per your eligibility.</p>
-    </div>
-
-    <div class="companies-grid" id="lpDrivesList"></div>
-    <div class="section-desc" id="lpDrivesEmpty" style="display:none;text-align:center;padding:32px 0;color:var(--muted)">No companies added yet. Check back soon!</div>
-
-  </section>
-  </div>
-
-  <!-- PAGE: REGISTRATION -->
-  <div class="lp-page sub" id="lpPage-form" style="display:none">
-    <div class="sub-hero" style="background-image:url('ITI.jpeg')">
-      <div class="sub-hero-overlay"></div>
-      <h2 class="sub-hero-title">Student Registration</h2>
-    </div>
-    <div class="lp-topbar"><button type="button" class="lp-back-btn" onclick="goToPage('home')">← Back to Home</button></div>
-  <!-- REGISTRATION FORM -->
-  <section class="section form-section" id="lp-form">
-    <div class="section-header">
-      <div class="section-label">Registration</div>
-      <h2 class="section-title">Registration Form</h2>
-      <p class="section-desc">Fill the form below correctly. All required fields (<span style="color:var(--red-500)">*</span>) are mandatory.</p>
-    </div>
-    <div class="form-container">
-      <form id="lpRegForm" novalidate>
-        <div class="form-grid">
-          <div class="form-group">
-            <label class="form-label">Name <span class="required">*</span></label>
-            <input class="form-input" type="text" name="name" placeholder="Enter your full name">
-            <span class="form-error" data-err="name"></span>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Registration No.</label>
-            <input class="form-input" type="text" name="roll" placeholder="e.g. REG/2024/001 (optional)">
-            <span class="form-error" data-err="roll"></span>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Father Name <span class="required">*</span></label>
-            <input class="form-input" type="text" name="father" placeholder="Father's full name">
-            <span class="form-error" data-err="father"></span>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Mobile Number <span class="required">*</span></label>
-            <input class="form-input" type="tel" name="mobile" placeholder="10-digit mobile number" maxlength="10">
-            <span class="form-error" data-err="mobile"></span>
-          </div>
-          <div class="form-group">
-            <label class="form-label">ID Number</label>
-            <input class="form-input" type="text" name="aadhaar" placeholder="ID / Roll Number" maxlength="14">
-            <span class="form-error" data-err="aadhaar"></span>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Date of Birth <span class="required">*</span></label>
-            <div style="display:flex;gap:8px;align-items:center">
-              <input class="form-input" type="text" name="dob" id="lpRegDob" placeholder="DD-MM-YYYY" maxlength="10" style="flex:1;min-width:0">
-              <button type="button" title="Pick from calendar" style="padding:10px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:9px;cursor:pointer;font-size:15px;flex:0 0 auto" onclick="openDobCal('lpDobCal')">📅</button>
-              <input class="form-input" type="date" id="lpDobCal" onchange="fDobCalPicked(this,'lpRegDob')" style="width:1px;height:1px;opacity:0;border:0;padding:0;position:absolute;pointer-events:none">
-            </div>
-            <span class="form-error" data-err="dob"></span>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Email ID <span class="required">*</span></label>
-            <input class="form-input" type="email" name="email" placeholder="example@email.com">
-            <span class="form-error" data-err="email"></span>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Category <span class="required">*</span></label>
-            <select class="form-select" name="category" id="lpCategory">
-              <option value="">-- Select Category --</option>
-            </select>
-            <span class="form-error" data-err="category"></span>
-          </div>
-          <div class="form-group full-width">
-            <label class="form-label">Address <span class="required">*</span></label>
-            <input class="form-input" type="text" name="address" placeholder="Village/City, District">
-            <span class="form-error" data-err="address"></span>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Trade <span class="required">*</span></label>
-            <select class="form-select" name="trade" id="lpTradeSel">
-              <option value="">-- Select trade --</option>
-            </select>
-            <span class="form-error" data-err="trade"></span>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Session <span class="required">*</span></label>
-            <select class="form-select" name="session" id="lpSessionSel" onchange="handleLPSessionSel(this)">
-              <option>2020-21</option><option>2021-22</option><option>2022-23</option><option>2023-24</option><option>2024-25</option><option selected>2025-26</option>
-              <option value="__custom__">➕ Custom Session...</option>
-            </select>
-            <div id="lpSessionCustomBox" style="display:none;margin-top:8px">
-              <input class="form-input" id="lpSessionInput" placeholder="e.g. 2026-27" maxlength="7" onkeydown="if(event.key==='Enter')confirmLPSession()">
-              <div style="display:flex;gap:8px;margin-top:6px">
-                <button type="button" class="btn btn-primary btn-sm" onclick="confirmLPSession()">✅ Add</button>
-                <button type="button" class="btn btn-secondary btn-sm" onclick="cancelLPSession()">Cancel</button>
-              </div>
-            </div>
-            <span class="form-error" data-err="session"></span>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Status</label>
-            <select class="form-select" name="status">
-              <option>Placed</option><option>Apprenticeship</option><option>Self Employed</option><option selected>Studying</option><option>Unemployed</option>
-            </select>
-            <span class="form-error" data-err="status"></span>
-          </div>
-          <div class="form-group full-width">
-            <label class="form-label">Remarks</label>
-            <input class="form-input" type="text" name="remarks" placeholder="Any notes...">
-            <span class="form-error" data-err="remarks"></span>
-          </div>
-          <div class="form-note"><span class="note-icon">⚠️</span><span>Please fill the correct information. Your registration is saved in the Student section. After submitting the form, please join the WhatsApp group.</span></div>
-          <div class="form-submit-area">
-            <button type="submit" class="btn-submit" id="lpSubmitBtn">Submit Form</button>
-          </div>
-        </div>
-      </form>
-    </div>
-  </section>
-
-  <!-- SUCCESS OVERLAY -->
-  <div class="success-overlay" id="lpRegSuccess" style="display:none">
-    <div class="success-card">
-      <div class="success-icon">✓</div>
-      <h3>Registration Successful!</h3>
-      <p>Your form has been submitted successfully. Please join the WhatsApp group below for updates.</p>
-      <div class="success-actions">
-        <a class="btn-success-wa" id="lpSuccessWa" href="https://chat.whatsapp.com/LipB0iromkA8nI2oFi3JQy?s=cl&p=i&mlu=0&ilr=4" target="_blank" rel="noopener noreferrer"><span>💬</span>Join WhatsApp Group</a>
-        <button class="btn-success-close" onclick="closeRegSuccess()">Close</button>
-      </div>
-    </div>
-  </div>
-  </div>
-
-  <!-- PAGE: CONTACT -->
-  <div class="lp-page sub" id="lpPage-contact" style="display:none">
-    <div class="sub-hero" style="background-image:url('ITI.jpeg')">
-      <div class="sub-hero-overlay"></div>
-      <h2 class="sub-hero-title">Contact Us</h2>
-    </div>
-    <div class="lp-topbar"><button type="button" class="lp-back-btn" onclick="goToPage('home')">← Back to Home</button></div>
-  <!-- CONTACT -->
-  <section class="section" id="lp-contact">
-    <div class="section-header">
-      <div class="section-label">Contact</div>
-      <h2 class="section-title">Contact Us</h2>
-      <p class="section-desc">Contact us for any information regarding registration or placement.</p>
-    </div>
-    <div class="companies-grid" style="max-width:780px">
-      <div class="company-card">
-        <div class="company-header">
-          <div class="company-badge" style="background:rgba(245,158,11,.15);color:var(--accent)">Contact</div>
-        </div>
-        <div class="company-card-body">
-          <h3 class="company-name">Er. Mahender Singh<span style="display:block;font-size:13px;font-weight:500;color:var(--muted);font-family:var(--font-english);margin-top:2px">Apprenticeship Instructor</span></h3>
-          <div class="company-details-list">
-            <div class="company-detail-item">
-              <span class="detail-label">Institute</span>
-              <span class="detail-value">Govt. ITI Kiloi (Haryana)</span>
-            </div>
-            <div class="company-detail-item">
-              <span class="detail-label">Phone</span>
-              <span class="detail-value"><a href="tel:+919992720108" style="color:var(--accent);text-decoration:none">+91 99927 20108</a></span>
-            </div>
-            <div class="company-detail-item">
-              <span class="detail-label">WhatsApp</span>
-              <span class="detail-value"><a href="https://wa.me/919992720108" target="_blank" rel="noopener noreferrer" style="color:var(--accent);text-decoration:none">+91 99927 20108</a></span>
-            </div>
-          </div>
-          <div class="company-footer" style="display:flex;gap:10px;flex-direction:column">
-            <a class="btn-success-wa" href="https://chat.whatsapp.com/LipB0iromkA8nI2oFi3JQy?s=cl&p=i&mlu=0&ilr=4" target="_blank" rel="noopener noreferrer"><span>💬</span>Join WhatsApp Group</a>
-            <button class="btn-primary" style="width:100%;justify-content:center" onclick="goToPage('form')"><span>📝</span>Register Now</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-  </div>
-
-  <!-- LOADER -->
-  <div class="loader-overlay" id="lpLoader" style="display:none">
-    <div class="loader-content">
-      <div class="loader-icon">GK</div>
-      <div class="loader-text">
-        <h2>GITI Kiloi</h2>
-        <p>Campus Placement Portal</p>
-      </div>
-      <div class="loader-bar-track"><div class="loader-bar"></div></div>
-    </div>
-  </div>
-</div>
-
 <div id="appLoader" style="display:none;position:fixed;inset:0;background:#070b12;z-index:9999;align-items:center;justify-content:center;flex-direction:column;gap:16px">
   <div style="width:48px;height:48px;border:4px solid #1e2535;border-top-color:#f59e0b;border-radius:50%;animation:spin 0.8s linear infinite"></div>
   <div style="color:#f59e0b;font-weight:700;font-size:14px;letter-spacing:1px">Loading GITI Kiloi...</div>
@@ -853,26 +568,12 @@ tr:hover td{background:rgba(255,255,255,.015)}
 <script>
 (function(){
   try{
-    // #home shared link → always show public landing page
+    // Legacy #home bookmarks → open the public landing page
     if(location.hash.includes("home")){
-      document.addEventListener("DOMContentLoaded",function(){
-        var lp=document.getElementById("landingPage");
-        if(lp) lp.style.display="block";
-        var ls=document.getElementById("loginScreen");
-        if(ls) ls.style.display="none";
-      });
+      var parts=location.href.split("#")[0].split("?")[0].split("/");
+      parts[parts.length-1]="landing.html";
+      location.replace(parts.join("/"));
       return;
-    }
-    var sess=JSON.parse(localStorage.getItem("iti_kiloi_session")||"null");
-    if(sess&&sess.username){
-      document.addEventListener("DOMContentLoaded",function(){
-        var lp=document.getElementById("landingPage");
-        if(lp) lp.style.display="none";
-        var ls=document.getElementById("loginScreen");
-        if(ls) ls.style.display="none";
-        var loader=document.getElementById("appLoader");
-        if(loader) loader.style.display="flex";
-      });
     }
   }catch(e){}
 })();
@@ -886,9 +587,6 @@ tr:hover td{background:rgba(255,255,255,.015)}
 <!-- LOGIN -->
 <div id="loginScreen">
   <div class="login-box">
-    <div style="text-align:left;margin-bottom:8px">
-      <button onclick="backToHome()" style="background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:13px;text-decoration:underline">← Back to Home</button>
-    </div>
     <div class="login-logo">
       <h1>GITI <span>Kiloi</span></h1>
       <p>Unofficial Student App — Not a Govt. Portal</p>
@@ -1794,40 +1492,24 @@ function persistAll(){
 function restoreSession(){
   var loader=document.getElementById("appLoader");
   var sess; try{sess=JSON.parse(localStorage.getItem("iti_kiloi_session")||"null");}catch(e){sess=null;}
-  var isHomeLink=location.hash.includes("home");
-
-  // Force public home page when shared link has #home
-  if(isHomeLink){
-    currentUser=null; window.currentUser=null;
-    if(loader)loader.style.display="none";
-    var lp=document.getElementById("landingPage");
-    if(lp) lp.style.display="block";
-    document.getElementById("loginScreen").style.display="none";
-    // Clear #home so normal app behaviour resumes if user logs in
-    try{history.replaceState(null,"",location.pathname+location.search);}catch(e){}
-    return;
-  }
 
   if(!sess||!sess.username){
     if(loader)loader.style.display="none";
-    var lp=document.getElementById("landingPage");
-    if(lp) lp.style.display="block";
+    showLogin();
     return;
   }
   var u=sess.username;
   if(!users[u]){
     try{localStorage.removeItem("iti_kiloi_session");}catch(e){}
     if(loader)loader.style.display="none";
-    var lp2=document.getElementById("landingPage");
-    if(lp2) lp2.style.display="block";
+    showLogin();
     return;
   }
   if((users[u].pwChangedAt||"")!==(sess.pwChangedAt||"")){
     try{localStorage.removeItem("iti_kiloi_session");}catch(e){}
     if(loader)loader.style.display="none";
     alert("🔄 Password was changed. Please log in again.");
-    var lp2b=document.getElementById("landingPage");
-    if(lp2b) lp2b.style.display="block";
+    showLogin();
     return;
   }
   currentUser={username:u,...users[u]};
@@ -2136,9 +1818,7 @@ function showLogin(){
 }
 function backToHome(){
   document.getElementById("loginScreen").style.display="none";
-  var lp=document.getElementById("landingPage");
-  if(lp) lp.style.display="block";
-  window.scrollTo({top:0,behavior:"smooth"});
+  try{ window.location.href=lpShareUrl(); }catch(e){}
 }
 function scrollToSection(name){
   var el=document.getElementById("lp-"+name)||document.getElementById(name);
@@ -2153,16 +1833,17 @@ function goToPage(name){
   closeLPNav();
 }
 function toggleLPNav(){
-  document.getElementById("lpNavLinks").classList.toggle("open");
+  var n=document.getElementById("lpNavLinks"); if(n) n.classList.toggle("open");
 }
 function closeLPNav(){
-  document.getElementById("lpNavLinks").classList.remove("open");
+  var n=document.getElementById("lpNavLinks"); if(n) n.classList.remove("open");
 }
 function lpShareUrl(){
   try{
-    var base=location.href.split("#")[0].split("?")[0];
-    return base+"#home";
-  }catch(e){ return window.location.origin+"#home"; }
+    var parts=location.href.split("#")[0].split("?")[0].split("/");
+    parts[parts.length-1]="landing.html";
+    return parts.join("/");
+  }catch(e){ return window.location.origin+"/landing.html"; }
 }
 function lpSharePanelOf(anchor){
   var w=anchor&&anchor.closest?anchor.closest(".lp-share-wrap"):null;

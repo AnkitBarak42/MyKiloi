@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#f59e0b">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="GITI Kiloi">
+<meta name="description" content="GITI Kiloi Placement Management System">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+<title>GITI Kiloi — Placement Portal</title>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyCV_dEkyIdUU8nDUPqC4VjpLQmaYJCbPGw",
+  authDomain: "iti-kiloi.firebaseapp.com",
+  databaseURL: "https://iti-kiloi-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "iti-kiloi",
+  storageBucket: "iti-kiloi.firebasestorage.app",
+  messagingSenderId: "18851968697",
+  appId: "1:18851968697:web:d3169d64203c88dd45cd68"
+};
+firebase.initializeApp(firebaseConfig);
+var _db = firebase.database();
+</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#000000;--bg2:#0a0a0a;--card:#161b24;--border:#1e2535;
+  --accent:#f59e0b;--accent2:#d97706;
+  --blue:#3b82f6;--green:#22c55e;--red:#ef4444;--purple:#a855f7;
+  --text:#e2e8f0;--muted:#64748b;--light:#94a3b8;
+  --primary-900:#0f172a;--primary-800:#1e293b;--primary-700:#334155;--primary-600:#475569;--primary-500:#64748b;--primary-400:#94a3b8;--primary-300:#cbd5e1;--primary-200:#e2e8f0;--primary-100:#f1f5f9;--primary-50:#f8fafc;
+  --accent-600:#d97706;--accent-500:#f59e0b;--accent-400:#fbbf24;--accent-300:#fcd34d;--accent-100:#fef3c7;
+  --blue-700:#1d4ed8;--blue-600:#2563eb;--blue-500:#3b82f6;--blue-400:#60a5fa;--blue-100:#dbeafe;
+  --green-600:#16a34a;--green-500:#22c55e;--green-100:#dcfce7;
+  --red-500:#ef4444;--red-100:#fee2e2;
+  --font-hindi:"Noto Sans Devanagari","Segoe UI",sans-serif;
+  --font-english:"Inter","Segoe UI",system-ui,sans-serif;
+}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;min-height:100vh;overflow-x:hidden}
+input,select,textarea,button{font-family:inherit}
+
+/* ── LANDING PAGE — GITI Kiloi dark theme ── */
+#landingPage{font-family:var(--font-hindi);color:var(--text);background:var(--bg);line-height:1.6;overflow-x:hidden}
+#landingPage h1,#landingPage h2,#landingPage h3{font-family:var(--font-hindi)}
+#landingPage input,#landingPage select,#landingPage textarea,#landingPage button{font-family:var(--font-hindi)}
+#landingPage a{color:inherit;text-decoration:none}
+#landingPage img{max-width:100%;display:block}
+#landingPage button{cursor:pointer;border:none;outline:none;font-family:inherit}
+#landingPage ul{list-style:none}
+.loader-overlay{z-index:9999;background:var(--bg);flex-direction:column;justify-content:center;align-items:center;gap:32px;display:flex;position:fixed;inset:0}
+.loader-content{flex-direction:column;align-items:center;gap:24px;display:flex}
+.loader-icon{background:#fff;width:72px;height:72px;font-family:var(--font-english);color:#0f172a;letter-spacing:1px;border-radius:18px;justify-content:center;align-items:center;font-size:24px;font-weight:800;display:flex}
+.loader-text{text-align:center}
+.loader-text h2{font-family:var(--font-hindi);color:#fff;letter-spacing:.5px;margin-bottom:4px;font-size:20px;font-weight:700}
+.loader-text p{color:var(--muted);font-size:13px;font-weight:500}
+.loader-bar-track{background:var(--card);border-radius:2px;width:200px;height:3px;overflow:hidden}
+.loader-bar{background:var(--accent);border-radius:2px;height:100%;animation:1.8s ease-in-out forwards loaderProgress}
+@keyframes loaderProgress{0%{width:0%}30%{width:40%}60%{width:70%}to{width:100%}}
+.lp-navbar{z-index:1000;height:64px;transition:background .3s,box-shadow .3s,backdrop-filter .3s;justify-content:space-between;align-items:center;padding:0 40px;display:flex;position:fixed;top:0;left:0;right:0}
+.lp-navbar.scrolled{-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);background:rgba(0,0,0,.95);box-shadow:0 1px 3px rgba(0,0,0,.4)}
+.lp-navbar-brand{cursor:pointer;align-items:center;gap:12px;display:flex}
+.lp-navbar-logo{background:#fff;width:36px;height:36px;font-family:var(--font-english);color:#0f172a;letter-spacing:.5px;border-radius:8px;flex-shrink:0;justify-content:center;align-items:center;font-size:12px;font-weight:800;display:flex}
+.lp-navbar-title{font-family:var(--font-hindi);color:#fff;white-space:nowrap;font-size:15px;font-weight:700}
+.lp-navbar-links{align-items:center;gap:8px;display:flex}
+.lp-navbar-links a{color:var(--light);border-radius:6px;transition:color .3s,background .3s;white-space:nowrap;padding:8px 16px;font-size:13px;font-weight:500;text-decoration:none;cursor:pointer}
+.lp-navbar-links a:hover{color:#fff;background:rgba(255,255,255,.08)}
+.lp-navbar-links .lp-navbar-cta{color:#fff!important;background:rgba(255,255,255,.12)!important;border:1px solid rgba(255,255,255,.2)!important;padding:8px 20px!important;font-weight:600!important;border-radius:6px}
+.lp-navbar-links .lp-btn-login-nav{color:#fff;background:rgba(245,158,11,.18);border:1px solid rgba(245,158,11,.4);padding:8px 20px;font-weight:600;border-radius:6px;cursor:pointer;font-size:13px;transition:all .3s;white-space:nowrap;font-family:var(--font-hindi)}
+.lp-navbar-links .lp-btn-login-nav:hover{background:rgba(245,158,11,.3)}
+.lp-navbar-toggle{color:#fff;background:transparent;padding:4px;font-size:24px;border:none;cursor:pointer;display:none}
+.lp-page{min-height:100vh;animation:lpFade .25s ease}
+.lp-page.sub{padding-top:64px;background:linear-gradient(180deg,var(--bg2),var(--bg))}
+.lp-page.sub .section{padding-top:32px}
+.lp-topbar{padding:0 24px;margin-top:24px}
+.lp-back-btn{display:inline-flex;align-items:center;gap:6px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;color:var(--light);font-family:var(--font-english),var(--font-hindi),sans-serif;font-size:13px;font-weight:500;padding:9px 16px;cursor:pointer;transition:all .2s}
+.lp-back-btn:hover{color:#fff;border-color:rgba(245,158,11,.4);background:var(--card)}
+@keyframes lpFade{from{opacity:0}to{opacity:1}}
+.hero-section{text-align:center;background:linear-gradient(180deg,#000 0%,#050505 100%);flex-direction:column;justify-content:center;align-items:center;min-height:100vh;padding:100px 24px 60px;display:flex;position:relative;overflow:hidden}
+.hero-section::before{content:"";pointer-events:none;background:linear-gradient(90deg,transparent,rgba(245,158,11,.18),transparent);height:1px;position:absolute;bottom:0;left:0;right:0}
+.hero-badge{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:100px;align-items:center;gap:8px;margin-bottom:32px;padding:8px 20px;display:inline-flex}
+.hero-badge-dot{background:#22c55e;border-radius:50%;flex-shrink:0;width:8px;height:8px;box-shadow:0 0 0 3px rgba(34,197,94,.15)}
+.hero-badge span{color:var(--light);letter-spacing:.5px;font-size:13px;font-weight:600}
+.hero-title{font-family:var(--font-hindi);color:#fff;z-index:1;margin-bottom:12px;font-size:52px;font-weight:800;line-height:1.2;position:relative}
+.hero-title-accent{color:#fbbf24}
+.hero-subtitle{font-family:var(--font-hindi);color:var(--light);z-index:1;max-width:600px;margin-bottom:40px;font-size:20px;font-weight:500;line-height:1.7;position:relative}
+.hero-actions{z-index:1;gap:16px;display:flex;position:relative;flex-wrap:wrap;justify-content:center}
+.btn-primary{background:linear-gradient(135deg,#f59e0b,#d97706);color:#0f172a;border-radius:10px;transition:background .3s,box-shadow .3s;align-items:center;gap:8px;padding:14px 32px;font-size:15px;font-weight:700;display:inline-flex;cursor:pointer;border:none}
+.btn-primary:hover{background:linear-gradient(135deg,#fbbf24,#f59e0b);box-shadow:0 4px 12px rgba(245,158,11,.3)}
+.btn-secondary{color:var(--text);border-radius:10px;transition:background .3s,border-color .3s;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);align-items:center;gap:8px;padding:14px 32px;font-size:15px;font-weight:600;display:inline-flex;cursor:pointer}
+.btn-secondary:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.25)}
+.stats-bar{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 24px}
+.stats-container{grid-template-columns:repeat(4,1fr);max-width:1000px;margin:0 auto;display:grid}
+.stat-item{flex-direction:column;align-items:center;padding:28px 16px;display:flex;position:relative}
+.stat-item:not(:last-child)::after{content:"";background:var(--border);width:1px;height:40px;position:absolute;top:50%;right:0;transform:translateY(-50%)}
+.stat-number{font-family:var(--font-english);color:#fff;margin-bottom:6px;font-size:28px;font-weight:800;line-height:1}
+.stat-number .accent{color:#fbbf24}
+.stat-label{color:var(--muted);font-size:13px;font-weight:500}
+.section{padding:80px 24px}
+.section-header{text-align:center;max-width:600px;margin:0 auto 56px}
+.section-label{font-family:var(--font-english);color:var(--accent);text-transform:uppercase;letter-spacing:3px;align-items:center;gap:8px;margin-bottom:12px;font-size:11px;font-weight:700;display:inline-flex}
+.section-title{font-family:var(--font-hindi);color:#fff;margin-bottom:12px;font-size:36px;font-weight:800;line-height:1.3}
+.section-desc{color:var(--muted);font-size:15px;line-height:1.7}
+.companies-grid{flex-direction:column;gap:32px;max-width:1100px;margin:0 auto;display:flex}
+.company-card{background:var(--card);border:1px solid var(--border);border-radius:16px;transition:box-shadow .3s,transform .3s,border-color .3s;overflow:hidden}
+.company-card:hover{box-shadow:0 10px 15px rgba(0,0,0,.4);border-color:rgba(245,158,11,.35)}
+.company-card-header{border-bottom:1px solid var(--border);justify-content:space-between;align-items:flex-start;gap:16px;padding:28px 32px;display:flex}
+.company-card-header-left{flex:1;align-items:flex-start;gap:16px;display:flex}
+.company-number{border-radius:10px;background:linear-gradient(135deg,#f59e0b,#d97706);width:44px;height:44px;font-family:var(--font-english);color:#0f172a;flex-shrink:0;justify-content:center;align-items:center;font-size:16px;font-weight:800;display:flex}
+.company-name{font-family:var(--font-english);color:#fff;margin-bottom:4px;font-size:18px;font-weight:700;line-height:1.3}
+.company-location{color:var(--light);align-items:flex-start;gap:4px;font-size:13px;line-height:1.5;display:flex}
+.company-location .icon{flex-shrink:0;margin-top:2px}
+.company-details-list{flex-direction:column;gap:12px;display:flex}
+.company-detail-item{justify-content:space-between;gap:12px;border-bottom:1px solid var(--border);padding-bottom:12px;display:flex}
+.company-detail-item:last-child{border-bottom:none;padding-bottom:0}
+.detail-label{color:var(--muted);font-size:13px;white-space:nowrap}
+.detail-value{color:#fff;text-align:right;margin-left:auto;font-size:14px;font-weight:500}
+.company-footer{margin-top:16px}
+.company-footer .btn-success-wa{width:100%}
+.company-type-badge{white-space:nowrap;border-radius:100px;flex-shrink:0;padding:6px 14px;font-size:12px;font-weight:600;display:inline-flex}
+.badge-apprenticeship{background:rgba(59,130,246,.15);color:#60a5fa;border:1px solid rgba(59,130,246,.3)}
+.badge-job{background:rgba(34,197,94,.15);color:#4ade80;border:1px solid rgba(34,197,94,.3)}
+.company-card-body{flex-direction:column;gap:24px;padding:28px 32px;display:flex}
+.company-info-grid{grid-template-columns:repeat(2,1fr);gap:20px;display:grid}
+.info-block{flex-direction:column;gap:8px;display:flex}
+.info-block-label{color:var(--muted);text-transform:uppercase;letter-spacing:1px;font-size:11px;font-weight:700}
+.info-block-value{color:var(--text);font-size:14px;font-weight:600;line-height:1.5}
+.info-block-value .highlight{color:#fbbf24;font-weight:700}
+.salary-display{background:var(--bg2);border:1px solid var(--border);border-radius:10px;align-items:center;gap:16px;padding:16px 20px;display:flex}
+.salary-icon{border-radius:6px;background:var(--accent);width:40px;height:40px;color:#0f172a;flex-shrink:0;justify-content:center;align-items:center;font-size:18px;display:flex}
+.salary-details{flex:1}
+.salary-amount{font-family:var(--font-english);color:#fff;font-size:20px;font-weight:800}
+.salary-period{color:var(--muted);font-size:12px;font-weight:500}
+.trades-list{flex-wrap:wrap;gap:8px;display:flex}
+.trade-tag{background:var(--bg2);border:1px solid var(--border);font-family:var(--font-english);color:var(--light);border-radius:100px;align-items:center;gap:6px;padding:6px 14px;font-size:13px;font-weight:500;display:inline-flex}
+.trade-tag .count{background:var(--accent);color:#0f172a;border-radius:100px;padding:1px 7px;font-size:11px;font-weight:700}
+.benefits-list{grid-template-columns:repeat(2,1fr);gap:10px;display:grid}
+.benefit-item{color:var(--light);align-items:flex-start;gap:8px;font-size:13px;line-height:1.5;display:flex}
+.benefit-icon{color:#4ade80;flex-shrink:0;margin-top:2px}
+.eligibility-grid{grid-template-columns:repeat(4,1fr);gap:12px;display:grid}
+.eligibility-item{background:var(--bg2);border:1px solid var(--border);border-radius:6px;text-align:center;padding:12px}
+.eligibility-item .label{color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;font-size:11px;font-weight:600}
+.eligibility-item .value{color:var(--text);font-size:14px;font-weight:700}
+.form-section{background:linear-gradient(180deg,var(--bg),var(--bg2))}
+.form-container{background:var(--card);border:1px solid var(--border);border-radius:24px;max-width:720px;box-shadow:0 10px 15px rgba(0,0,0,.4);margin:0 auto;padding:48px}
+.form-grid{grid-template-columns:repeat(2,1fr);gap:24px;display:grid}
+.form-group{flex-direction:column;gap:6px;display:flex}
+.form-group.full-width{grid-column:1/-1}
+.form-label{color:var(--light);align-items:center;gap:4px;font-size:13px;font-weight:600;display:flex}
+.form-label .required{color:var(--red)}
+.form-input,.form-select{background:var(--bg2);border:1.5px solid var(--border);border-radius:6px;width:100%;color:var(--text);transition:border-color .3s,box-shadow .3s;outline:none;padding:12px 16px;font-size:14px;font-family:var(--font-english)}
+.form-input:focus,.form-select:focus{border-color:var(--accent);background:var(--bg);box-shadow:0 0 0 3px rgba(245,158,11,.15)}
+.form-input::placeholder{color:var(--muted)}
+.form-select{appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-position:right 14px center;background-repeat:no-repeat;padding-right:36px}
+.radio-group{gap:16px;padding-top:4px;display:flex}
+.radio-label{color:var(--light);cursor:pointer;border:1.5px solid var(--border);border-radius:6px;transition:all .3s;background:var(--bg2);align-items:center;gap:8px;padding:8px 16px;font-size:14px;display:flex}
+.radio-label:hover{border-color:rgba(245,158,11,.4)}
+.radio-label input{accent-color:var(--accent2);width:16px;height:16px}
+.radio-label input:checked+span{font-weight:600}
+.radio-label:has(input:checked){border-color:var(--accent);background:rgba(245,158,11,.08);color:#fbbf24}
+.checkbox-group{flex-direction:column;gap:10px;padding-top:4px;display:flex}
+.checkbox-label{color:var(--light);cursor:pointer;border:1.5px solid var(--border);border-radius:6px;transition:all .3s;background:var(--bg2);align-items:center;gap:10px;padding:10px 16px;font-size:14px;line-height:1.4;display:flex}
+.checkbox-label:hover{border-color:rgba(245,158,11,.4)}
+.checkbox-label input{accent-color:var(--accent2);flex-shrink:0;width:16px;height:16px}
+.checkbox-label:has(input:checked){border-color:var(--accent);background:rgba(245,158,11,.08)}
+.form-divider{background:var(--border);grid-column:1/-1;height:1px;margin:8px 0}
+.form-note{background:rgba(245,158,11,.08);border-radius:6px;color:#fbbf24;border:1px solid rgba(245,158,11,.25);grid-column:1/-1;align-items:flex-start;gap:10px;padding:14px 18px;font-size:13px;font-weight:500;line-height:1.5;display:flex}
+.form-note .note-icon{flex-shrink:0;margin-top:1px;font-size:16px}
+.form-submit-area{flex-direction:column;grid-column:1/-1;align-items:center;gap:16px;margin-top:8px;display:flex}
+.btn-submit{background:linear-gradient(135deg,#f59e0b,#d97706);width:100%;color:#0f172a;border-radius:10px;transition:background .3s,box-shadow .3s,opacity .3s;justify-content:center;align-items:center;gap:10px;padding:16px 32px;font-size:16px;font-weight:700;display:flex;cursor:pointer;border:none}
+.btn-submit:hover:not(:disabled){background:linear-gradient(135deg,#fbbf24,#f59e0b);box-shadow:0 4px 12px rgba(245,158,11,.3)}
+.btn-submit:disabled{opacity:.6;cursor:not-allowed}
+.btn-submit .spinner{border:2.5px solid rgba(15,23,42,.3);border-top-color:#0f172a;border-radius:50%;width:18px;height:18px;animation:.7s linear infinite spin}
+@keyframes spin{to{transform:rotate(360deg)}}
+.form-error{color:var(--red);margin-top:2px;font-size:12px;font-weight:500}
+.success-overlay{z-index:9998;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);background:rgba(0,0,0,.92);justify-content:center;align-items:center;padding:24px;display:flex;position:fixed;inset:0}
+.success-card{background:var(--card);border:1px solid var(--border);border-radius:24px;text-align:center;width:100%;max-width:440px;box-shadow:0 20px 25px rgba(0,0,0,.5);padding:48px}
+.success-icon{background:rgba(34,197,94,.15);width:72px;height:72px;color:#4ade80;border-radius:50%;justify-content:center;align-items:center;margin:0 auto 24px;font-size:32px;display:flex}
+.success-card h3{font-family:var(--font-hindi);color:#fff;margin-bottom:8px;font-size:22px;font-weight:700}
+.success-card p{color:var(--muted);margin-bottom:28px;font-size:14px;line-height:1.6}
+.success-actions{flex-direction:column;gap:12px;display:flex}
+.btn-success-wa{color:#fff;border-radius:10px;transition:transform .3s;background:#25d366;justify-content:center;align-items:center;gap:10px;padding:14px 24px;font-size:15px;font-weight:600;display:inline-flex;text-decoration:none;cursor:pointer;border:none}
+.btn-success-wa:hover{transform:translateY(-1px)}
+.btn-success-close{color:var(--muted);transition:color .3s;background:transparent;padding:10px;font-size:14px;font-weight:500;cursor:pointer;border:none}
+.btn-success-close:hover{color:var(--text)}
+@media(max-width:768px){
+  .lp-navbar{padding:0 20px}
+  .lp-navbar-links{-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);background:rgba(0,0,0,.98);flex-direction:column;gap:4px;padding:16px 20px;display:none;position:absolute;top:64px;left:0;right:0}
+  .lp-navbar-links.open{display:flex}
+  .lp-navbar-links a{text-align:left;width:100%;padding:12px 16px}
+  .lp-navbar-links .lp-btn-login-nav{width:100%;text-align:center;padding:12px 16px}
+  .lp-navbar-toggle{justify-content:center;align-items:center;display:flex}
+  .hero-title{font-size:32px}
+  .hero-subtitle{font-size:16px}
+  .hero-actions{flex-direction:column;width:100%;padding:0 20px}
+  .btn-primary,.btn-secondary{justify-content:center}
+  .section-title{font-size:28px}
+  .stats-container{grid-template-columns:repeat(2,1fr)}
+  .stat-item:nth-child(2)::after{display:none}
+  .stat-item:nth-child(3),.stat-item:nth-child(4){border-top:1px solid var(--border)}
+  .stat-item:nth-child(3)::after{display:block}
+  .company-card-header{flex-direction:column;padding:20px}
+  .company-card-body{padding:20px}
+  .company-info-grid,.benefits-list{grid-template-columns:1fr}
+  .eligibility-grid{grid-template-columns:repeat(2,1fr)}
+  .salary-display{text-align:center;flex-direction:column}
+  .form-section{padding:48px 0}
+  .form-section .section-header{padding:0 20px}
+  .form-container{box-shadow:none;border-left:none;border-right:none;border-radius:0;max-width:100%;padding:24px 16px 100px}
+  .form-grid{grid-template-columns:1fr;gap:20px}
+  .form-input,.form-select{min-height:50px;padding:14px 16px;font-size:16px;font-family:var(--font-english)}
+  .form-select{padding-right:40px}
+  .form-label{margin-bottom:2px;font-size:14px}
+  .radio-group{flex-direction:column;gap:8px}
+  .radio-label,.checkbox-label{min-height:50px;padding:14px 16px;font-size:15px}
+  .form-submit-area{background:var(--card);border-top:1px solid var(--border);z-index:10;margin:0 -16px;padding:16px;position:sticky;bottom:0}
+  .btn-submit{border-radius:6px;min-height:54px;font-size:17px}
+  .form-note{padding:12px 14px;font-size:13px}
+}
+
+/* ── HOME (hero banner + ticker + notice board) ── */
+.hero-section{min-height:82vh}
+.hero-bg{position:absolute;inset:0;background-size:cover;background-position:center}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(2,6,16,.64) 0%,rgba(2,6,16,.38) 45%,rgba(2,6,16,.9) 100%)}
+.hero-inner{position:relative;z-index:2;width:100%;flex-direction:column;align-items:center;text-align:center;display:flex}
+.hero-foot{position:relative;z-index:2;margin-top:30px;color:rgba(255,255,255,.62);font-size:11.5px;letter-spacing:2.5px;text-transform:uppercase;font-weight:600;font-family:var(--font-english)}
+.hero-foot b{color:#fbbf24;font-weight:700}
+.hp-ticker{position:relative;z-index:5;background:#0b0f1a;border-bottom:1px solid var(--border);flex-wrap:nowrap;display:flex;align-items:center;overflow:hidden}
+.hp-ticker-label{background:linear-gradient(135deg,#f59e0b,#d97706);color:#0f172a;flex:0 0 auto;padding:11px 20px;font-size:13px;font-weight:800;letter-spacing:.5px;white-space:nowrap}
+.hp-ticker-track{flex:1;overflow:hidden;white-space:nowrap}
+.hp-ticker-inner{display:inline-block;padding:11px 0;animation:lpTicker 30s linear infinite;color:var(--light);font-size:13.5px;font-weight:500}
+.hp-ticker:hover .hp-ticker-inner{animation-play-state:paused}
+.hp-ticker-inner .sep{margin:0 24px;color:rgba(245,158,11,.6)}
+.hp-ticker-inner b{color:#fbbf24;font-weight:600}
+@keyframes lpTicker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.hp-main{max-width:1180px;margin:0 auto;padding:72px 24px 56px;grid-template-columns:1fr 340px;gap:44px;display:grid}
+.hp-sec-head{margin-bottom:26px}
+.hp-label{color:var(--accent);text-transform:uppercase;letter-spacing:2.5px;justify-content:center;align-items:center;gap:9px;margin-bottom:12px;font-size:12px;font-weight:700;display:flex}
+.hp-label::before,.hp-label::after{content:"";background:var(--accent);width:28px;height:1.5px;display:inline-block;opacity:.7}
+.hp-title{color:#fff;text-align:center;margin-bottom:12px;font-size:32px;font-weight:800;line-height:1.3}
+.hp-title .hp-accent{color:rgba(245,158,11,.95)}
+.hp-desc{color:var(--muted);text-align:center;max-width:640px;margin:0 auto;font-size:15px;line-height:1.8}
+.hp-features{gap:16px;margin-top:38px;grid-template-columns:repeat(2,1fr);display:grid}
+.hp-feature{cursor:pointer;background:var(--card);border:1px solid var(--border);border-radius:14px;gap:14px;align-items:flex-start;padding:20px;display:flex;transition:transform .25s,border-color .25s,box-shadow .25s}
+.hp-feature:hover{transform:translateY(-2px);border-color:rgba(245,158,11,.4);box-shadow:0 8px 16px rgba(0,0,0,.35)}
+.hp-feature-icon{background:rgba(245,158,11,.12);border-radius:10px;width:46px;height:46px;flex:0 0 auto;justify-content:center;align-items:center;font-size:21px;display:flex}
+.hp-feature h4{color:#fff;margin-bottom:4px;font-size:15px;font-weight:700}
+.hp-feature p{color:var(--muted);font-size:13px;line-height:1.55}
+.hp-notice{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;position:sticky;top:84px;align-self:start;box-shadow:0 8px 16px rgba(0,0,0,.3)}
+.hp-notice-head{border-bottom:1px solid var(--border);background:var(--bg2);align-items:center;gap:10px;padding:15px 18px;font-size:15px;font-weight:700;color:#fff;display:flex}
+.hp-notice-head .dot{border-radius:50%;background:#22c55e;width:9px;height:9px;box-shadow:0 0 0 3px rgba(34,197,94,.2);flex:0 0 auto}
+.hp-notice-head .cnt{color:var(--accent);font-size:12px;font-weight:800;margin-left:auto;background:rgba(245,158,11,.12);border-radius:100px;padding:2px 9px}
+.hp-notice-body{max-height:390px;overflow:hidden;flex-direction:column;display:flex}
+.hp-notice-item{border-bottom:1px solid var(--border);gap:12px;align-items:flex-start;padding:14px 18px;display:flex;transition:background .2s}
+.hp-notice-item:last-child{border-bottom:none}
+.hp-notice-item:hover{background:var(--bg2)}
+.hp-notice-item-icon{background:rgba(245,158,11,.12);border-radius:8px;width:40px;height:40px;flex:0 0 auto;justify-content:center;align-items:center;font-size:18px;display:flex}
+.hp-notice-item h5{color:#fff;margin-bottom:3px;font-size:13.5px;font-weight:600;line-height:1.4}
+.hp-notice-item p{color:var(--muted);font-size:12.5px;line-height:1.55}
+.hp-notice-item p b{color:#fbbf24;font-weight:600}
+.hp-notice-more{background:var(--bg2);border-top:1px solid var(--border);color:var(--accent);text-align:center;padding:13px;font-size:13px;font-weight:600;cursor:pointer;transition:color .2s,background .2s;display:block}
+.hp-notice-more:hover{background:var(--bg);color:#fbbf24}
+@media(max-width:960px){
+  .hp-main{grid-template-columns:1fr;max-width:720px;gap:36px}
+  .hp-notice{position:static}
+}
+@media(max-width:768px){
+  .hero-section{min-height:88vh}
+  .hp-main{padding:48px 20px 40px}
+  .hp-title{font-size:26px}
+  .hp-features{grid-template-columns:1fr;gap:12px;margin-top:28px}
+  .hp-ticker-label{font-size:12px;padding:10px 14px}
+  .hero-foot{font-size:10px;letter-spacing:1.5px}
+}
+
+/* ── SUB-PAGE BANNER (image header) ── */
+.sub-hero{position:relative;height:200px;background-size:cover;background-position:center;overflow:hidden}
+.sub-hero-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(2,6,16,.55),rgba(2,6,16,.82))}
+.sub-hero-title{position:relative;z-index:2;color:#fff;text-align:center;font-size:34px;font-weight:800;letter-spacing:.5px;top:50%;left:50%;transform:translate(-50%,-50%)}
+@media(max-width:768px){
+  .sub-hero{height:150px}
+  .sub-hero-title{font-size:24px}
+}
+
+/* ── FOOTER ── */
+.footer{background:var(--primary-900);color:var(--primary-300);padding:60px 24px 32px;font-family:var(--font-hindi)}
+.footer-content{max-width:1000px;margin:0 auto}
+.footer-main{border-bottom:1px solid var(--primary-700);grid-template-columns:1.3fr 1fr 1fr;gap:48px;padding-bottom:40px;display:grid}
+.footer-officer-card{border:1px solid var(--primary-700);border-radius:16px;background:#ffffff0a;padding:28px}
+.footer-officer-name{font-family:var(--font-hindi);color:var(--white,#fff);margin-bottom:4px;font-size:20px;font-weight:700}
+.footer-officer-title{color:var(--accent-400);margin-bottom:4px;font-size:13px;font-weight:600}
+.footer-officer-inst{color:var(--primary-400);margin-bottom:20px;font-size:13px;line-height:1.6}
+.footer-contact-item{color:var(--primary-300);align-items:center;gap:10px;margin-bottom:10px;font-size:14px;display:flex;text-decoration:none;cursor:pointer;transition:color .2s}
+.footer-contact-item:hover{color:var(--white,#fff)}
+.footer-contact-item .icon{color:var(--accent-500);flex-shrink:0;font-size:16px}
+.footer-section-title{font-family:var(--font-hindi);color:var(--white,#fff);margin-bottom:20px;font-size:15px;font-weight:700}
+.footer-links{flex-direction:column;gap:12px;display:flex}
+.footer-links a{color:var(--primary-400);transition:color .3s;align-items:center;gap:6px;font-size:14px;display:flex;text-decoration:none;cursor:pointer}
+.footer-links a:hover{color:var(--white,#fff)}
+.whatsapp-btn{color:var(--white,#fff);border-radius:10px;transition:transform .3s,box-shadow .3s;background:#25d366;align-items:center;gap:10px;margin-top:8px;padding:12px 24px;font-size:14px;font-weight:600;display:inline-flex;text-decoration:none;box-shadow:0 4px 14px #25d3664d}
+.whatsapp-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px #25d36666}
+.whatsapp-btn .icon{font-size:20px}
+.footer-bottom{color:var(--primary-500);justify-content:space-between;align-items:center;padding-top:24px;font-size:12px;display:flex;flex-wrap:wrap;gap:8px}
+.footer-bottom a{color:var(--primary-400);transition:color .3s}
+.footer-bottom a:hover{color:var(--white,#fff)}
+@media(max-width:768px){
+  .footer-main{grid-template-columns:1fr;gap:32px}
+  .footer-bottom{text-align:center;flex-direction:column;gap:8px}
+}
+</style>
+</head>
+<body class="sb-open">
+
+<!-- LANDING PAGE -->
+<div id="landingPage">
+
+  <nav class="lp-navbar" id="lpNav">
+    <div class="lp-navbar-brand" onclick="goToPage('home')">
+      <div class="lp-navbar-logo">GK</div>
+      <span class="lp-navbar-title">GITI Kiloi</span>
+    </div>
+    <div class="lp-navbar-links" id="lpNavLinks">
+      <a onclick="goToPage('drives')">Placement Drives</a>
+      <a onclick="goToPage('contact')">Contact</a>
+      <a href="./" style="margin-left:4px" title="Admin Login">🔐</a>
+    </div>
+    <button class="lp-navbar-toggle" onclick="toggleLPNav()" aria-label="Toggle menu">☰</button>
+  </nav>
+
+  <!-- PAGE: HOME -->
+  <div class="lp-page" id="lpPage-home">
+
+  <!-- HERO (banner image background) -->
+  <section class="hero-section" id="lp-hero">
+    <div class="hero-bg" style="background-image:url('ITI.jpeg')"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-inner">
+      <div class="hero-actions">
+        <a class="btn-primary" onclick="goToPage('drives')">📝 Apply Now</a>
+        <a class="btn-secondary" onclick="goToPage('form')">📋 Registration</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- BREAKING NEWS TICKER -->
+  <div class="hp-ticker">
+    <span class="hp-ticker-label">📢 Notice</span>
+    <div class="hp-ticker-track" id="lpTickerTrack"></div>
+  </div>
+
+  <!-- WELCOME + NOTICE BOARD -->
+  <section class="hp-main">
+    <div class="hp-content">
+      <div class="hp-sec-head">
+        <span class="hp-label">Welcome to</span>
+        <h2 class="hp-title">Govt. ITI Kiloi <span class="hp-accent">(Haryana)</span></h2>
+        <p class="hp-desc">Connecting students with reputed companies through campus placements and apprenticeship training. Browse the latest drives, check eligibility and register for your future.</p>
+      </div>
+      <div class="hp-features">
+        <div class="hp-feature" onclick="goToPage('drives')">
+          <div class="hp-feature-icon">🏢</div>
+          <div><h4>Placement Drives</h4><p>Job openings from reputed companies at the campus.</p></div>
+        </div>
+        <div class="hp-feature" onclick="goToPage('drives')">
+          <div class="hp-feature-icon">🛠️</div>
+          <div><h4>Apprenticeship</h4><p>Hands-on training with industry stipend support.</p></div>
+        </div>
+        <div class="hp-feature" onclick="goToPage('form')">
+          <div class="hp-feature-icon">📝</div>
+          <div><h4>Student Registration</h4><p>Fill the form and apply for your preferred drive.</p></div>
+        </div>
+        <div class="hp-feature" onclick="goToPage('contact')">
+          <div class="hp-feature-icon">📞</div>
+          <div><h4>Contact Help Desk</h4><p>Support for registration and placement queries.</p></div>
+        </div>
+      </div>
+    </div>
+    <aside class="hp-notice">
+      <div class="hp-notice-head"><span class="dot"></span>Notice Board <span class="cnt" id="lpNoticeCount"></span></div>
+      <div class="hp-notice-body" id="lpNoticeBoard"></div>
+      <div class="hp-notice-more" onclick="goToPage('drives')">View All Drives →</div>
+    </aside>
+  </section>
+
+  <!-- STATS -->
+  <section class="stats-bar">
+    <div class="stats-container">
+      <div class="stat-item"><div class="stat-number">500<span class="accent">+</span></div><div class="stat-label">Total Posts</div></div>
+      <div class="stat-item"><div class="stat-number">3</div><div class="stat-label">Companies</div></div>
+      <div class="stat-item"><div class="stat-number">₹24,300</div><div class="stat-label">Max Salary/Month</div></div>
+      <div class="stat-item"><div class="stat-number">₹18,000</div><div class="stat-label">Stipend/Month</div></div>
+    </div>
+  </section>
+  </div>
+
+  <!-- PAGE: PLACEMENT DRIVES -->
+  <div class="lp-page sub" id="lpPage-drives" style="display:none">
+    <div class="sub-hero" style="background-image:url('ITI.jpeg')">
+      <div class="sub-hero-overlay"></div>
+      <h2 class="sub-hero-title">Placement Drives</h2>
+    </div>
+    <div class="lp-topbar"><button type="button" class="lp-back-btn" onclick="goToPage('home')">← Back to Home</button></div>
+  <!-- PLACEMENT DRIVES -->
+  <section class="section" id="lp-drives">
+    <div class="section-header">
+      <div class="section-label">Placement Drives</div>
+      <h2 class="section-title">Available Placement Drives</h2>
+      <p class="section-desc">Read the details of the companies below carefully and apply as per your eligibility.</p>
+    </div>
+
+    <div class="companies-grid" id="lpDrivesList"></div>
+    <div class="section-desc" id="lpDrivesEmpty" style="display:none;text-align:center;padding:32px 0;color:var(--muted)">No companies added yet. Check back soon!</div>
+
+  </section>
+  </div>
+
+  <!-- PAGE: REGISTRATION -->
+  <div class="lp-page sub" id="lpPage-form" style="display:none">
+    <div class="sub-hero" style="background-image:url('ITI.jpeg')">
+      <div class="sub-hero-overlay"></div>
+      <h2 class="sub-hero-title">Student Registration</h2>
+    </div>
+    <div class="lp-topbar"><button type="button" class="lp-back-btn" onclick="goToPage('home')">← Back to Home</button></div>
+  <!-- REGISTRATION FORM -->
+  <section class="section form-section" id="lp-form">
+    <div class="section-header">
+      <div class="section-label">Registration</div>
+      <h2 class="section-title">Registration Form</h2>
+      <p class="section-desc">Fill the form below correctly. All required fields (<span style="color:var(--red-500)">*</span>) are mandatory.</p>
+    </div>
+    <div class="form-container">
+      <form id="lpRegForm" novalidate>
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Name <span class="required">*</span></label>
+            <input class="form-input" type="text" name="name" placeholder="Enter your full name">
+            <span class="form-error" data-err="name"></span>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Registration No.</label>
+            <input class="form-input" type="text" name="roll" placeholder="e.g. REG/2024/001 (optional)">
+            <span class="form-error" data-err="roll"></span>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Father Name <span class="required">*</span></label>
+            <input class="form-input" type="text" name="father" placeholder="Father's full name">
+            <span class="form-error" data-err="father"></span>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Mobile Number <span class="required">*</span></label>
+            <input class="form-input" type="tel" name="mobile" placeholder="10-digit mobile number" maxlength="10">
+            <span class="form-error" data-err="mobile"></span>
+          </div>
+          <div class="form-group">
+            <label class="form-label">ID Number</label>
+            <input class="form-input" type="text" name="aadhaar" placeholder="ID / Roll Number" maxlength="14">
+            <span class="form-error" data-err="aadhaar"></span>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Date of Birth <span class="required">*</span></label>
+            <div style="display:flex;gap:8px;align-items:center">
+              <input class="form-input" type="text" name="dob" id="lpRegDob" placeholder="DD-MM-YYYY" maxlength="10" style="flex:1;min-width:0">
+              <button type="button" title="Pick from calendar" style="padding:10px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:9px;cursor:pointer;font-size:15px;flex:0 0 auto" onclick="openDobCal('lpDobCal')">📅</button>
+              <input class="form-input" type="date" id="lpDobCal" onchange="fDobCalPicked(this,'lpRegDob')" style="width:1px;height:1px;opacity:0;border:0;padding:0;position:absolute;pointer-events:none">
+            </div>
+            <span class="form-error" data-err="dob"></span>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email ID <span class="required">*</span></label>
+            <input class="form-input" type="email" name="email" placeholder="example@email.com">
+            <span class="form-error" data-err="email"></span>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Category <span class="required">*</span></label>
+            <select class="form-select" name="category" id="lpCategory">
+              <option value="">-- Select Category --</option>
+            </select>
+            <span class="form-error" data-err="category"></span>
+          </div>
+          <div class="form-group full-width">
+            <label class="form-label">Address <span class="required">*</span></label>
+            <input class="form-input" type="text" name="address" placeholder="Village/City, District">
+            <span class="form-error" data-err="address"></span>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Trade <span class="required">*</span></label>
+            <select class="form-select" name="trade" id="lpTradeSel">
+              <option value="">-- Select trade --</option>
+            </select>
+            <span class="form-error" data-err="trade"></span>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Session <span class="required">*</span></label>
+            <select class="form-select" name="session" id="lpSessionSel" onchange="handleLPSessionSel(this)">
+              <option>2020-21</option><option>2021-22</option><option>2022-23</option><option>2023-24</option><option>2024-25</option><option selected>2025-26</option>
+              <option value="__custom__">➕ Custom Session...</option>
+            </select>
+            <div id="lpSessionCustomBox" style="display:none;margin-top:8px">
+              <input class="form-input" id="lpSessionInput" placeholder="e.g. 2026-27" maxlength="7" onkeydown="if(event.key==='Enter')confirmLPSession()">
+              <div style="display:flex;gap:8px;margin-top:6px">
+                <button type="button" class="btn btn-primary btn-sm" onclick="confirmLPSession()">✅ Add</button>
+                <button type="button" class="btn btn-secondary btn-sm" onclick="cancelLPSession()">Cancel</button>
+              </div>
+            </div>
+            <span class="form-error" data-err="session"></span>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Status</label>
+            <select class="form-select" name="status">
+              <option>Placed</option><option>Apprenticeship</option><option>Self Employed</option><option selected>Studying</option><option>Unemployed</option>
+            </select>
+            <span class="form-error" data-err="status"></span>
+          </div>
+          <div class="form-group full-width">
+            <label class="form-label">Remarks</label>
+            <input class="form-input" type="text" name="remarks" placeholder="Any notes...">
+            <span class="form-error" data-err="remarks"></span>
+          </div>
+          <div class="form-note"><span class="note-icon">⚠️</span><span>Please fill the correct information. Your registration is saved in the Student section. After submitting the form, please join the WhatsApp group.</span></div>
+          <div class="form-submit-area">
+            <span class="form-error" id="lpSubmitError" style="text-align:center" ></span>
+            <button type="submit" class="btn-submit" id="lpSubmitBtn">Submit Form</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- SUCCESS OVERLAY -->
+  <div class="success-overlay" id="lpRegSuccess" style="display:none">
+    <div class="success-card">
+      <div class="success-icon">✓</div>
+      <h3>Registration Successful!</h3>
+      <p>Your form has been submitted successfully. Please join the WhatsApp group below for updates.</p>
+      <div class="success-actions">
+        <a class="btn-success-wa" href="https://chat.whatsapp.com/LipB0iromkA8nI2oFi3JQy?s=cl&p=i&mlu=0&ilr=4" target="_blank" rel="noopener noreferrer"><span>💬</span>Join WhatsApp Group</a>
+        <button class="btn-success-close" onclick="closeRegSuccess()">Close</button>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <!-- PAGE: CONTACT -->
+  <div class="lp-page sub" id="lpPage-contact" style="display:none">
+    <div class="sub-hero" style="background-image:url('ITI.jpeg')">
+      <div class="sub-hero-overlay"></div>
+      <h2 class="sub-hero-title">Contact Us</h2>
+    </div>
+    <div class="lp-topbar"><button type="button" class="lp-back-btn" onclick="goToPage('home')">← Back to Home</button></div>
+  <!-- CONTACT -->
+  <section class="section" id="lp-contact">
+    <div class="section-header">
+      <div class="section-label">Contact</div>
+      <h2 class="section-title">Contact Us</h2>
+      <p class="section-desc">Contact us for any information regarding registration or placement.</p>
+    </div>
+    <div class="companies-grid" style="max-width:780px">
+      <div class="company-card">
+        <div class="company-header">
+          <div class="company-badge" style="background:rgba(245,158,11,.15);color:var(--accent)">Contact</div>
+        </div>
+        <div class="company-card-body">
+          <h3 class="company-name">Er. Mahender Singh<span style="display:block;font-size:13px;font-weight:500;color:var(--muted);font-family:var(--font-english);margin-top:2px">Apprenticeship Instructor</span></h3>
+          <div class="company-details-list">
+            <div class="company-detail-item">
+              <span class="detail-label">Institute</span>
+              <span class="detail-value">Govt. ITI Kiloi (Haryana)</span>
+            </div>
+            <div class="company-detail-item">
+              <span class="detail-label">Phone</span>
+              <span class="detail-value"><a href="tel:+919992720108" style="color:var(--accent);text-decoration:none">+91 99927 20108</a></span>
+            </div>
+            <div class="company-detail-item">
+              <span class="detail-label">WhatsApp</span>
+              <span class="detail-value"><a href="https://wa.me/919992720108" target="_blank" rel="noopener noreferrer" style="color:var(--accent);text-decoration:none">+91 99927 20108</a></span>
+            </div>
+          </div>
+          <div class="company-footer" style="display:flex;gap:10px;flex-direction:column">
+            <a class="btn-success-wa" href="https://chat.whatsapp.com/LipB0iromkA8nI2oFi3JQy?s=cl&p=i&mlu=0&ilr=4" target="_blank" rel="noopener noreferrer"><span>💬</span>Join WhatsApp Group</a>
+            <button class="btn-primary" style="width:100%;justify-content:center" onclick="goToPage('form')"><span>📝</span>Register Now</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-main">
+        <div class="footer-officer-card">
+          <div class="footer-officer-name">Er. Mahender Singh</div>
+          <div class="footer-officer-title">Apprenticeship Instructor</div>
+          <div class="footer-officer-inst">Industrial Training Institute, Kiloi, Haryana</div>
+          <a class="footer-contact-item" href="tel:+919992720108">
+            <span class="icon">📞</span><span>9992720108</span>
+          </a>
+          <a class="footer-contact-item" href="https://wa.me/919992720108" target="_blank" rel="noopener noreferrer">
+            <span class="icon">💬</span><span>WhatsApp</span>
+          </a>
+        </div>
+        <div>
+          <div class="footer-section-title">Quick Links</div>
+          <div class="footer-links">
+            <a onclick="goToPage('home')">🏠 Home</a>
+            <a onclick="goToPage('drives')">🏢 Placement Drives</a>
+            <a onclick="goToPage('form')">📝 Registration</a>
+            <a onclick="goToPage('contact')">📞 Contact</a>
+          </div>
+        </div>
+        <div>
+          <div class="footer-section-title">About</div>
+          <p style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:14px">GITI Kiloi — Placement Management System for Industrial Training Institute, Kiloi, Haryana.</p>
+          <p style="font-size:12px;color:var(--muted);line-height:1.7">Principal Office<br>ITI Kiloi</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>ITI Kiloi, Haryana — Placement Cell</span>
+        <span>Managed by <span style="color:var(--accent-400)">Er. Mahender Singh</span>, Apprenticeship Instructor</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- LOADER -->
+  <div class="loader-overlay" id="lpLoader" style="display:none">
+    <div class="loader-content">
+      <div class="loader-icon">GK</div>
+      <div class="loader-text">
+        <h2>GITI Kiloi</h2>
+        <p>Campus Placement Portal</p>
+      </div>
+      <div class="loader-bar-track"><div class="loader-bar"></div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+var lpDrives=[], lpDriveNextId=1;
+var trades=["Electrician","Fitter","Welder","COPA","Mechanic (MV)","Plumber","Carpenter","Draughtsman Civil","Turner","Machinist","Surveyor"];
+var CATEGORIES=["Gen","BCA","BCB","SC","ST","DSC","EWS","Others"];
+
+function escLP(s){
+  return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+function fillTradeOptions(selId,selected,withPlaceholder){
+  var sel=document.getElementById(selId);
+  if(!sel) return;
+  sel.innerHTML=(withPlaceholder?'<option value="">-- Select trade --</option>':'')+trades.map(function(t){return '<option'+(t===selected?" selected":'')+'>'+t+'</option>';}).join("");
+}
+function fillCategoryOptions(selId,selected){
+  var sel=document.getElementById(selId);
+  if(!sel) return;
+  sel.innerHTML='<option value="">-- Select Category --</option>'+CATEGORIES.map(function(c){return '<option'+(c===selected?" selected":'')+'>'+c+'</option>';}).join("");
+}
+function lpPosts(d){
+  var n=0; (d.trades||[]).forEach(function(t){ n+=(parseInt(t.c,10)||0); });
+  return n;
+}
+function goToPage(name){
+  var pages=document.querySelectorAll(".lp-page");
+  for(var i=0;i<pages.length;i++) pages[i].style.display="none";
+  var el=document.getElementById("lpPage-"+name);
+  if(el){ el.style.display="block"; window.scrollTo(0,0); }
+  closeLPNav();
+}
+function toggleLPNav(){ document.getElementById("lpNavLinks").classList.toggle("open"); }
+function closeLPNav(){ document.getElementById("lpNavLinks").classList.remove("open"); }
+function applyToDrive(id){ goToPage("form"); }
+function openDobCal(calId){
+  var c=document.getElementById(calId);
+  if(!c) return;
+  if(c.showPicker){ try{ c.showPicker(); return; }catch(e){} }
+  c.click();
+}
+function fDobCalPicked(el,tid){
+  var t=document.getElementById(tid);
+  if(t&&el.value) t.value=el.value;
+}
+function normalizeDob(v){
+  v=(v||"").toString().trim(); if(!v) return "";
+  var m1=v.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+  if(m1) return m1[1]+"-"+("0"+m1[2]).slice(-2)+"-"+("0"+m1[3]).slice(-2);
+  var m2=v.match(/^(\d{1,2})-(\d{1,2})-(\d{4})$/);
+  if(m2) return m2[3]+"-"+("0"+m2[2]).slice(-2)+"-"+("0"+m2[1]).slice(-2);
+  return v;
+}
+function runLPLoader(){
+  try{
+    setTimeout(function(){ var ldr=document.getElementById("lpLoader"); /* loader hidden initially (display none); show+hide on first paint */
+      if(!ldr) return;
+      ldr.style.display="flex";
+      setTimeout(function(){ ldr.style.transition="opacity .5s ease"; ldr.style.opacity="0"; },2200);
+      setTimeout(function(){ ldr.style.display="none"; ldr.style.opacity="1"; },2800);
+    },50);
+  }catch(e){}
+}
+function handleLPSessionSel(sel){
+  var box=document.getElementById("lpSessionCustomBox");
+  if(box) box.style.display=(sel&&sel.value==="__custom__")?"block":"none";
+  if(sel&&sel.value==="__custom__"){ var inp=document.getElementById("lpSessionInput"); if(inp) inp.focus(); }
+}
+function confirmLPSession(){
+  var v=((document.getElementById("lpSessionInput")||{}).value||"").trim();
+  if(!v){ alert("Please enter the session (e.g. 2026-27)"); return; }
+  var sel=document.getElementById("lpSessionSel");
+  if(sel) sel.value=v;
+  var box=document.getElementById("lpSessionCustomBox");
+  if(box) box.style.display="none";
+}
+function cancelLPSession(){
+  var sel=document.getElementById("lpSessionSel");
+  if(sel&&sel.value==="__custom__") sel.value="2025-26";
+  var box=document.getElementById("lpSessionCustomBox");
+  if(box) box.style.display="none";
+}
+function closeRegSuccess(){
+  var o=document.getElementById("lpRegSuccess");
+  if(o) o.style.display="none";
+}
+
+function loadLPDrives(){
+  try{
+    _db.ref("iti_kiloi/drives").on("value",function(snap){
+      var obj=snap.exists()?snap.val():{};
+      var arr=Object.keys(obj).map(function(k){ return obj[k]; });
+      lpDrives=arr.slice().sort(function(a,b){ return (a.id||0)-(b.id||0); });
+      lpDriveNextId=lpDrives.length?Math.max.apply(null,lpDrives.map(function(x){return x.id||0;}))+1:1;
+      renderLPHp();
+      renderLPDrivesPage();
+    },function(){});
+  }catch(e){}
+}
+function renderLPHp(){
+  var active=lpDrives.filter(function(d){return d&&d.active!==false;});
+  var lines=active.map(function(d){
+    var s=escLP(d.name||"Placement Drive");
+    if(d.type) s+=" · "+escLP(d.type);
+    var n=lpPosts(d); if(n) s+=" · "+n+" posts";
+    if(d.salaryAmount) s+=" · "+escLP(d.salaryAmount);
+    return s;
+  });
+  var ticker=document.getElementById("lpTickerTrack");
+  if(ticker){
+    if(lines.length){
+      var html=lines.map(function(s){return "<b>🔔 "+s+"</b><span class=\"sep\">✦</span>";}).join(" ");
+      ticker.innerHTML='<span class="hp-ticker-inner">'+html+html+'</span>';
+    } else {
+      ticker.innerHTML='<span class="hp-ticker-inner"><b>🎉 Campus Placement Drive 2025-26 is open</b><span class="sep">✦</span></span>';
+    }
+  }
+  var cnt=document.getElementById("lpNoticeCount");
+  if(cnt) cnt.textContent=lines.length>0?lines.length+" live":"";
+  var nb=document.getElementById("lpNoticeBoard");
+  if(nb){
+    if(lines.length){
+      nb.innerHTML=active.slice(0,7).map(function(d){
+        var rows=[];
+        if(d.type) rows.push("<b>"+escLP(d.type)+"</b>");
+        var n=lpPosts(d); if(n) rows.push(n+" posts");
+        if(d.location) rows.push(escLP(d.location));
+        if(d.salaryAmount) rows.push("💰 "+escLP(d.salaryAmount)+(d.salaryPeriod?(" "+escLP(d.salaryPeriod)):""));
+        var icon=(d.type||"").toLowerCase()==="job"?"💼":"🛠️";
+        return '<div class="hp-notice-item"><div class="hp-notice-item-icon">'+icon+'</div><div><h5>'+escLP(d.name||"Placement Drive")+'</h5>'+(rows.length?'<p>'+rows.join(" &nbsp;·&nbsp; ")+'</p>':"")+'</div></div>';
+      }).join("");
+    } else {
+      nb.innerHTML='<div class="hp-notice-item"><div class="hp-notice-item-icon">📌</div><div><h5>New Placement Drive Coming Soon</h5><p>Details will be announced here. Stay tuned!</p></div></div>';
+    }
+  }
+}
+function renderLPDrivesPage(){
+  var list=document.getElementById("lpDrivesList");
+  var empty=document.getElementById("lpDrivesEmpty");
+  if(!list) return;
+  var active=lpDrives.filter(function(d){return d.active!==false;});
+  if(empty) empty.style.display=active.length?"none":"block";
+  list.innerHTML=active.map(function(d,i){
+    var sub=d.sub?'<span style="display:block;font-size:13px;font-weight:500;color:var(--muted);margin-top:2px">'+escLP(d.sub)+'</span>':"";
+    var trades2=(d.trades||[]).map(function(t){
+      return '<span class="trade-tag">'+escLP(t.t)+(t.c?'<span class="count">'+t.c+'</span>':"")+'</span>';
+    }).join("");
+    var benefits=(d.benefits||[]).map(function(b){
+      return '<div class="benefit-item"><span class="benefit-icon">✓</span><span>'+escLP(b)+'</span></div>';
+    }).join("");
+    var work="";
+    if(d.workLabel1||d.workValue1||d.workLabel2||d.workValue2){
+      work='<div class="info-block"><div class="info-block-label">Working Hours</div><div class="eligibility-grid" style="grid-template-columns:repeat(2,1fr)">';
+      if(d.workLabel1||d.workValue1) work+='<div class="eligibility-item"><div class="label">'+escLP(d.workLabel1)+'</div><div class="value">'+escLP(d.workValue1)+'</div></div>';
+      if(d.workLabel2||d.workValue2) work+='<div class="eligibility-item"><div class="label">'+escLP(d.workLabel2)+'</div><div class="value">'+escLP(d.workValue2)+'</div></div>';
+      work+='</div></div>';
+    }
+    var badge=(d.type||"").toLowerCase()==="job"?"badge-job":"badge-apprenticeship";
+    return '<div class="company-card">'
+      +'<div class="company-card-header"><div class="company-card-header-left">'
+      +'<div class="company-number">'+(i+1)+'</div><div>'
+      +'<h3 class="company-name">'+escLP(d.name||"Company")+sub+'</h3>'
+      +'<div class="company-location"><span class="icon">📍</span><span>'+escLP(d.location||"")+'</span></div>'
+      +'</div></div>'
+      +'<span class="company-type-badge '+badge+'">'+escLP(d.type||"")+'</span></div>'
+      +'<div class="company-card-body">'
+      +(d.role?'<div class="info-block"><div class="info-block-label">Job Role</div><div class="info-block-value">'+escLP(d.role)+(d.roleHighlight?' — <span class="highlight">'+escLP(d.roleHighlight)+'</span>':"")+'</div></div>':"")
+      +(d.salaryAmount?'<div class="salary-display"><div class="salary-icon">₹</div><div class="salary-details"><div class="salary-amount">'+escLP(d.salaryAmount)+'</div>'+(d.salaryPeriod?'<div class="salary-period">'+escLP(d.salaryPeriod)+'</div>':"")+'</div></div>':"")
+      +(d.salaryDetails?'<div class="info-block"><div class="info-block-label">Salary Details</div><div class="info-block-value">'+escLP(d.salaryDetails)+'</div></div>':"")
+      +(d.website?'<div class="info-block"><div class="info-block-label">Website</div><div class="info-block-value"><a href="'+escLP(d.website)+'" target="_blank" rel="noopener noreferrer" style="color:var(--blue);text-decoration:underline">'+escLP(d.website)+'</a></div></div>':"")
+      +(trades2?'<div class="info-block"><div class="info-block-label">Eligible Trades &amp; Posts</div><div class="trades-list">'+trades2+'</div></div>':"")
+      +(d.note?'<div class="form-note"><span class="note-icon">ℹ️</span><span>'+escLP(d.note)+'</span></div>':"")
+      +work
+      +(benefits?'<div class="info-block"><div class="info-block-label">Other Benefits &amp; Facilities</div><div class="benefits-list">'+benefits+'</div></div>':"")
+      +'</div>'
+      +'<div style="padding:16px 20px;border-top:1px solid var(--border)"><button class="btn-submit" style="border-radius:10px" onclick="applyToDrive('+d.id+')">📝 Apply for '+escLP(d.name)+'</button></div>'
+      +'</div>';
+  }).join("");
+}
+
+document.addEventListener("DOMContentLoaded",function(){
+  runLPLoader();
+  try{ fillTradeOptions("lpTradeSel","",true); fillCategoryOptions("lpCategory",""); }catch(e){}
+  try{ _db.ref("iti_kiloi/trades").once("value").then(function(s){ if(s.exists()){ trades=s.val(); try{ fillTradeOptions("lpTradeSel","",true); }catch(e){} } }); }catch(e){}
+  loadLPDrives();
+
+  var form=document.getElementById("lpRegForm");
+  if(!form) return;
+  form.addEventListener("submit",function(e){
+    e.preventDefault();
+    var errs={}, f={};
+    ["name","roll","father","mobile","dob","aadhaar","email","category","address","session","remarks"].forEach(function(n){
+      var el=form.querySelector('[name="'+n+'"]');
+      f[n]=(el&&el.value?el.value:"").trim();
+    });
+    f.trade=(form.querySelector('[name="trade"]')||{}).value||"";
+    f.status=(form.querySelector('[name="status"]')||{}).value||"Studying";
+
+    if(!f.name) errs.name="Name is required";
+    if(!f.father) errs.father="Father name is required";
+    if(!/^[6-9]\d{9}$/.test(f.mobile)) errs.mobile="Enter a valid 10-digit mobile number";
+    if(!f.dob) errs.dob="Date of birth is required";
+    if(!f.email) errs.email="Email ID is required";
+    if(f.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email)) errs.email="Enter a valid email";
+    if(!f.category) errs.category="Category is required";
+    if(!f.address) errs.address="Address is required";
+    if(!f.trade) errs.trade="Select trade";
+    if(!f.session||f.session==="__custom__") errs.session="Session is required";
+
+    form.querySelectorAll(".form-error").forEach(function(s){ s.textContent=""; });
+    Object.keys(errs).forEach(function(k){
+      var s=form.querySelector('[data-err="'+k+'"]');
+      if(s) s.textContent="❌ "+errs[k];
+    });
+    if(Object.keys(errs).length>0) return;
+
+    var btn=document.getElementById("lpSubmitBtn");
+    var errBar=document.getElementById("lpSubmitError");
+    if(!btn) return;
+    btn.disabled=true;
+    btn.innerHTML='<span class="spinner"></span> Submitting...';
+    if(errBar) errBar.textContent="";
+
+    var dob=normalizeDob(f.dob);
+    var st={ name:f.name, roll:f.roll||"SR-1", father:f.father, aadhaar:f.aadhaar, mobile:f.mobile, dob:dob,
+      address:f.address, trade:f.trade, session:f.session, email:f.category, emailId:f.email,
+      status:f.status, remarks:f.remarks, registeredAt:new Date().toISOString(), source:"landing" };
+
+    _db.ref("iti_kiloi/students").transaction(function(cur){
+      var students=(cur&&cur.students)||[];
+      var nid=(cur&&cur.nextId)||students.length+1;
+      st.roll=f.roll||("SR-"+nid);
+      st.id=nid;
+      students.push(st);
+      return { students:students, nextId:nid+1 };
+    },function(err,committed){
+      btn.disabled=false;
+      btn.innerHTML="Submit Form";
+      if(err||!committed){
+        if(errBar) errBar.textContent="❌ Submit fail hua — internet check karein aur dobara try karein.";
+        return;
+      }
+      form.reset();
+      document.getElementById("lpRegSuccess").style.display="flex";
+    },false);
+  });
+});
+</script>
+</body>
+</html>
