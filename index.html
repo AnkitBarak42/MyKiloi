@@ -1045,7 +1045,7 @@ tr:hover td{background:rgba(15,23,42,.025)}
           </div>
           <div class="tbl-wrap">
             <table>
-              <thead><tr id="stuThead"><th>#</th><th>Name</th><th>Father Name</th><th>Date of Birth</th><th>Reg. No.</th><th>Mobile</th><th>Trade</th><th>Session</th><th>Status</th><th>Category</th><th>Email ID</th><th>Actions</th></tr></thead>
+              <thead><tr id="stuThead"><th>#</th><th>Name</th><th>Father Name</th><th>Date of Birth</th><th>Reg. No.</th><th>Mobile</th><th>Trade</th><th>Session</th><th>Status</th><th>Category</th><th>Email ID</th><th>Remarks</th><th>Actions</th></tr></thead>
               <tbody id="stuBody"></tbody>
             </table>
           </div>
@@ -1336,6 +1336,26 @@ tr:hover td{background:rgba(15,23,42,.025)}
           </div>
         </div>
 
+        <!-- JOB FAIR EVENT DETAILS -->
+        <div class="card" style="margin-bottom:16px">
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:12px">
+            <div>
+              <h2 style="margin:0 0 3px;font-size:17px">📅 Job Fair — Date / Time / Venue</h2>
+              <p style="margin:0;font-size:12px;color:var(--muted)">These details blink as a banner on the public Landing page.</p>
+            </div>
+            <span class="cnt-label" id="jfEventStatus">Not saved yet</span>
+          </div>
+          <div class="filter-row" style="flex-wrap:wrap;gap:10px">
+            <input type="date" id="jfEventDate" title="Job Fair Date"
+              style="padding:7px 11px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;outline:none;color-scheme:dark">
+            <input type="time" id="jfEventTime" title="Job Fair Time"
+              style="padding:7px 11px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;outline:none;color-scheme:dark">
+            <input id="jfEventVenue" placeholder="Venue — e.g. Main Seminar Hall, GITI Kiloi"
+              style="flex:1;min-width:180px;padding:7px 11px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;outline:none">
+            <button class="btn btn-primary" onclick="saveJfEvent()">💾 Save</button>
+          </div>
+        </div>
+
         <!-- COMPANY PLACEMENT DRIVES -->
         <div class="card" style="margin-bottom:16px">
           <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:12px">
@@ -1382,7 +1402,7 @@ tr:hover td{background:rgba(15,23,42,.025)}
             <table>
               <thead><tr>
                 <th>#</th><th>Name</th><th>Reg No.</th><th>Mobile</th><th>Email</th>
-                <th>Trade</th><th>Session</th><th>Company</th><th>Month/Year</th><th>Remark</th><th class="no-print">Actions</th>
+                <th>Trade</th><th>Session</th><th>Company</th><th>Month/Year</th><th>Date</th><th>Time</th><th>Venue</th><th>Remark</th><th class="no-print">Actions</th>
               </tr></thead>
               <tbody id="jfBody"></tbody>
             </table>
@@ -1695,6 +1715,9 @@ tr:hover td{background:rgba(15,23,42,.025)}
           <div style="font-size:10px;color:var(--muted);margin-top:4px">4 digit year daalo (e.g. 2032)</div>
         </div>
       </div>
+      <div class="fg2"><label>Date</label><input id="jfDate" type="date"></div>
+      <div class="fg2"><label>Time</label><input id="jfTime" type="time"></div>
+      <div class="fg2" style="grid-column:1/-1"><label>Venue</label><input id="jfVenue" placeholder="e.g. Main Seminar Hall, GITI Kiloi"></div>
     </div>
     <div class="fg2"><label>Remark</label><input id="jfRemark" placeholder="Any notes..."></div>
     <div class="modal-foot">
@@ -3204,9 +3227,9 @@ function renderStudents(resetPage){
   const thead=document.getElementById("stuThead");
   if(thead){
     if(selectMode&&isAdmin){
-      thead.innerHTML=`<th style="width:36px"><input type="checkbox" id="chkAll" onchange="chkAllVisible(this)" style="width:15px;height:15px;cursor:pointer;accent-color:var(--red)"></th><th>#</th><th>Name</th><th>Father Name</th><th>Date of Birth</th><th>Reg. No.</th><th>Mobile</th><th>Trade</th><th>Session</th><th>Status</th><th>Category</th><th>Email ID</th><th>Actions</th>`;
+      thead.innerHTML=`<th style="width:36px"><input type="checkbox" id="chkAll" onchange="chkAllVisible(this)" style="width:15px;height:15px;cursor:pointer;accent-color:var(--red)"></th><th>#</th><th>Name</th><th>Father Name</th><th>Date of Birth</th><th>Reg. No.</th><th>Mobile</th><th>Trade</th><th>Session</th><th>Status</th><th>Category</th><th>Email ID</th><th>Remarks</th><th>Actions</th>`;
     } else {
-      thead.innerHTML=`<th>#</th><th>Name</th><th>Father Name</th><th>Date of Birth</th><th>Reg. No.</th><th>Mobile</th><th>Trade</th><th>Session</th><th>Status</th><th>Category</th><th>Email ID</th><th>Actions</th>`;
+      thead.innerHTML=`<th>#</th><th>Name</th><th>Father Name</th><th>Date of Birth</th><th>Reg. No.</th><th>Mobile</th><th>Trade</th><th>Session</th><th>Status</th><th>Category</th><th>Email ID</th><th>Remarks</th><th>Actions</th>`;
     }
   }
   document.getElementById("stuBody").innerHTML=paged.length?paged.map((s,i)=>{
@@ -3223,13 +3246,14 @@ function renderStudents(resetPage){
       <td><span class="badge b-${s.status.toLowerCase().replace(" ","-")}">${s.status}</span></td>
 <td style="color:var(--muted)">${s.email||s.category||"—"}</td>
       <td style="font-size:12px;color:var(--muted)">${s.emailId||"—"}</td>
+      <td style="font-size:12px;color:var(--muted)">${s.remarks||"—"}</td>
       <td onclick="event.stopPropagation()"><div style="display:flex;gap:5px">
         <button class="btn-icon bi-view" onclick="viewStudent(${s.id})">👁️</button>
         ${!selectMode?`<button class="btn-icon bi-edit" onclick="editStudent(${s.id})">✏️</button>`:""}
         ${isAdmin&&!selectMode?`<button class="btn-icon bi-del" onclick="delStudent(${s.id})">🗑️</button>`:""}
       </div></td>
     </tr>`;
-  }).join(""):`<tr><td class="empty-td" colspan="${selectMode?13:12}">No students found</td></tr>`;
+  }).join(""):`<tr><td class="empty-td" colspan="${selectMode?14:13}">No students found</td></tr>`;
 
   // Pagination
   let pg='';
@@ -4705,6 +4729,7 @@ function cancelJFSession(){
 function loadJobFair(){
   updateJFPSelInfo();
   buildYearOptions("jfYear", "", true);
+  loadJfEvent();
   if(window._firebaseReady && window._db){
     window._db.ref("iti_kiloi/jobfair").on("value", snap=>{
       jobFairData = snap.exists() ? Object.values(snap.val()) : [];
@@ -4727,11 +4752,49 @@ function persistJF(){
   }
 }
 
+let jfEvent=null;
+function loadJfEvent(){
+  if(window._firebaseReady && window._db){
+    window._db.ref("iti_kiloi/jobfair_event").on("value",function(snap){
+      jfEvent=snap.exists()?snap.val():null;
+      fillJfEventForm();
+    },function(){});
+  } else {
+    try{ jfEvent=JSON.parse(localStorage.getItem("iti_kiloi_jobfair_event")||"null"); }catch(e){ jfEvent=null; }
+    fillJfEventForm();
+  }
+}
+function fillJfEventForm(){
+  const d=document.getElementById("jfEventDate");
+  const t=document.getElementById("jfEventTime");
+  const v=document.getElementById("jfEventVenue");
+  if(!d) return;
+  d.value=jfEvent?jfEvent.date||"":"";
+  t.value=jfEvent?jfEvent.time||"":"";
+  v.value=jfEvent?jfEvent.venue||"":"";
+  const st=document.getElementById("jfEventStatus");
+  if(st) st.textContent=(jfEvent&&(jfEvent.date||jfEvent.time||jfEvent.venue))?"✅ Live on Landing page":"Not saved yet";
+}
+function saveJfEvent(){
+  const d=document.getElementById("jfEventDate").value;
+  const t=document.getElementById("jfEventTime").value;
+  const v=document.getElementById("jfEventVenue").value.trim();
+  if(!d&&!t&&!v){ showToast("Enter date, time or venue first","err"); return; }
+  jfEvent={date:d,time:t,venue:v,updatedAt:new Date().toISOString()};
+  try{ localStorage.setItem("iti_kiloi_jobfair_event",JSON.stringify(jfEvent)); }catch(e){}
+  if(window._firebaseReady && window._db){
+    window._db.ref("iti_kiloi/jobfair_event").set(jfEvent);
+  }
+  const st=document.getElementById("jfEventStatus");
+  if(st) st.textContent="✅ Saved — blinking on Landing page";
+  showToast("Job Fair event saved ✅");
+}
+
 function openAddJobFairModal(){
   editingJFId=null;
   selectedJFDirCompanies=[];
   document.getElementById("jfModalTitle").textContent="🏢 Add Job Fair Entry";
-  ["jfName","jfReg","jfMob","jfEmail","jfRemark"].forEach(id=>document.getElementById(id).value="");
+  ["jfName","jfReg","jfMob","jfEmail","jfRemark","jfDate","jfTime","jfVenue"].forEach(id=>document.getElementById(id).value="");
   document.getElementById("jfSession").value="2024-25";
   const sel=document.getElementById("jfTrade2");
   sel.innerHTML=trades.map(t=>`<option>${t}</option>`).join("");
@@ -4827,6 +4890,9 @@ function openEditJFModal(id){
   document.getElementById("jfMob").value=j.mob||"";
   document.getElementById("jfEmail").value=j.email||"";
   document.getElementById("jfRemark").value=j.remark||"";
+  document.getElementById("jfDate").value=j.date||"";
+  document.getElementById("jfTime").value=j.time||"";
+  document.getElementById("jfVenue").value=j.venue||"";
   document.getElementById("jfSession").value=j.session||"2024-25";
   document.getElementById("jfSession").value=j.session||"2024-25";
   const sel=document.getElementById("jfTrade2");
@@ -4856,6 +4922,9 @@ function saveJobFairEntry(){
     company,
     month:document.getElementById("jfMonthM").value,
     year:document.getElementById("jfYearM").value,
+    date:document.getElementById("jfDate").value||"",
+    time:document.getElementById("jfTime").value||"",
+    venue:document.getElementById("jfVenue").value.trim(),
     remark:document.getElementById("jfRemark").value.trim(),
   };
   if(editingJFId){
@@ -4879,6 +4948,11 @@ function deleteJFEntry(id){
 }
 
 const MONTH_NAMES=["","January","February","March","April","May","June","July","August","September","October","November","December"];
+function fmtJfDate(v){
+  if(!v) return "";
+  const m=/^(\d{4})-(\d{1,2})-(\d{1,2})$/.exec(v);
+  return m?m[3]+"-"+m[2]+"-"+m[1]:v;
+}
 let jfPrintMonthSel=[], jfPrintYearSel=[], jfPrintTradeSel=[]; // empty array = "All" for each
 
 const jfMonthItems=MONTH_NAMES.slice(1).map((m,i)=>[String(i+1).padStart(2,"0"),m]);
@@ -4987,14 +5061,17 @@ function printJobFairList(data,title){
       <td>${escLP(j.email||"—")}</td>
       <td>${escLP(j.trade||"—")}</td>
       <td>${escLP(j.session||"—")}</td>
-      <td>${escLP(j.company||(j.companies&&j.companies[0])||"—")}${(j.companies&&j.companies.length>1)?' <b>+'+(j.companies.length-1)+'</b>':""}</td>
+      <td>${escLP((j.companies&&j.companies.length)?j.companies.join(", "):(j.company||"—"))}</td>
       <td>${MONTH_NAMES[parseInt(j.month)]||j.month||"—"} ${j.year||""}</td>
+      <td>${j.date?fmtJfDate(j.date):"—"}</td>
+      <td>${escLP(j.time||"—")}</td>
+      <td>${escLP(j.venue||"—")}</td>
       <td>${escLP(j.remark||"—")}</td>
     </tr>`;
   }).join("");
   w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${title}</title><style>${printCSS}</style></head><body>
   <div class="hdr"><h1>GITI KILOI — PLACEMENT MANAGEMENT</h1><h2>${title}</h2><p>Date: ${new Date().toLocaleDateString("en-IN",{day:"2-digit",month:"long",year:"numeric"})}</p></div>
-  <table><thead><tr><th>#</th><th>Name</th><th>Reg No.</th><th>Mobile</th><th>Email</th><th>Trade</th><th>Session</th><th>Company</th><th>Month/Year</th><th>Remark</th></tr></thead><tbody>${rows}</tbody></table>
+  <table><thead><tr><th>#</th><th>Name</th><th>Reg No.</th><th>Mobile</th><th>Email</th><th>Trade</th><th>Session</th><th>Company</th><th>Month/Year</th><th>Date</th><th>Time</th><th>Venue</th><th>Remark</th></tr></thead><tbody>${rows}</tbody></table>
   <p style="text-align:right;margin-top:8px;font-size:11px;color:#666">Total: ${data.length} records</p>
   <div class="foot"><div class="sig">Instructor</div><div class="sig">Appr. Instructor</div><div class="sig">Group Instructor</div></div>
   <script>setTimeout(()=>window.print(),600)<\/script></body></html>`);
@@ -5015,14 +5092,14 @@ function renderJobFair(){
   let data=jobFairData.filter(j=>{
     return (!mon||j.month===mon)&&(!yr||j.year===String(yr))
       &&(!tr||j.trade===tr)
-      &&(!q||(j.name||"").toLowerCase().includes(q)||(j.reg||"").toLowerCase().includes(q)||(j.company||"").toLowerCase().includes(q));
+      &&(!q||(j.name||"").toLowerCase().includes(q)||(j.reg||"").toLowerCase().includes(q)||(j.company||"").toLowerCase().includes(q)||(j.companies||[]).join(", ").toLowerCase().includes(q));
   });
   const countEl=document.getElementById("jfCount");
   if(countEl) countEl.textContent=data.length+" entries";
   const tbody=document.getElementById("jfBody");
   if(!tbody) return;
   if(!data.length){
-    tbody.innerHTML=`<tr><td colspan="11" class="empty-td">No entries found — change the Month/Year filter or add a new entry.</td></tr>`;
+    tbody.innerHTML=`<tr><td colspan="14" class="empty-td">No entries found — change the Month/Year filter or add a new entry.</td></tr>`;
     return;
   }
   tbody.innerHTML=data.map((j,i)=>`
@@ -5034,8 +5111,11 @@ function renderJobFair(){
       <td style="font-size:12px">${j.email||"—"}</td>
       <td>${j.trade||"—"}</td>
       <td>${j.session||"—"}</td>
-      <td style="color:var(--accent);font-weight:600">${j.company||"—"}${(j.companies&&j.companies.length>1)?` <span style="font-size:11px;font-weight:600">+${j.companies.length-1} more</span>`:""}</td>
+      <td style="color:var(--accent);font-weight:600">${(j.companies&&j.companies.length)?j.companies.join(", "):(j.company||"—")}</td>
       <td style="white-space:nowrap">${MONTH_NAMES[parseInt(j.month)]||j.month} ${j.year}</td>
+      <td style="white-space:nowrap;font-size:12px">${j.date?fmtJfDate(j.date):"—"}</td>
+      <td style="white-space:nowrap;font-size:12px">${j.time?j.time:"—"}</td>
+      <td style="font-size:12px">${j.venue||"—"}</td>
       <td style="color:var(--muted);font-size:12px">${j.remark||"—"}</td>
       <td class="no-print"><div style="display:flex;gap:5px">
         <button class="btn-icon bi-edit" onclick="openEditJFModal(${j.id})">✏️</button>
