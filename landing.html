@@ -909,7 +909,8 @@ input,select,textarea,button{font-family:inherit}
 <script>
 var lpDrives=[], lpDriveNextId=1;
 var lpApplyDriveId=null;
-var trades=["Electrician","Fitter","Welder","COPA","Mechanic (MV)","Plumber","Carpenter","Draughtsman Civil","Turner","Machinist","Surveyor"];
+var trades=["Carpenter","COPA","Draughtsman Civil","Electrician","Fitter","Machinist","Mechanic (MV)","Plumber","Surveyor","Turner","Welder"];
+function sortTrades(arr){ return (arr||[]).slice().sort(function(a,b){ return String(a).toLowerCase().localeCompare(String(b).toLowerCase()); }); }
 var CATEGORIES=["Gen","BCA","BCB","SC","ST","DSC","EWS","Others"];
 
 function lpLog(action, details, uid){
@@ -1526,7 +1527,7 @@ document.addEventListener("DOMContentLoaded",function(){
   initTheme();
   runLPLoader();
   try{ fillTradeOptions("lpTradeSel","",true); fillCategoryOptions("lpCategory",""); }catch(e){}
-  try{ _db.ref("iti_kiloi/trades").once("value").then(function(s){ if(s.exists()){ trades=s.val(); try{ fillTradeOptions("lpTradeSel","",true); }catch(e){} } }); }catch(e){}
+  try{ _db.ref("iti_kiloi/trades").once("value").then(function(s){ if(s.exists()){ trades=sortTrades(s.val()); try{ fillTradeOptions("lpTradeSel","",true); }catch(e){} } }); }catch(e){}
   loadLPDrives();
   loadLPJobFairs();
 

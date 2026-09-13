@@ -1847,7 +1847,8 @@ const DEFAULT_USERS = {
   staff1: {pass:"staff123",role:"staff", name:"Staff Member 1"},
   staff2: {pass:"staff123",role:"staff", name:"Staff Member 2"},
 };
-const DEFAULT_TRADES = ["Electrician","Fitter","Welder","COPA","Mechanic (MV)","Plumber","Carpenter","Draughtsman Civil","Turner","Machinist","Surveyor"];
+const DEFAULT_TRADES = ["Carpenter","COPA","Draughtsman Civil","Electrician","Fitter","Machinist","Mechanic (MV)","Plumber","Surveyor","Turner","Welder"];
+function sortTrades(arr){ return (arr||[]).slice().sort(function(a,b){ return String(a).toLowerCase().localeCompare(String(b).toLowerCase()); }); }
 const SESSIONS = ["2020-21","2021-22","2022-23","2023-24","2024-25","2025-26"];
 const CATEGORIES = ["Gen","BCA","BCB","SC","ST","DSC","EWS","Others"];
 const SAMPLE = [];
@@ -2021,7 +2022,7 @@ window.addEventListener("load",()=>{
           db.ref("iti_kiloi/students").set({students,nextId});
         }
         if(d.users) users=d.users;
-        if(d.trades) trades=d.trades;
+        if(d.trades) trades=sortTrades(d.trades);
         if(d.log) activityLog=d.log;
       } else {
         // First time — save sample data
@@ -2081,7 +2082,7 @@ window.addEventListener("load",()=>{
       }
     });
     db.ref("iti_kiloi/trades").on("value",snap=>{
-      if(snap.exists()){trades=snap.val();if(currentUser)try{renderTrades();}catch(e){}}
+      if(snap.exists()){trades=sortTrades(snap.val());if(currentUser)try{renderTrades();}catch(e){}}
     });
     db.ref("iti_kiloi/log").on("value",snap=>{
       if(snap.exists()){ mergeLogEntries(snap.val()||[]); if(currentUser)try{renderActivity();}catch(e){} }
@@ -2130,7 +2131,7 @@ window.addEventListener("load",()=>{
     if(sd&&sd.students&&sd.students.length){students=sd.students;nextId=sd.nextId||sd.students.length+1;}
     else{students=[];nextId=1;}
     if(su) users=su;
-    if(st) trades=st;
+    if(st) trades=sortTrades(st);
     if(sl) activityLog=sl;
   }
 
@@ -3244,7 +3245,7 @@ function renderStudents(resetPage){
       <td style="color:var(--muted)">${(stuPage-1)*STU_PER_PAGE+i+1}</td>
       <td><b>${s.name}</b></td>
       <td style="font-size:12px;color:var(--muted)">${s.father||"—"}</td>
-      <td style="font-size:12px;color:var(--muted)">${s.dob||"—"}</td>
+      <td style="font-size:12px;color:var(--muted)">${fmtDob(s.dob)}</td>
       <td style="font-size:12px;color:var(--muted)">${maskRoll(s.roll)}</td>
       <td>${s.mobile||"—"}</td><td>${s.trade}</td><td>${s.session}</td>
       <td><span class="badge b-${s.status.toLowerCase().replace(" ","-")}">${s.status}</span></td>
@@ -3401,7 +3402,7 @@ function viewStudent(id){
   const mRoll=r=>isAdm?r:(r?r.slice(0,3)+"***":"-");
   document.getElementById("viewGrid").innerHTML=[
     ["Name",s.name],["Reg. No.",mRoll(s.roll)],["Mobile",s.mobile||"—"],["ID Number",s.aadhaar||"N/A"],
-    ["Father Name",s.father||"—"],["Date of Birth",s.dob||"—"],["Address",s.address||"—"],["Email ID",s.emailId||"—"],["Category",s.email||s.category||"—"],
+    ["Father Name",s.father||"—"],["Date of Birth",fmtDob(s.dob)],["Address",s.address||"—"],["Email ID",s.emailId||"—"],["Category",s.email||s.category||"—"],
     ["Trade",s.trade],["Session",s.session],
     ["Remarks",s.remarks||"—"],
   ].map(([l,v])=>`<div class="detail-item"><div class="dl">${l}</div><div class="dv">${v}</div></div>`).join("")
@@ -3831,7 +3832,7 @@ function printTable(data,title,cols){
       case "sno":return i+1;
       case "name":return `<b>${s.name}</b>`;
       case "father":return s.father||"—";
-      case "dob":return s.dob||"—";
+      case "dob":return fmtDob(s.dob);
       case "roll":return mRollP(s.roll||"");
       case "mobile":return s.mobile||"—";
       case "aadhaar":return s.aadhaar||"—";
@@ -4036,7 +4037,7 @@ function exportPDF(type,cols){
           case "sno":return i+1;
           case "name":return s.name;
           case "father":return s.father||"";
-          case "dob":return s.dob||"";
+          case "dob":return s.dob?String(fmtDob(s.dob)).replace(/—/g,""):"";
           case "roll":return mRP(s.roll||"");
           case "mobile":return s.mobile||"";
           case "aadhaar":return s.aadhaar||"";
@@ -4127,7 +4128,7 @@ function processJsonRestore(file){
       if(!bk.data||!bk.data.students) throw new Error("Invalid backup file");
       if(!confirm(`Restore? This will replace all current data.\n\nBackup contains: ${bk.data.students.length} students, ${Object.keys(bk.data.users||{}).length} users`)) return;
       students=bk.data.students; nextId=bk.data.nextId||students.length+1;
-      if(bk.data.trades) trades=bk.data.trades;
+      if(bk.data.trades) trades=sortTrades(bk.data.trades);
       if(bk.data.users) users=bk.data.users;
       persistAll();
       logActivity("RESTORE_BACKUP", `JSON backup restored — ${students.length} students, ${trades.length} trades`);
@@ -4358,7 +4359,7 @@ function renderActivity(){
     filtered.map(l=>{
       const m = ACTION_META[l.action]||{label:l.action,icon:"📌",color:"var(--muted)"};
       const dt = new Date(l.ts);
-      const dateStr = dt.toLocaleDateString("en-IN",{day:"2-digit",month:"short",year:"numeric"});
+      const dateStr = fmtD(dt);
       const timeStr = dt.toLocaleTimeString("en-IN",{hour:"2-digit",minute:"2-digit"});
       return `<tr>
         <td style="white-space:nowrap;color:var(--muted);font-size:12px">${dateStr}<br><span style="color:var(--light)">${timeStr}</span></td>
@@ -4388,7 +4389,7 @@ function addTrade(){
   const t=document.getElementById("newTrade").value.trim();
   if(!t){showToast("Please enter a trade name.","err");return;}
   if(trades.includes(t)){showToast("Ye trade pehle se hai!","err");return;}
-  trades.push(t);
+  trades.push(t); trades=sortTrades(trades);
   logActivity("ADD_TRADE", `"${t}" trade was added`);
   persistAll();document.getElementById("newTrade").value="";
   renderTrades();showToast(`Trade "${t}" added ✅`);
@@ -4427,7 +4428,7 @@ function renderPendingRequests(){
             <div style="font-size:12px;color:var(--muted);margin-top:4px;line-height:1.8">
               📱 ${r.mobile} &nbsp;|&nbsp; 📧 ${r.email}<br>
               🎓 Role: <b style="color:var(--accent)">${r.role}</b> &nbsp;|&nbsp;
-              🕐 ${new Date(r.requestedAt).toLocaleDateString("en-IN")}
+              🕐 ${fmtD(r.requestedAt)}
             </div>
           </div>
           <div style="display:flex;gap:8px">
@@ -4539,8 +4540,8 @@ function renderProcessedRequests(){
               <span>🎓 Staff Role: <b style="color:var(--accent)">${r.role||"—"}</b></span>
               <span>👤 Username: <b style="color:var(--text)">${un}</b></span>
               <span>🔑 Password: <b style="color:var(--text);font-family:monospace">${r.pass||"—"}</b></span>
-              <span>📅 Requested: <b style="color:var(--text)">${r.requestedAt?new Date(r.requestedAt).toLocaleDateString("en-IN"):"—"}</b></span>
-              <span>⚡ Processed: <b style="color:${statusColor}">${r.processedAt?new Date(r.processedAt).toLocaleString("en-IN"):"—"}</b></span>
+              <span>📅 Requested: <b style="color:var(--text)">${r.requestedAt?fmtD(r.requestedAt):"—"}</b></span>
+              <span>⚡ Processed: <b style="color:${statusColor}">${r.processedAt?fmtDT(r.processedAt):"—"}</b></span>
               <span>👮 By Admin: <b style="color:var(--text)">${r.processedBy||"—"}</b></span>
             </div>
           </div>
@@ -4993,6 +4994,28 @@ function fmtJfDate(v){
   if(!v) return "";
   const m=/^(\d{4})-(\d{1,2})-(\d{1,2})$/.exec(v);
   return m?m[3]+"-"+m[2]+"-"+m[1]:v;
+}
+function fmtD(v){
+  if(v===0||v===null||v===undefined||v==="") return "";
+  var d=new Date(v);
+  if(isNaN(d.getTime())) return "";
+  return ("0"+d.getDate()).slice(-2)+"-"+("0"+(d.getMonth()+1)).slice(-2)+"-"+d.getFullYear();
+}
+function fmtDT(v){
+  if(v===0||v===null||v===undefined||v==="") return "";
+  var d=new Date(v);
+  if(isNaN(d.getTime())) return "";
+  return ("0"+d.getDate()).slice(-2)+"-"+("0"+(d.getMonth()+1)).slice(-2)+"-"+d.getFullYear()+" "
+    +("0"+d.getHours()).slice(-2)+":"+("0"+d.getMinutes()).slice(-2);
+}
+function fmtDob(v){
+  if(!v) return "—";
+  var s=String(v).trim();
+  var d=/^(\d{1,2})-(\d{1,2})-(\d{4})$/.exec(s);
+  if(d) return ("0"+d[1]).slice(-2)+"-"+("0"+d[2]).slice(-2)+"-"+d[3];
+  var iso=/^(\d{4})-(\d{1,2})-(\d{1,2})/.exec(s);
+  if(iso) return iso[3]+"-"+iso[2]+"-"+iso[1];
+  return s;
 }
 let jfPrintMonthSel=[], jfPrintYearSel=[], jfPrintTradeSel=[]; // empty array = "All" for each
 
