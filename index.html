@@ -883,7 +883,7 @@ tr:hover td{background:rgba(15,23,42,.025)}
         <div style="display:flex;gap:6px">
           <input id="suDob" type="text" required placeholder="DD-MM-YYYY" maxlength="10" style="flex:1;min-width:0">
           <button type="button" title="Pick from calendar" class="btn btn-secondary" style="padding:0 12px" onclick="openDobCal('suDobCal')">📅</button>
-          <input id="suDobCal" type="date" style="display:none" onchange="fDobCalPicked(this,'suDob')">
+          <input id="suDobCal" type="date" onchange="fDobCalPicked(this,'suDob')" style="width:1px;height:1px;opacity:0;border:0;padding:0;position:absolute;pointer-events:none">
         </div>
       </div>
       <div class="fg"><label>Email ID *</label><input id="suEmail" type="email" required placeholder="your@email.com"></div>
@@ -1565,7 +1565,7 @@ tr:hover td{background:rgba(15,23,42,.025)}
       <div style="display:flex;gap:6px">
         <input id="fDob" type="text" required placeholder="DD-MM-YYYY" maxlength="10" style="flex:1;min-width:0">
         <button type="button" title="Pick from calendar" class="btn btn-secondary" style="padding:0 12px" onclick="openDobCal('fDobCal')">📅</button>
-        <input id="fDobCal" type="date" style="display:none" onchange="fDobCalPicked(this,'fDob')">
+        <input id="fDobCal" type="date" onchange="fDobCalPicked(this,'fDob')" style="width:1px;height:1px;opacity:0;border:0;padding:0;position:absolute;pointer-events:none">
       </div>
     </div>
     <div class="form-grid">
@@ -3411,7 +3411,10 @@ var DOB_MONTHS=["January","February","March","April","May","June","July","August
 function openDobCal(calId){
   const c=document.getElementById(calId);
   if(!c) return;
-  try{ if(c.showPicker){ c.showPicker(); return; } }catch(e){}
+  const touchDevice=(navigator.maxTouchPoints>0)||(window.matchMedia&&window.matchMedia("(pointer:coarse)").matches);
+  if(!touchDevice){
+    try{ if(c.showPicker){ c.showPicker(); return; } }catch(e){}
+  }
   dobCalOpenFallback(c);
 }
 function dobCalOpenFallback(calInput){

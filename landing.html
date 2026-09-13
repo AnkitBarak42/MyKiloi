@@ -182,7 +182,13 @@ input,select,textarea,button{font-family:inherit}
 .ap-company-item input{width:15px;height:15px;accent-color:var(--accent);cursor:pointer;flex:0 0 auto}
 .form-note.disclaimer{background:rgba(239,68,68,.08);color:var(--text);border:1px solid rgba(239,68,68,.3)}
 .form-note.disclaimer b{color:var(--red)}
-.footer-disclaimer{border-top:1px solid var(--primary-200);padding:16px 20px;font-size:11.5px;color:var(--primary-500);line-height:1.75;text-align:center;max-width:1000px;margin:0 auto}
+.app-disclaimer{display:flex;align-items:center;margin:28px auto 0;max-width:1000px;background:linear-gradient(135deg,rgba(245,158,11,.16),rgba(217,119,6,.1));border:1px solid rgba(245,158,11,.35);border-radius:12px;overflow:hidden;font-size:12.5px;font-weight:600}
+.app-disclaimer .ad-label{flex:0 0 auto;display:flex;align-items:center;gap:6px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#0f172a;font-weight:800;letter-spacing:.4px;padding:9px 14px;font-size:11px;border-radius:11px 0 0 11px}
+.app-disclaimer .ad-track{flex:1;overflow:hidden;white-space:nowrap}
+.app-disclaimer .ad-inner{display:inline-block;white-space:nowrap;padding:10px 0;animation:adScroll 30s linear infinite;color:var(--light)}
+.app-disclaimer .ad-inner b{color:#fbbf24}
+@keyframes adScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+@media(max-width:720px){.app-disclaimer{margin:20px auto 0}.app-disclaimer .ad-label{padding:8px 9px;font-size:10px;letter-spacing:.2px}.app-disclaimer{font-size:11px}}
 .form-note .note-icon{flex-shrink:0;margin-top:1px;font-size:16px}
 .form-submit-area{flex-direction:column;grid-column:1/-1;align-items:center;gap:16px;margin-top:8px;display:flex}
 .btn-submit{background:linear-gradient(135deg,#f59e0b,#d97706);width:100%;color:#0f172a;border-radius:10px;transition:background .3s,box-shadow .3s,opacity .3s;justify-content:center;align-items:center;gap:10px;padding:16px 32px;font-size:16px;font-weight:700;display:flex;cursor:pointer;border:none}
@@ -816,7 +822,7 @@ input,select,textarea,button{font-family:inherit}
               <input class="form-input" type="text" id="apRemark" placeholder="Any notes...">
             </div>
             <div class="form-note"><span class="note-icon">ℹ️</span><span>You must be a registered student. Your mobile number and date of birth are verified before saving. The entry appears in the Job Fair section.</span></div>
-            <div class="form-note disclaimer"><span class="note-icon">⚠️</span><span><b>Disclaimer:</b> There is no guarantee of job, selection or stipend. Final selection is at the sole discretion of each company. Kindly verify all details before submitting the application.</span></div>
+            <div class="form-note disclaimer"><span class="note-icon">⚠️</span><span><b>Disclaimer:</b> This website is <b>NOT a Government website</b>. It is an unofficial platform used <b>ONLY for data collection for internal use</b> by the instructors of ITI Kiloi. No information here is shared with any private entity.</span></div>
             <div class="form-submit-area">
               <span class="form-error" id="lpApplyErr" style="text-align:center"></span>
               <button type="submit" class="btn-submit" id="lpApplySubmitBtn">Submit Application</button>
@@ -870,7 +876,11 @@ input,select,textarea,button{font-family:inherit}
           <p style="font-size:12px;color:var(--muted);line-height:1.7">Principal Office<br>ITI Kiloi</p>
         </div>
       </div>
-      <div class="footer-disclaimer">⚠️ <b>Disclaimer:</b> Information provided on this portal is for general guidance only. Admission, selection and placement are subject to eligibility, seat availability and the discretion of each recruiting company. GITI Kiloi does not guarantee any job offer or stipend. Students are advised to verify details with the institute before relying on any information.</div>
+      <!-- RUNNING DISCLAIMER (end of page) -->
+      <div class="app-disclaimer">
+        <span class="ad-label">⚠️ Disclaimer</span>
+        <div class="ad-track"><div class="ad-inner"><b>This website is NOT a Government website.</b> It is an unofficial platform used <b>ONLY for data collection for internal use</b> by the instructors of ITI Kiloi. No information here is shared with any private entity.&nbsp;&nbsp;•&nbsp;&nbsp;<b>This website is NOT a Government website.</b> It is an unofficial platform used <b>ONLY for data collection for internal use</b> by the instructors of ITI Kiloi. No information here is shared with any private entity.&nbsp;&nbsp;•&nbsp;&nbsp;</div></div>
+      </div>
       <div class="footer-bottom">
         <span>ITI Kiloi, Haryana — Placement Cell</span>
         <span>© Mahender Singh Dagar. All Rights Reserved.</span>
@@ -1154,7 +1164,10 @@ var DOB_MONTHS=["January","February","March","April","May","June","July","August
 function openDobCal(calId){
   var c=document.getElementById(calId);
   if(!c) return;
-  try{ if(c.showPicker){ c.showPicker(); return; } }catch(e){}
+  var touchDevice=(navigator.maxTouchPoints>0)||(window.matchMedia&&window.matchMedia("(pointer:coarse)").matches);
+  if(!touchDevice){
+    try{ if(c.showPicker){ c.showPicker(); return; } }catch(e){}
+  }
   dobCalOpenFallback(c);
 }
 function dobCalOpenFallback(calInput){
