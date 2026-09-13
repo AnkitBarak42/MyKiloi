@@ -32,11 +32,11 @@ var _db = firebase.database();
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 :root{
-  --bg:#000000;--bg2:#0a0a0a;--card:#161b24;--border:#1e2535;
+  --bg:#ffffff;--bg2:#f1f5f9;--card:#ffffff;--border:#e2e8f0;
   --accent:#f59e0b;--accent2:#d97706;
   --blue:#3b82f6;--green:#22c55e;--red:#ef4444;--purple:#a855f7;
-  --text:#e2e8f0;--muted:#64748b;--light:#94a3b8;
-  --primary-900:#0f172a;--primary-800:#1e293b;--primary-700:#334155;--primary-600:#475569;--primary-500:#64748b;--primary-400:#94a3b8;--primary-300:#cbd5e1;--primary-200:#e2e8f0;--primary-100:#f1f5f9;--primary-50:#f8fafc;
+  --text:#0f172a;--muted:#64748b;--light:#475569;
+  --primary-900:#0f172a;--primary-800:#1e293b;--primary-700:#334155;--primary-600:#475569;--primary-500:#64748b;--primary-400:#64748b;--primary-300:#334155;--primary-200:#cbd5e1;--primary-100:#eef2f7;--primary-50:#f8fafc;
   --accent-600:#d97706;--accent-500:#f59e0b;--accent-400:#fbbf24;--accent-300:#fcd34d;--accent-100:#fef3c7;
   --blue-700:#1d4ed8;--blue-600:#2563eb;--blue-500:#3b82f6;--blue-400:#60a5fa;--blue-100:#dbeafe;
   --green-600:#16a34a;--green-500:#22c55e;--green-100:#dcfce7;
@@ -59,54 +59,54 @@ input,select,textarea,button{font-family:inherit}
 .loader-content{flex-direction:column;align-items:center;gap:24px;display:flex}
 .loader-icon{background:#fff;width:72px;height:72px;font-family:var(--font-english);color:#0f172a;letter-spacing:1px;border-radius:18px;justify-content:center;align-items:center;font-size:24px;font-weight:800;display:flex}
 .loader-text{text-align:center}
-.loader-text h2{font-family:var(--font-hindi);color:#fff;letter-spacing:.5px;margin-bottom:4px;font-size:20px;font-weight:700}
+.loader-text h2{font-family:var(--font-hindi);color:#0f172a;letter-spacing:.5px;margin-bottom:4px;font-size:20px;font-weight:700}
 .loader-text p{color:var(--muted);font-size:13px;font-weight:500}
 .loader-bar-track{background:var(--card);border-radius:2px;width:200px;height:3px;overflow:hidden}
 .loader-bar{background:var(--accent);border-radius:2px;height:100%;animation:1.8s ease-in-out forwards loaderProgress}
 @keyframes loaderProgress{0%{width:0%}30%{width:40%}60%{width:70%}to{width:100%}}
-.lp-navbar{z-index:1000;height:64px;transition:background .3s,box-shadow .3s,backdrop-filter .3s;justify-content:space-between;align-items:center;padding:0 40px;display:flex;position:fixed;top:0;left:0;right:0}
-.lp-navbar.scrolled{-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);background:rgba(0,0,0,.95);box-shadow:0 1px 3px rgba(0,0,0,.4)}
+.lp-navbar{z-index:1000;height:64px;transition:background .3s,box-shadow .3s,backdrop-filter .3s;justify-content:space-between;align-items:center;padding:0 40px;display:flex;position:fixed;top:0;left:0;right:0;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);background:rgba(255,255,255,.92);box-shadow:0 1px 3px rgba(15,23,42,.12)}
+.lp-navbar.scrolled{-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);background:rgba(255,255,255,.96);box-shadow:0 2px 10px rgba(15,23,42,.14)}
 .lp-navbar-brand{cursor:pointer;align-items:center;gap:12px;display:flex}
 .lp-navbar-logo{background:#fff;width:36px;height:36px;font-family:var(--font-english);color:#0f172a;letter-spacing:.5px;border-radius:8px;flex-shrink:0;justify-content:center;align-items:center;font-size:12px;font-weight:800;display:flex}
-.lp-navbar-title{font-family:var(--font-hindi);color:#fff;white-space:nowrap;font-size:15px;font-weight:700}
+.lp-navbar-title{font-family:var(--font-hindi);color:#0f172a;white-space:nowrap;font-size:15px;font-weight:700}
 .lp-navbar-links{align-items:center;gap:8px;display:flex}
 .lp-navbar-links a{color:var(--light);border-radius:6px;transition:color .3s,background .3s;white-space:nowrap;padding:8px 16px;font-size:13px;font-weight:500;text-decoration:none;cursor:pointer}
-.lp-navbar-links a:hover{color:#fff;background:rgba(255,255,255,.08)}
-.lp-navbar-links .lp-navbar-cta{color:#fff!important;background:rgba(255,255,255,.12)!important;border:1px solid rgba(255,255,255,.2)!important;padding:8px 20px!important;font-weight:600!important;border-radius:6px}
-.lp-navbar-links .lp-btn-login-nav{color:#fff;background:rgba(245,158,11,.18);border:1px solid rgba(245,158,11,.4);padding:8px 20px;font-weight:600;border-radius:6px;cursor:pointer;font-size:13px;transition:all .3s;white-space:nowrap;font-family:var(--font-hindi)}
-.lp-navbar-links .lp-btn-login-nav:hover{background:rgba(245,158,11,.3)}
-.lp-navbar-toggle{color:#fff;background:transparent;padding:4px;font-size:24px;border:none;cursor:pointer;display:none}
+.lp-navbar-links a:hover{color:#0f172a;background:rgba(15,23,42,.08)}
+.lp-navbar-links .lp-navbar-cta{color:#0f172a!important;background:rgba(15,23,42,.05)!important;border:1px solid rgba(15,23,42,.28)!important;padding:8px 20px!important;font-weight:600!important;border-radius:6px}
+.lp-navbar-links .lp-btn-login-nav{color:#0f172a;background:linear-gradient(135deg,#f59e0b,#d97706);border:none;padding:8px 20px;font-weight:700;border-radius:6px;cursor:pointer;font-size:13px;transition:all .3s;white-space:nowrap;font-family:var(--font-hindi);box-shadow:0 2px 6px rgba(245,158,11,.35)}
+.lp-navbar-links .lp-btn-login-nav:hover{background:linear-gradient(135deg,#fbbf24,#f59e0b)}
+.lp-navbar-toggle{color:#0f172a;background:transparent;padding:4px;font-size:24px;border:none;cursor:pointer;display:none}
 .lp-page{min-height:100vh;animation:lpFade .25s ease}
 .lp-page.sub{padding-top:64px;background:linear-gradient(180deg,var(--bg2),var(--bg))}
 .lp-page.sub .section{padding-top:32px}
 .lp-topbar{padding:0 24px;margin-top:24px}
 .lp-back-btn{display:inline-flex;align-items:center;gap:6px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;color:var(--light);font-family:var(--font-english),var(--font-hindi),sans-serif;font-size:13px;font-weight:500;padding:9px 16px;cursor:pointer;transition:all .2s}
-.lp-back-btn:hover{color:#fff;border-color:rgba(245,158,11,.4);background:var(--card)}
+.lp-back-btn:hover{color:#0f172a;border-color:rgba(245,158,11,.4);background:var(--card)}
 @keyframes lpFade{from{opacity:0}to{opacity:1}}
 .hero-section{text-align:center;background:linear-gradient(180deg,#000 0%,#050505 100%);flex-direction:column;justify-content:center;align-items:center;min-height:100vh;padding:100px 24px 60px;display:flex;position:relative;overflow:hidden}
 .hero-section::before{content:"";pointer-events:none;background:linear-gradient(90deg,transparent,rgba(245,158,11,.18),transparent);height:1px;position:absolute;bottom:0;left:0;right:0}
 .hero-badge{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:100px;align-items:center;gap:8px;margin-bottom:32px;padding:8px 20px;display:inline-flex}
 .hero-badge-dot{background:#22c55e;border-radius:50%;flex-shrink:0;width:8px;height:8px;box-shadow:0 0 0 3px rgba(34,197,94,.15)}
-.hero-badge span{color:var(--light);letter-spacing:.5px;font-size:13px;font-weight:600}
+.hero-badge span{color:rgba(226,232,240,.85);letter-spacing:.5px;font-size:13px;font-weight:600}
 .hero-title{font-family:var(--font-hindi);color:#fff;z-index:1;margin-bottom:12px;font-size:52px;font-weight:800;line-height:1.2;position:relative}
 .hero-title-accent{color:#fbbf24}
-.hero-subtitle{font-family:var(--font-hindi);color:var(--light);z-index:1;max-width:600px;margin-bottom:40px;font-size:20px;font-weight:500;line-height:1.7;position:relative}
+.hero-subtitle{font-family:var(--font-hindi);color:rgba(226,232,240,.9);z-index:1;max-width:600px;margin-bottom:40px;font-size:20px;font-weight:500;line-height:1.7;position:relative}
 .hero-actions{z-index:1;gap:16px;display:flex;position:relative;flex-wrap:wrap;justify-content:center}
 .btn-primary{background:linear-gradient(135deg,#f59e0b,#d97706);color:#0f172a;border-radius:10px;transition:background .3s,box-shadow .3s;align-items:center;gap:8px;padding:14px 32px;font-size:15px;font-weight:700;display:inline-flex;cursor:pointer;border:none}
 .btn-primary:hover{background:linear-gradient(135deg,#fbbf24,#f59e0b);box-shadow:0 4px 12px rgba(245,158,11,.3)}
-.btn-secondary{color:var(--text);border-radius:10px;transition:background .3s,border-color .3s;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);align-items:center;gap:8px;padding:14px 32px;font-size:15px;font-weight:600;display:inline-flex;cursor:pointer}
-.btn-secondary:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.25)}
+.btn-secondary{color:#fff;border-radius:10px;transition:background .3s,border-color .3s;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.22);align-items:center;gap:8px;padding:14px 32px;font-size:15px;font-weight:600;display:inline-flex;cursor:pointer}
+.btn-secondary:hover{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.32)}
 .stats-bar{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 24px}
 .stats-container{grid-template-columns:repeat(4,1fr);max-width:1000px;margin:0 auto;display:grid}
 .stat-item{flex-direction:column;align-items:center;padding:28px 16px;display:flex;position:relative}
 .stat-item:not(:last-child)::after{content:"";background:var(--border);width:1px;height:40px;position:absolute;top:50%;right:0;transform:translateY(-50%)}
-.stat-number{font-family:var(--font-english);color:#fff;margin-bottom:6px;font-size:28px;font-weight:800;line-height:1}
-.stat-number .accent{color:#fbbf24}
+.stat-number{font-family:var(--font-english);color:#0f172a;margin-bottom:6px;font-size:28px;font-weight:800;line-height:1}
+.stat-number .accent{color:#b45309}
 .stat-label{color:var(--muted);font-size:13px;font-weight:500}
 .section{padding:80px 24px}
 .section-header{text-align:center;max-width:600px;margin:0 auto 56px}
 .section-label{font-family:var(--font-english);color:var(--accent);text-transform:uppercase;letter-spacing:3px;align-items:center;gap:8px;margin-bottom:12px;font-size:11px;font-weight:700;display:inline-flex}
-.section-title{font-family:var(--font-hindi);color:#fff;margin-bottom:12px;font-size:36px;font-weight:800;line-height:1.3}
+.section-title{font-family:var(--font-hindi);color:#0f172a;margin-bottom:12px;font-size:36px;font-weight:800;line-height:1.3}
 .section-desc{color:var(--muted);font-size:15px;line-height:1.7}
 .companies-grid{flex-direction:column;gap:32px;max-width:1100px;margin:0 auto;display:flex}
 .company-card{background:var(--card);border:1px solid var(--border);border-radius:16px;transition:box-shadow .3s,transform .3s,border-color .3s;overflow:hidden}
@@ -114,29 +114,30 @@ input,select,textarea,button{font-family:inherit}
 .company-card-header{border-bottom:1px solid var(--border);justify-content:space-between;align-items:flex-start;gap:16px;padding:28px 32px;display:flex}
 .company-card-header-left{flex:1;align-items:flex-start;gap:16px;display:flex}
 .company-number{border-radius:10px;background:linear-gradient(135deg,#f59e0b,#d97706);width:44px;height:44px;font-family:var(--font-english);color:#0f172a;flex-shrink:0;justify-content:center;align-items:center;font-size:16px;font-weight:800;display:flex}
-.company-name{font-family:var(--font-english);color:#fff;margin-bottom:4px;font-size:18px;font-weight:700;line-height:1.3}
+.company-name{font-family:var(--font-english);color:#0f172a;margin-bottom:4px;font-size:18px;font-weight:700;line-height:1.3}
 .company-location{color:var(--light);align-items:flex-start;gap:4px;font-size:13px;line-height:1.5;display:flex}
 .company-location .icon{flex-shrink:0;margin-top:2px}
 .company-details-list{flex-direction:column;gap:12px;display:flex}
 .company-detail-item{justify-content:space-between;gap:12px;border-bottom:1px solid var(--border);padding-bottom:12px;display:flex}
 .company-detail-item:last-child{border-bottom:none;padding-bottom:0}
 .detail-label{color:var(--muted);font-size:13px;white-space:nowrap}
-.detail-value{color:#fff;text-align:right;margin-left:auto;font-size:14px;font-weight:500}
+.detail-value{color:#0f172a;text-align:right;margin-left:auto;font-size:14px;font-weight:500}
 .company-footer{margin-top:16px}
 .company-footer .btn-success-wa{width:100%}
 .company-type-badge{white-space:nowrap;border-radius:100px;flex-shrink:0;padding:6px 14px;font-size:12px;font-weight:600;display:inline-flex}
-.badge-apprenticeship{background:rgba(59,130,246,.15);color:#60a5fa;border:1px solid rgba(59,130,246,.3)}
-.badge-job{background:rgba(34,197,94,.15);color:#4ade80;border:1px solid rgba(34,197,94,.3)}
+.badge-apprenticeship{background:rgba(37,99,235,.12);color:#1d4ed8;border:1px solid rgba(37,99,235,.35)}
+.badge-job{background:rgba(22,163,74,.12);color:#15803d;border:1px solid rgba(22,163,74,.35)}
+.badge-combined{background:rgba(147,51,234,.12);color:#7e22ce;border:1px solid rgba(147,51,234,.35)}
 .company-card-body{flex-direction:column;gap:24px;padding:28px 32px;display:flex}
 .company-info-grid{grid-template-columns:repeat(2,1fr);gap:20px;display:grid}
 .info-block{flex-direction:column;gap:8px;display:flex}
 .info-block-label{color:var(--muted);text-transform:uppercase;letter-spacing:1px;font-size:11px;font-weight:700}
 .info-block-value{color:var(--text);font-size:14px;font-weight:600;line-height:1.5}
-.info-block-value .highlight{color:#fbbf24;font-weight:700}
+.info-block-value .highlight{color:#b45309;font-weight:700}
 .salary-display{background:var(--bg2);border:1px solid var(--border);border-radius:10px;align-items:center;gap:16px;padding:16px 20px;display:flex}
 .salary-icon{border-radius:6px;background:var(--accent);width:40px;height:40px;color:#0f172a;flex-shrink:0;justify-content:center;align-items:center;font-size:18px;display:flex}
 .salary-details{flex:1}
-.salary-amount{font-family:var(--font-english);color:#fff;font-size:20px;font-weight:800}
+.salary-amount{font-family:var(--font-english);color:#0f172a;font-size:20px;font-weight:800}
 .salary-period{color:var(--muted);font-size:12px;font-weight:500}
 .trades-list{flex-wrap:wrap;gap:8px;display:flex}
 .trade-tag{background:var(--bg2);border:1px solid var(--border);font-family:var(--font-english);color:var(--light);border-radius:100px;align-items:center;gap:6px;padding:6px 14px;font-size:13px;font-weight:500;display:inline-flex}
@@ -183,7 +184,7 @@ input,select,textarea,button{font-family:inherit}
 .success-overlay{z-index:9998;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);background:rgba(0,0,0,.92);justify-content:center;align-items:center;padding:24px;display:flex;position:fixed;inset:0}
 .success-card{background:var(--card);border:1px solid var(--border);border-radius:24px;text-align:center;width:100%;max-width:440px;box-shadow:0 20px 25px rgba(0,0,0,.5);padding:48px}
 .success-icon{background:rgba(34,197,94,.15);width:72px;height:72px;color:#4ade80;border-radius:50%;justify-content:center;align-items:center;margin:0 auto 24px;font-size:32px;display:flex}
-.success-card h3{font-family:var(--font-hindi);color:#fff;margin-bottom:8px;font-size:22px;font-weight:700}
+.success-card h3{font-family:var(--font-hindi);color:#0f172a;margin-bottom:8px;font-size:22px;font-weight:700}
 .success-card p{color:var(--muted);margin-bottom:28px;font-size:14px;line-height:1.6}
 .success-actions{flex-direction:column;gap:12px;display:flex}
 .btn-success-wa{color:#fff;border-radius:10px;transition:transform .3s;background:#25d366;justify-content:center;align-items:center;gap:10px;padding:14px 24px;font-size:15px;font-weight:600;display:inline-flex;text-decoration:none;cursor:pointer;border:none}
@@ -192,7 +193,7 @@ input,select,textarea,button{font-family:inherit}
 .btn-success-close:hover{color:var(--text)}
 @media(max-width:768px){
   .lp-navbar{padding:0 20px}
-  .lp-navbar-links{-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);background:rgba(0,0,0,.98);flex-direction:column;gap:4px;padding:16px 20px;display:none;position:absolute;top:64px;left:0;right:0}
+  .lp-navbar-links{-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);background:rgba(255,255,255,.98);flex-direction:column;gap:4px;padding:16px 20px;display:none;position:absolute;top:64px;left:0;right:0}
   .lp-navbar-links.open{display:flex}
   .lp-navbar-links a{text-align:left;width:100%;padding:12px 16px}
   .lp-navbar-links .lp-btn-login-nav{width:100%;text-align:center;padding:12px 16px}
@@ -235,7 +236,7 @@ input,select,textarea,button{font-family:inherit}
 .hp-ticker{position:relative;z-index:5;background:#0b0f1a;border-bottom:1px solid var(--border);flex-wrap:nowrap;display:flex;align-items:center;overflow:hidden}
 .hp-ticker-label{background:linear-gradient(135deg,#f59e0b,#d97706);color:#0f172a;flex:0 0 auto;padding:11px 20px;font-size:13px;font-weight:800;letter-spacing:.5px;white-space:nowrap}
 .hp-ticker-track{flex:1;overflow:hidden;white-space:nowrap}
-.hp-ticker-inner{display:inline-block;padding:11px 0;animation:lpTicker 30s linear infinite;color:var(--light);font-size:13.5px;font-weight:500}
+.hp-ticker-inner{display:inline-block;padding:11px 0;animation:lpTicker 30s linear infinite;color:rgba(226,232,240,.85);font-size:13.5px;font-weight:500}
 .hp-ticker:hover .hp-ticker-inner{animation-play-state:paused}
 .hp-ticker-inner .sep{margin:0 24px;color:rgba(245,158,11,.6)}
 .hp-ticker-inner b{color:#fbbf24;font-weight:600}
@@ -244,17 +245,17 @@ input,select,textarea,button{font-family:inherit}
 .hp-sec-head{margin-bottom:26px}
 .hp-label{color:var(--accent);text-transform:uppercase;letter-spacing:2.5px;justify-content:center;align-items:center;gap:9px;margin-bottom:12px;font-size:12px;font-weight:700;display:flex}
 .hp-label::before,.hp-label::after{content:"";background:var(--accent);width:28px;height:1.5px;display:inline-block;opacity:.7}
-.hp-title{color:#fff;text-align:center;margin-bottom:12px;font-size:32px;font-weight:800;line-height:1.3}
+.hp-title{color:#0f172a;text-align:center;margin-bottom:12px;font-size:32px;font-weight:800;line-height:1.3}
 .hp-title .hp-accent{color:rgba(245,158,11,.95)}
 .hp-desc{color:var(--muted);text-align:center;max-width:640px;margin:0 auto;font-size:15px;line-height:1.8}
 .hp-features{gap:16px;margin-top:38px;grid-template-columns:repeat(2,1fr);display:grid}
 .hp-feature{cursor:pointer;background:var(--card);border:1px solid var(--border);border-radius:14px;gap:14px;align-items:flex-start;padding:20px;display:flex;transition:transform .25s,border-color .25s,box-shadow .25s}
 .hp-feature:hover{transform:translateY(-2px);border-color:rgba(245,158,11,.4);box-shadow:0 8px 16px rgba(0,0,0,.35)}
 .hp-feature-icon{background:rgba(245,158,11,.12);border-radius:10px;width:46px;height:46px;flex:0 0 auto;justify-content:center;align-items:center;font-size:21px;display:flex}
-.hp-feature h4{color:#fff;margin-bottom:4px;font-size:15px;font-weight:700}
+.hp-feature h4{color:#0f172a;margin-bottom:4px;font-size:15px;font-weight:700}
 .hp-feature p{color:var(--muted);font-size:13px;line-height:1.55}
 .hp-notice{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;position:sticky;top:84px;align-self:start;box-shadow:0 8px 16px rgba(0,0,0,.3)}
-.hp-notice-head{border-bottom:1px solid var(--border);background:var(--bg2);align-items:center;gap:10px;padding:15px 18px;font-size:15px;font-weight:700;color:#fff;display:flex}
+.hp-notice-head{border-bottom:1px solid var(--border);background:var(--bg2);align-items:center;gap:10px;padding:15px 18px;font-size:15px;font-weight:700;color:#0f172a;display:flex}
 .hp-notice-head .dot{border-radius:50%;background:#22c55e;width:9px;height:9px;box-shadow:0 0 0 3px rgba(34,197,94,.2);flex:0 0 auto}
 .hp-notice-head .cnt{color:var(--accent);font-size:12px;font-weight:800;margin-left:auto;background:rgba(245,158,11,.12);border-radius:100px;padding:2px 9px}
 .hp-notice-body{max-height:390px;overflow:hidden;flex-direction:column;display:flex}
@@ -262,11 +263,11 @@ input,select,textarea,button{font-family:inherit}
 .hp-notice-item:last-child{border-bottom:none}
 .hp-notice-item:hover{background:var(--bg2)}
 .hp-notice-item-icon{background:rgba(245,158,11,.12);border-radius:8px;width:40px;height:40px;flex:0 0 auto;justify-content:center;align-items:center;font-size:18px;display:flex}
-.hp-notice-item h5{color:#fff;margin-bottom:3px;font-size:13.5px;font-weight:600;line-height:1.4}
+.hp-notice-item h5{color:#0f172a;margin-bottom:3px;font-size:13.5px;font-weight:600;line-height:1.4}
 .hp-notice-item p{color:var(--muted);font-size:12.5px;line-height:1.55}
-.hp-notice-item p b{color:#fbbf24;font-weight:600}
+.hp-notice-item p b{color:#b45309;font-weight:600}
 .hp-notice-more{background:var(--bg2);border-top:1px solid var(--border);color:var(--accent);text-align:center;padding:13px;font-size:13px;font-weight:600;cursor:pointer;transition:color .2s,background .2s;display:block}
-.hp-notice-more:hover{background:var(--bg);color:#fbbf24}
+.hp-notice-more:hover{background:var(--bg);color:#b45309}
 @media(max-width:960px){
   .hp-main{grid-template-columns:1fr;max-width:720px;gap:36px}
   .hp-notice{position:static}
@@ -290,26 +291,26 @@ input,select,textarea,button{font-family:inherit}
 }
 
 /* ── FOOTER ── */
-.footer{background:var(--primary-900);color:var(--primary-300);padding:60px 24px 32px;font-family:var(--font-hindi)}
+.footer{background:var(--bg2);color:var(--primary-500);padding:60px 24px 32px;font-family:var(--font-hindi)}
 .footer-content{max-width:1000px;margin:0 auto}
-.footer-main{border-bottom:1px solid var(--primary-700);grid-template-columns:1.3fr 1fr 1fr;gap:48px;padding-bottom:40px;display:grid}
-.footer-officer-card{border:1px solid var(--primary-700);border-radius:16px;background:#ffffff0a;padding:28px}
-.footer-officer-name{font-family:var(--font-hindi);color:var(--white,#fff);margin-bottom:4px;font-size:20px;font-weight:700}
-.footer-officer-title{color:var(--accent-400);margin-bottom:4px;font-size:13px;font-weight:600}
-.footer-officer-inst{color:var(--primary-400);margin-bottom:20px;font-size:13px;line-height:1.6}
-.footer-contact-item{color:var(--primary-300);align-items:center;gap:10px;margin-bottom:10px;font-size:14px;display:flex;text-decoration:none;cursor:pointer;transition:color .2s}
-.footer-contact-item:hover{color:var(--white,#fff)}
+.footer-main{border-bottom:1px solid var(--primary-200);grid-template-columns:1fr 1.3fr 1fr;gap:48px;padding-bottom:40px;display:grid}
+.footer-officer-card{border:1px solid var(--primary-200);border-radius:16px;background:rgba(15,23,42,.03);padding:28px}
+.footer-officer-name{font-family:var(--font-hindi);color:var(--primary-900);margin-bottom:4px;font-size:20px;font-weight:700}
+.footer-officer-title{color:var(--accent-600);margin-bottom:4px;font-size:13px;font-weight:600}
+.footer-officer-inst{color:var(--primary-500);margin-bottom:20px;font-size:13px;line-height:1.6}
+.footer-contact-item{color:var(--primary-500);align-items:center;gap:10px;margin-bottom:10px;font-size:14px;display:flex;text-decoration:none;cursor:pointer;transition:color .2s}
+.footer-contact-item:hover{color:var(--primary-900)}
 .footer-contact-item .icon{color:var(--accent-500);flex-shrink:0;font-size:16px}
-.footer-section-title{font-family:var(--font-hindi);color:var(--white,#fff);margin-bottom:20px;font-size:15px;font-weight:700}
+.footer-section-title{font-family:var(--font-hindi);color:var(--primary-900);margin-bottom:20px;font-size:15px;font-weight:700}
 .footer-links{flex-direction:column;gap:12px;display:flex}
-.footer-links a{color:var(--primary-400);transition:color .3s;align-items:center;gap:6px;font-size:14px;display:flex;text-decoration:none;cursor:pointer}
-.footer-links a:hover{color:var(--white,#fff)}
+.footer-links a{color:var(--primary-500);transition:color .3s;align-items:center;gap:6px;font-size:14px;display:flex;text-decoration:none;cursor:pointer}
+.footer-links a:hover{color:var(--primary-900)}
 .whatsapp-btn{color:var(--white,#fff);border-radius:10px;transition:transform .3s,box-shadow .3s;background:#25d366;align-items:center;gap:10px;margin-top:8px;padding:12px 24px;font-size:14px;font-weight:600;display:inline-flex;text-decoration:none;box-shadow:0 4px 14px #25d3664d}
 .whatsapp-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px #25d36666}
 .whatsapp-btn .icon{font-size:20px}
 .footer-bottom{color:var(--primary-500);justify-content:space-between;align-items:center;padding-top:24px;font-size:12px;display:flex;flex-wrap:wrap;gap:8px}
-.footer-bottom a{color:var(--primary-400);transition:color .3s}
-.footer-bottom a:hover{color:var(--white,#fff)}
+.footer-bottom a{color:var(--primary-500);transition:color .3s}
+.footer-bottom a:hover{color:var(--primary-900)}
 @media(max-width:768px){
   .footer-main{grid-template-columns:1fr;gap:32px}
   .footer-bottom{text-align:center;flex-direction:column;gap:8px}
@@ -328,6 +329,7 @@ input,select,textarea,button{font-family:inherit}
     </div>
     <div class="lp-navbar-links" id="lpNavLinks">
       <a onclick="goToPage('drives')">Placement Drives</a>
+      <a onclick="goToPage('portal')">Student Portal</a>
       <a onclick="goToPage('contact')">Contact</a>
     </div>
     <button class="lp-navbar-toggle" onclick="toggleLPNav()" aria-label="Toggle menu">☰</button>
@@ -342,8 +344,7 @@ input,select,textarea,button{font-family:inherit}
     <div class="hero-overlay"></div>
     <div class="hero-inner">
       <div class="hero-actions">
-        <a class="btn-primary" onclick="goToPage('drives')">📝 Apply Now</a>
-        <a class="btn-secondary" onclick="goToPage('form')">📋 Registration</a>
+        <a class="btn-primary" onclick="goToPage('portal')">🔐 Student Portal</a>
       </div>
     </div>
   </section>
@@ -371,9 +372,9 @@ input,select,textarea,button{font-family:inherit}
           <div class="hp-feature-icon">🛠️</div>
           <div><h4>Apprenticeship</h4><p>Hands-on training with industry stipend support.</p></div>
         </div>
-        <div class="hp-feature" onclick="goToPage('form')">
-          <div class="hp-feature-icon">📝</div>
-          <div><h4>Student Registration</h4><p>Fill the form and apply for your preferred drive.</p></div>
+        <div class="hp-feature" onclick="goToPage('portal')">
+          <div class="hp-feature-icon">🔐</div>
+          <div><h4>Student Portal</h4><p>Verify with your mobile number to apply or register.</p></div>
         </div>
         <div class="hp-feature" onclick="goToPage('contact')">
           <div class="hp-feature-icon">📞</div>
@@ -417,6 +418,41 @@ input,select,textarea,button{font-family:inherit}
     <div class="companies-grid" id="lpDrivesList"></div>
     <div class="section-desc" id="lpDrivesEmpty" style="display:none;text-align:center;padding:32px 0;color:var(--muted)">No companies added yet. Check back soon!</div>
 
+  </section>
+  </div>
+
+  <!-- PAGE: STUDENT PORTAL -->
+  <div class="lp-page sub" id="lpPage-portal" style="display:none">
+    <div class="sub-hero" style="background-image:url('ITI.jpeg')">
+      <div class="sub-hero-overlay"></div>
+      <h2 class="sub-hero-title">Student Portal</h2>
+    </div>
+    <div class="lp-topbar"><button type="button" class="lp-back-btn" onclick="goToPage('home')">← Back to Home</button></div>
+  <!-- STUDENT PORTAL -->
+  <section class="section" id="lp-portal">
+    <div class="section-header">
+      <div class="section-label">Student Portal</div>
+      <h2 class="section-title">Verify &amp; Continue</h2>
+      <p class="section-desc">Enter the mobile number and date of birth you used at the time of registration. Verified students are taken to the Placement Drives to apply; new students are taken to Registration.</p>
+    </div>
+    <div class="form-container" style="max-width:520px;margin:0 auto">
+      <div class="form-group">
+        <label class="form-label">Mobile Number</label>
+        <input class="form-input" type="tel" id="portMobile" placeholder="10-digit mobile number" maxlength="10" onkeydown="if(event.key==='Enter')verifyStudentPortal()">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Date of Birth</label>
+        <div style="display:flex;gap:8px;align-items:center">
+          <input class="form-input" type="text" id="portDob" placeholder="DD-MM-YYYY" maxlength="10" style="flex:1;min-width:0" onkeydown="if(event.key==='Enter')verifyStudentPortal()">
+          <button type="button" title="Pick from calendar" style="padding:10px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:9px;cursor:pointer;font-size:15px;flex:0 0 auto" onclick="openDobCal('portDobCal')">📅</button>
+          <input class="form-input" type="date" id="portDobCal" onchange="fDobCalPicked(this,'portDob')" style="width:1px;height:1px;opacity:0;border:0;padding:0;position:absolute;pointer-events:none">
+        </div>
+      </div>
+      <div class="form-submit-area">
+        <span class="form-error" id="portMsg" style="text-align:center"></span>
+        <button type="button" class="btn-submit" onclick="verifyStudentPortal()">🔍 Verify &amp; Continue</button>
+      </div>
+    </div>
   </section>
   </div>
 
@@ -595,6 +631,15 @@ input,select,textarea,button{font-family:inherit}
   <footer class="footer">
     <div class="footer-content">
       <div class="footer-main">
+        <div>
+          <div class="footer-section-title">Quick Links</div>
+          <div class="footer-links">
+            <a onclick="goToPage('home')">🏠 Home</a>
+            <a onclick="goToPage('drives')">🏢 Placement Drives</a>
+            <a onclick="goToPage('portal')">🔐 Student Portal</a>
+            <a onclick="goToPage('contact')">📞 Contact</a>
+          </div>
+        </div>
         <div class="footer-officer-card">
           <div class="footer-officer-name">Er. Mahender Singh</div>
           <div class="footer-officer-title">Apprenticeship Instructor</div>
@@ -607,15 +652,6 @@ input,select,textarea,button{font-family:inherit}
           </a>
         </div>
         <div>
-          <div class="footer-section-title">Quick Links</div>
-          <div class="footer-links">
-            <a onclick="goToPage('home')">🏠 Home</a>
-            <a onclick="goToPage('drives')">🏢 Placement Drives</a>
-            <a onclick="goToPage('form')">📝 Registration</a>
-            <a onclick="goToPage('contact')">📞 Contact</a>
-          </div>
-        </div>
-        <div>
           <div class="footer-section-title">About</div>
           <p style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:14px">GITI Kiloi — Placement Management System for Industrial Training Institute, Kiloi, Haryana.</p>
           <p style="font-size:12px;color:var(--muted);line-height:1.7">Principal Office<br>ITI Kiloi</p>
@@ -623,7 +659,8 @@ input,select,textarea,button{font-family:inherit}
       </div>
       <div class="footer-bottom">
         <span>ITI Kiloi, Haryana — Placement Cell</span>
-        <span>Managed by <span style="color:var(--accent-400)">Er. Mahender Singh</span>, Apprenticeship Instructor</span>
+        <span>© Mahender Singh Dagar. All Rights Reserved.</span>
+        <span>Developed and Managed by <span style="color:var(--accent-400)">Er. Mahender Singh</span>, Apprenticeship Instructor</span>
       </div>
     </div>
   </footer>
@@ -672,6 +709,27 @@ function goToPage(name){
 }
 function toggleLPNav(){ document.getElementById("lpNavLinks").classList.toggle("open"); }
 function closeLPNav(){ document.getElementById("lpNavLinks").classList.remove("open"); }
+function portMsg(t,ok){
+  var m=document.getElementById("portMsg");
+  if(m){ m.textContent=t||""; m.style.color=ok?"var(--green)":"#ef4444"; }
+}
+function verifyStudentPortal(){
+  var m=((document.getElementById("portMobile")||{}).value||"").trim();
+  var d=((document.getElementById("portDob")||{}).value||"").trim();
+  if(!/^[6-9]\d{9}$/.test(m)){ portMsg("❌ Please enter a valid 10-digit mobile number."); return; }
+  if(!normalizeDob(d)){ portMsg("❌ Please enter your date of birth."); return; }
+  portMsg("⏳ Verifying...",true);
+  try{
+    _db.ref("iti_kiloi/students").once("value").then(function(snap){
+      var students=(snap.exists()&&snap.val()&&snap.val().students)||[];
+      var found=null,i;
+      for(i=0;i<students.length;i++){ if(String(students[i].mobile)===m){ found=students[i]; break; } }
+      if(!found){ goToPage("form"); return; }
+      if(normalizeDob(found.dob)!==normalizeDob(d)){ portMsg("❌ Details do not match. Please check your date of birth."); return; }
+      goToPage("drives");
+    }).catch(function(){ portMsg("❌ Could not verify — check your internet connection and try again."); });
+  }catch(e){ portMsg("❌ Student Portal is unavailable. Please try again later."); }
+}
 function applyToDrive(id){ goToPage("form"); }
 function openDobCal(calId){
   var c=document.getElementById(calId);
@@ -762,11 +820,11 @@ function renderLPHp(){
     if(lines.length){
       nb.innerHTML=active.slice(0,7).map(function(d){
         var rows=[];
-        if(d.type) rows.push("<b>"+escLP(d.type)+"</b>");
+        if(d.type) rows.push("<b>"+escLP(lpTypeLabel(d.type))+"</b>");
         var n=lpPosts(d); if(n) rows.push(n+" posts");
         if(d.location) rows.push(escLP(d.location));
         if(d.salaryAmount) rows.push("💰 "+escLP(d.salaryAmount)+(d.salaryPeriod?(" "+escLP(d.salaryPeriod)):""));
-        var icon=(d.type||"").toLowerCase()==="job"?"💼":"🛠️";
+        var icon=(d.type||"").toLowerCase()==="job"?"💼":((d.type||"").toLowerCase()==="combined"?"🤝":"🛠️");
         return '<div class="hp-notice-item"><div class="hp-notice-item-icon">'+icon+'</div><div><h5>'+escLP(d.name||"Placement Drive")+'</h5>'+(rows.length?'<p>'+rows.join(" &nbsp;·&nbsp; ")+'</p>':"")+'</div></div>';
       }).join("");
     } else {
@@ -774,6 +832,7 @@ function renderLPHp(){
     }
   }
 }
+function lpTypeLabel(t){ return (t||"").toLowerCase()==="combined"?"Apprenticeship + Job":t; }
 function renderLPDrivesPage(){
   var list=document.getElementById("lpDrivesList");
   var empty=document.getElementById("lpDrivesEmpty");
@@ -795,14 +854,14 @@ function renderLPDrivesPage(){
       if(d.workLabel2||d.workValue2) work+='<div class="eligibility-item"><div class="label">'+escLP(d.workLabel2)+'</div><div class="value">'+escLP(d.workValue2)+'</div></div>';
       work+='</div></div>';
     }
-    var badge=(d.type||"").toLowerCase()==="job"?"badge-job":"badge-apprenticeship";
+    var badge=(d.type||"").toLowerCase()==="job"?"badge-job":((d.type||"").toLowerCase()==="combined"?"badge-combined":"badge-apprenticeship");
     return '<div class="company-card">'
       +'<div class="company-card-header"><div class="company-card-header-left">'
       +'<div class="company-number">'+(i+1)+'</div><div>'
       +'<h3 class="company-name">'+escLP(d.name||"Company")+sub+'</h3>'
       +'<div class="company-location"><span class="icon">📍</span><span>'+escLP(d.location||"")+'</span></div>'
       +'</div></div>'
-      +'<span class="company-type-badge '+badge+'">'+escLP(d.type||"")+'</span></div>'
+      +'<span class="company-type-badge '+badge+'">'+escLP(lpTypeLabel(d.type))+'</span></div>'
       +'<div class="company-card-body">'
       +(d.role?'<div class="info-block"><div class="info-block-label">Job Role</div><div class="info-block-value">'+escLP(d.role)+(d.roleHighlight?' — <span class="highlight">'+escLP(d.roleHighlight)+'</span>':"")+'</div></div>':"")
       +(d.salaryAmount?'<div class="salary-display"><div class="salary-icon">₹</div><div class="salary-details"><div class="salary-amount">'+escLP(d.salaryAmount)+'</div>'+(d.salaryPeriod?'<div class="salary-period">'+escLP(d.salaryPeriod)+'</div>':"")+'</div></div>':"")
@@ -866,8 +925,11 @@ document.addEventListener("DOMContentLoaded",function(){
       address:f.address, trade:f.trade, session:f.session, email:f.category, emailId:f.email,
       status:f.status, remarks:f.remarks, registeredAt:new Date().toISOString(), source:"landing" };
 
+    var dup=false;
     _db.ref("iti_kiloi/students").transaction(function(cur){
       var students=(cur&&cur.students)||[];
+      dup=students.some(function(s){ return String(s.mobile)===String(st.mobile); });
+      if(dup) return;
       var nid=(cur&&cur.nextId)||students.length+1;
       st.roll=f.roll||("SR-"+nid);
       st.id=nid;
@@ -876,8 +938,12 @@ document.addEventListener("DOMContentLoaded",function(){
     },function(err,committed){
       btn.disabled=false;
       btn.innerHTML="Submit Form";
+      if(dup){
+        if(errBar) errBar.textContent="❌ A student with this mobile number is already registered. Contact the help desk if this is your own record.";
+        return;
+      }
       if(err||!committed){
-        if(errBar) errBar.textContent="❌ Submit fail hua — internet check karein aur dobara try karein.";
+        if(errBar) errBar.textContent="❌ Submission failed — check your internet connection and try again.";
         return;
       }
       form.reset();
