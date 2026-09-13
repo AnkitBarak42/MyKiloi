@@ -185,6 +185,12 @@ tr:hover td{background:rgba(15,23,42,.03)}
 
 /* ── FILTER ROW ── */
 .filter-row{padding:11px 14px;border-bottom:1px solid var(--border);display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.jf-mwrap{position:relative;min-width:185px}
+.jf-mbtn{width:100%;text-align:left;padding:8px 11px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;outline:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:6px}
+.jf-mmenu{display:none;position:absolute;z-index:80;top:calc(100% + 4px);left:0;right:0;background:var(--bg2);border:1px solid var(--border);border-radius:8px;max-height:240px;overflow-y:auto;padding:6px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+.jf-mmenu label{display:flex;align-items:center;gap:8px;padding:7px 8px;cursor:pointer;font-size:13px;white-space:nowrap}
+.jf-mmenu label.jf-all{font-weight:700;border-bottom:1px solid var(--border);margin-bottom:4px}
+.jf-mmenu input{width:15px;height:15px;cursor:pointer;accent-color:var(--red)}
 .filter-row input,.filter-row select{padding:7px 10px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;outline:none}
 .filter-row input{flex:1;min-width:140px}
 .cnt-label{font-size:11px;color:var(--muted);margin-left:auto;white-space:nowrap}
@@ -781,8 +787,9 @@ tr:hover td{background:rgba(15,23,42,.025)}
 <div id="loginScreen">
   <div class="login-box">
     <div class="login-logo">
+      <div class="logo-circle"><img src="ITI 3.jpeg" alt="ITI 3"></div>
       <h1>GITI <span>Kiloi</span></h1>
-      <p>Unofficial Student App — Not a Govt. Portal</p>
+      <p>Unofficial Student App · Not a Govt. Portal</p>
     </div>
 
     <!-- STEP 1: Role Selection -->
@@ -888,6 +895,7 @@ tr:hover td{background:rgba(15,23,42,.025)}
     <!-- SIDEBAR -->
     <div class="sidebar" id="sidebar">
       <div class="sb-logo">
+        <div class="sb-logo-icon"><img src="ITI 3.jpeg" alt="ITI 3"></div>
         <div><h2>GITI <span>Kiloi</span></h2><p>Placement System</p></div>
       </div>
       <div class="sb-user">
@@ -1049,7 +1057,12 @@ tr:hover td{background:rgba(15,23,42,.025)}
           <div class="print-card" style="grid-column:span 2">
             <h4>🔍 Custom Filter Print</h4>
             <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px">
-              <select id="pTrade" style="padding:8px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;outline:none"><option value="">All Trades</option></select>
+              <div id="pTradeWrap" style="position:relative">
+                <button type="button" id="pTradeBtn" onclick="togglePTradeDropdown()" style="width:100%;text-align:left;padding:8px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;outline:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between">
+                  <span id="pTradeLabel">All Trades</span><span style="font-size:11px;color:var(--muted)">▾</span>
+                </button>
+                <div id="pTradeMenu" style="display:none;position:absolute;z-index:50;top:calc(100% + 4px);left:0;right:0;background:var(--bg2);border:1px solid var(--border);border-radius:8px;max-height:230px;overflow-y:auto;padding:6px;box-shadow:0 8px 24px rgba(0,0,0,.3)"></div>
+              </div>
               <select id="pStatus" style="padding:8px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;outline:none"><option value="">All Status</option><option>Placed</option><option>Apprenticeship</option><option>Self Employed</option><option>Studying</option><option>Unemployed</option></select>
               <div id="pSessionWrap" style="position:relative">
                 <button type="button" id="pSessionBtn" onclick="togglePSessionDropdown()" style="width:100%;text-align:left;padding:8px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;outline:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between">
@@ -1339,6 +1352,29 @@ tr:hover td{background:rgba(15,23,42,.025)}
               </tr></thead>
               <tbody id="jfBody"></tbody>
             </table>
+          </div>
+        </div>
+
+        <!-- Job Fair Custom Print Selection -->
+        <div class="card no-print" style="margin-bottom:16px;overflow:visible;position:relative;z-index:20">
+          <div class="card-head"><h3>🖨️ Print Selection</h3><span style="font-size:11px;color:var(--muted)">Select months, years & trades (multiple) — prints only the chosen Job Fair entries</span></div>
+          <div class="filter-row" style="flex-wrap:wrap;gap:10px">
+            <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+              <div class="jf-mwrap">
+                <button type="button" class="jf-mbtn" onclick="toggleJFPrintMonthDropdown()"><span id="jfPrintMonthLabel">All Months</span><span style="font-size:11px;color:var(--muted)">▾</span></button>
+                <div class="jf-mmenu" id="jfPrintMonthMenu"></div>
+              </div>
+              <div class="jf-mwrap">
+                <button type="button" class="jf-mbtn" onclick="toggleJFPrintYearDropdown()"><span id="jfPrintYearLabel">All Years</span><span style="font-size:11px;color:var(--muted)">▾</span></button>
+                <div class="jf-mmenu" id="jfPrintYearMenu"></div>
+              </div>
+              <div class="jf-mwrap">
+                <button type="button" class="jf-mbtn" onclick="toggleJFPTradeDropdown()"><span id="jfPrintTradeLabel">All Trades</span><span style="font-size:11px;color:var(--muted)">▾</span></button>
+                <div class="jf-mmenu" id="jfPrintTradeMenu"></div>
+              </div>
+              <button class="btn btn-primary" onclick="printJobFairCustom()">🖨️ Print Selected</button>
+            </div>
+            <div id="jfPrintSelInfo" style="width:100%;font-size:11px;color:var(--muted);line-height:1.5">📆 All Months · 🗓️ All Years · 🎓 All Trades</div>
           </div>
         </div>
       </div>
@@ -3443,6 +3479,7 @@ function renderReports(){
 const printCSS=`*{margin:0;padding:0;box-sizing:border-box}body{font-family:Arial,sans-serif;padding:24px;color:#111;font-size:12px}.hdr{text-align:center;border-bottom:2px solid #f59e0b;padding-bottom:12px;margin-bottom:16px}.hdr h1{font-size:18px;font-weight:900;letter-spacing:1px}.hdr h2{font-size:13px;color:#555;margin-top:3px}.hdr p{font-size:11px;color:#888;margin-top:2px}table{width:100%;border-collapse:collapse;font-size:11px}th{background:#f59e0b;color:#000;padding:7px 9px;text-align:left;font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:.4px}td{padding:6px 9px;border-bottom:1px solid #e5e7eb}tr:nth-child(even) td{background:#fafafa}.foot{margin-top:40px;display:flex;justify-content:space-between}.sig{text-align:center;border-top:1px solid #999;padding-top:5px;width:150px;font-size:11px;color:#555}.sbox{display:inline-block;background:#f3f4f6;border:1px solid #e5e7eb;border-radius:8px;padding:10px 16px;margin:4px;text-align:center}.sval{font-size:22px;font-weight:900;color:#f59e0b}.slbl{font-size:10px;color:#666;text-transform:uppercase}`;
 
 let pSessionSelected=[]; // empty array = "All Sessions"
+let pTradeSelected=[]; // empty array = "All Trades"
 
 const COL_PICK_DEFS=[
   {key:"sno",     label:"S.No"},
@@ -3483,7 +3520,8 @@ function colPickPrint(){
 }
 
 function populatePrintSelects(){
-  document.getElementById("pTrade").innerHTML='<option value="">All Trades</option>'+trades.map(t=>`<option>${t}</option>`).join("");
+  buildPTradeMenu();
+  updatePTradeLabel();
   pSessionSelected=[];
   buildPSessionMenu();
   updatePSessionLabel();
@@ -3532,12 +3570,60 @@ function updatePSessionLabel(){
   else lbl.textContent=pSessionSelected.length+" Sessions Selected";
 }
 
+function buildPTradeMenu(){
+  const menu=document.getElementById("pTradeMenu");
+  if(!menu) return;
+  const allChecked=pTradeSelected.length===0;
+  menu.innerHTML=`<label style="display:flex;align-items:center;gap:8px;padding:7px 8px;cursor:pointer;font-weight:700;border-bottom:1px solid var(--border);margin-bottom:4px;font-size:13px">
+      <input type="checkbox" id="pTradeAllChk" ${allChecked?"checked":""} onchange="togglePTradesAll()" style="width:15px;height:15px;cursor:pointer;accent-color:var(--red)"> All Trades
+    </label>`+
+    trades.map(t=>`<label style="display:flex;align-items:center;gap:8px;padding:7px 8px;cursor:pointer;font-size:13px">
+      <input type="checkbox" value="${escLP(t)}" ${pTradeSelected.includes(t)?"checked":""} onchange="togglePTradeOne(this)" style="width:15px;height:15px;cursor:pointer;accent-color:var(--red)"> ${t}
+    </label>`).join("")||`<div style="padding:8px;color:var(--muted);font-size:12px">No trades found</div>`;
+}
+function togglePTradeDropdown(){
+  const m=document.getElementById("pTradeMenu");
+  if(!m) return;
+  if(m.style.display==="none"){ buildPTradeMenu(); m.style.display="block"; }
+  else m.style.display="none";
+}
+function togglePTradesAll(){
+  pTradeSelected=[];
+  buildPTradeMenu();
+  updatePTradeLabel();
+}
+function togglePTradeOne(cb){
+  const v=cb.value;
+  if(cb.checked){ if(!pTradeSelected.includes(v)) pTradeSelected.push(v); }
+  else { pTradeSelected=pTradeSelected.filter(x=>x!==v); }
+  const all=document.getElementById("pTradeAllChk");
+  if(all) all.checked=pTradeSelected.length===0;
+  updatePTradeLabel();
+}
+function updatePTradeLabel(){
+  const lbl=document.getElementById("pTradeLabel");
+  if(!lbl) return;
+  if(pTradeSelected.length===0) lbl.textContent="All Trades";
+  else if(pTradeSelected.length===1) lbl.textContent=pTradeSelected[0];
+  else lbl.textContent=pTradeSelected.length+" Trades Selected";
+}
+
 document.addEventListener("click",function(e){
   const wrap=document.getElementById("pSessionWrap");
   const menu=document.getElementById("pSessionMenu");
   if(wrap && menu && menu.style.display==="block" && !wrap.contains(e.target)){
     menu.style.display="none";
   }
+  const tWrap=document.getElementById("pTradeWrap");
+  const tMenu=document.getElementById("pTradeMenu");
+  if(tWrap && tMenu && tMenu.style.display==="block" && !tWrap.contains(e.target)){
+    tMenu.style.display="none";
+  }
+  ["jfPrintMonthMenu","jfPrintYearMenu","jfPrintTradeMenu"].forEach(id=>{
+    const m=document.getElementById(id);
+    const wrap=m&&m.parentElement;
+    if(m && wrap && m.style.display==="block" && !wrap.contains(e.target)) m.style.display="none";
+  });
 });
 
 function printTable(data,title,cols){
@@ -3591,12 +3677,13 @@ function doPrint(type){
   if(type==="placed") return showColumnPicker(cols=>printTable(students.filter(s=>s.status==="Placed"),"Placed Students",cols));
   if(type==="apprenticeship") return showColumnPicker(cols=>printTable(students.filter(s=>s.status==="Apprenticeship"),"Apprenticeship Students",cols));
   if(type==="custom"){
-    const t=document.getElementById("pTrade").value,st=document.getElementById("pStatus").value;
+    const tSel=[...pTradeSelected],st=document.getElementById("pStatus").value;
     let d=[...students];
-    if(t) d=d.filter(x=>x.trade===t);if(st) d=d.filter(x=>x.status===st);
+    if(tSel.length) d=d.filter(x=>tSel.includes(x.trade));if(st) d=d.filter(x=>x.status===st);
     if(pSessionSelected.length) d=d.filter(x=>pSessionSelected.includes(x.session));
+    const tLabel=tSel.length===1?tSel[0]:(tSel.length>1?tSel.length+" Trades":"");
     const seLabel=pSessionSelected.length===1?pSessionSelected[0]:(pSessionSelected.length>1?pSessionSelected.length+" Sessions":"");
-    return showColumnPicker(cols=>printTable(d,`Filtered Report${t?" — "+t:""}${st?" — "+st:""}${seLabel?" — "+seLabel:""}`,cols));
+    return showColumnPicker(cols=>printTable(d,`Filtered Report${tLabel?" — "+tLabel:""}${st?" — "+st:""}${seLabel?" — "+seLabel:""}`,cols));
   }
   if(type==="summary"){
     const s=getStats();
@@ -4490,6 +4577,7 @@ function cancelJFSession(){
 }
 
 function loadJobFair(){
+  updateJFPSelInfo();
   buildYearOptions("jfYear", "", true);
   if(window._firebaseReady && window._db){
     window._db.ref("iti_kiloi/jobfair").on("value", snap=>{
@@ -4665,6 +4753,111 @@ function deleteJFEntry(id){
 }
 
 const MONTH_NAMES=["","January","February","March","April","May","June","July","August","September","October","November","December"];
+let jfPrintMonthSel=[], jfPrintYearSel=[], jfPrintTradeSel=[]; // empty array = "All" for each
+
+const jfMonthItems=MONTH_NAMES.slice(1).map((m,i)=>[String(i+1).padStart(2,"0"),m]);
+function jfYearItems(){ const a=[]; for(let y=2033;y>=2020;y--) a.push([String(y),String(y)]); return a; }
+function jfTradeItems(){ return trades.map(t=>[t,t]); }
+function jfSelToggle(sel,v,checked){ if(checked){ if(!sel.includes(v)) sel.push(v); } else { const i=sel.indexOf(v); if(i>-1) sel.splice(i,1); } }
+function jfBuildMenu(menuId,items,sel,allId,allFn,oneFn){
+  const menu=document.getElementById(menuId);
+  if(!menu) return;
+  const allChecked=sel.length===0;
+  let h='<label class="jf-all"><input type="checkbox" id="'+allId+'" '+((allChecked)?"checked":"")+' onchange="'+allFn+'()"> All</label>';
+  h+=items.map(it=>'<label><input type="checkbox" value="'+escLP(it[0])+'" '+((sel.includes(it[0]))?"checked":"")+' onchange="'+oneFn+'(this)"> '+it[1]+'</label>').join("");
+  menu.innerHTML=h||'<div style="padding:8px;color:var(--muted);font-size:12px">Nothing to select</div>';
+}
+function jfMenuShow(menuId,buildFn){
+  const m=document.getElementById(menuId);
+  if(!m) return;
+  if(m.style.display==="none"){ buildFn(); m.style.display="block"; } else m.style.display="none";
+}
+function updateJFPSelInfo(){
+  const box=document.getElementById("jfPrintSelInfo");
+  if(!box) return;
+  box.textContent="📆 "+(jfPrintMonthSel.length?jfPrintMonthSel.map(v=>MONTH_NAMES[parseInt(v)]).join(", "):"All Months")
+    +" · 🗓️ "+(jfPrintYearSel.length?jfPrintYearSel.join(", "):"All Years")
+    +" · 🎓 "+(jfPrintTradeSel.length?jfPrintTradeSel.join(", "):"All Trades");
+}
+
+function buildJFPrintMonthMenu(){ jfBuildMenu("jfPrintMonthMenu",jfMonthItems,jfPrintMonthSel,"jfAllMonthChk","toggleJFPMonthsAll","toggleJFPMonthOne"); }
+function toggleJFPrintMonthDropdown(){ jfMenuShow("jfPrintMonthMenu",buildJFPrintMonthMenu); }
+function toggleJFPMonthsAll(){ jfPrintMonthSel=[]; buildJFPrintMonthMenu(); updateJFPMonthLabel(); }
+function toggleJFPMonthOne(cb){ jfSelToggle(jfPrintMonthSel,cb.value,cb.checked); const a=document.getElementById("jfAllMonthChk"); if(a) a.checked=jfPrintMonthSel.length===0; updateJFPMonthLabel(); }
+function updateJFPMonthLabel(){
+  const lbl=document.getElementById("jfPrintMonthLabel");
+  if(!lbl) return;
+  if(jfPrintMonthSel.length===0) lbl.textContent="All Months";
+  else if(jfPrintMonthSel.length===1) lbl.textContent=MONTH_NAMES[parseInt(jfPrintMonthSel[0])];
+  else lbl.textContent=jfPrintMonthSel.length+" Months";
+  updateJFPSelInfo();
+}
+
+function buildJFPrintYearMenu(){ jfBuildMenu("jfPrintYearMenu",jfYearItems(),jfPrintYearSel,"jfAllYearChk","toggleJFPYearsAll","toggleJFPYearOne"); }
+function toggleJFPrintYearDropdown(){ jfMenuShow("jfPrintYearMenu",buildJFPrintYearMenu); }
+function toggleJFPYearsAll(){ jfPrintYearSel=[]; buildJFPrintYearMenu(); updateJFPYearLabel(); }
+function toggleJFPYearOne(cb){ jfSelToggle(jfPrintYearSel,cb.value,cb.checked); const a=document.getElementById("jfAllYearChk"); if(a) a.checked=jfPrintYearSel.length===0; updateJFPYearLabel(); }
+function updateJFPYearLabel(){
+  const lbl=document.getElementById("jfPrintYearLabel");
+  if(!lbl) return;
+  if(jfPrintYearSel.length===0) lbl.textContent="All Years";
+  else if(jfPrintYearSel.length===1) lbl.textContent=jfPrintYearSel[0];
+  else lbl.textContent=jfPrintYearSel.length+" Years";
+  updateJFPSelInfo();
+}
+
+function buildJFPrintTradeMenu(){ jfBuildMenu("jfPrintTradeMenu",jfTradeItems(),jfPrintTradeSel,"jfAllTradeChk","toggleJFPTradesAll","toggleJFPTradeOne"); }
+function toggleJFPTradeDropdown(){ jfMenuShow("jfPrintTradeMenu",buildJFPrintTradeMenu); }
+function toggleJFPTradesAll(){ jfPrintTradeSel=[]; buildJFPrintTradeMenu(); updateJFPTradeLabel(); }
+function toggleJFPTradeOne(cb){ jfSelToggle(jfPrintTradeSel,cb.value,cb.checked); const a=document.getElementById("jfAllTradeChk"); if(a) a.checked=jfPrintTradeSel.length===0; updateJFPTradeLabel(); }
+function updateJFPTradeLabel(){
+  const lbl=document.getElementById("jfPrintTradeLabel");
+  if(!lbl) return;
+  if(jfPrintTradeSel.length===0) lbl.textContent="All Trades";
+  else if(jfPrintTradeSel.length===1) lbl.textContent=jfPrintTradeSel[0];
+  else lbl.textContent=jfPrintTradeSel.length+" Trades Selected";
+  updateJFPSelInfo();
+}
+
+function printJobFairCustom(){
+  const mSel=[...jfPrintMonthSel], ySel=[...jfPrintYearSel], tSel=[...jfPrintTradeSel];
+  let d=jobFairData.slice();
+  if(mSel.length) d=d.filter(j=>mSel.includes(String(j.month||"").padStart(2,"0")));
+  if(ySel.length) d=d.filter(j=>ySel.includes(String(j.year||"")));
+  if(tSel.length) d=d.filter(j=>tSel.includes(j.trade));
+  const bits=[];
+  if(mSel.length) bits.push(mSel.map(v=>MONTH_NAMES[parseInt(v)]).join(", "));
+  if(ySel.length) bits.push("Year "+ySel.join(", "));
+  if(tSel.length===1) bits.push("Trade: "+tSel[0]);
+  else if(tSel.length>1) bits.push(tSel.length+" Trades");
+  printJobFairList(d, "Job Fair Report"+((bits.length?" — "+bits.join(", "):"")));
+}
+
+function printJobFairList(data,title){
+  const w=window.open("","_blank","width=900,height=700");
+  if(!w){alert("Allow popups: Click lock icon in address bar → Site Settings → Allow Popups");return;}
+  const rows=data.map((j,i)=>{
+    return `<tr>
+      <td style="text-align:center">${i+1}</td>
+      <td><b>${escLP(j.name||"")}</b></td>
+      <td>${escLP(j.reg||"—")}</td>
+      <td>${escLP(j.mob||"—")}</td>
+      <td>${escLP(j.email||"—")}</td>
+      <td>${escLP(j.trade||"—")}</td>
+      <td>${escLP(j.session||"—")}</td>
+      <td>${escLP(j.company||(j.companies&&j.companies[0])||"—")}${(j.companies&&j.companies.length>1)?' <b>+'+(j.companies.length-1)+'</b>':""}</td>
+      <td>${MONTH_NAMES[parseInt(j.month)]||j.month||"—"} ${j.year||""}</td>
+      <td>${escLP(j.remark||"—")}</td>
+    </tr>`;
+  }).join("");
+  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${title}</title><style>${printCSS}</style></head><body>
+  <div class="hdr"><h1>GITI KILOI — PLACEMENT MANAGEMENT</h1><h2>${title}</h2><p>Date: ${new Date().toLocaleDateString("en-IN",{day:"2-digit",month:"long",year:"numeric"})}</p></div>
+  <table><thead><tr><th>#</th><th>Name</th><th>Reg No.</th><th>Mobile</th><th>Email</th><th>Trade</th><th>Session</th><th>Company</th><th>Month/Year</th><th>Remark</th></tr></thead><tbody>${rows}</tbody></table>
+  <p style="text-align:right;margin-top:8px;font-size:11px;color:#666">Total: ${data.length} records</p>
+  <div class="foot"><div class="sig">Instructor</div><div class="sig">Appr. Instructor</div><div class="sig">Group Instructor</div></div>
+  <script>setTimeout(()=>window.print(),600)<\/script></body></html>`);
+  w.document.close();
+}
 
 function renderJobFair(){
   const jfTradeF=document.getElementById("jfTrade");

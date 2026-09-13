@@ -3,7 +3,7 @@
 <head>
 <script>try{if(localStorage.getItem("iti_kiloi_theme")==="dark")document.documentElement.setAttribute("data-theme","dark");}catch(e){}</script>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#f59e0b">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -32,6 +32,8 @@ var _db = firebase.database();
 </script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+*{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+html{-webkit-text-size-adjust:100%}
 :root{
   --bg:#ffffff;--bg2:#f1f5f9;--card:#ffffff;--border:#e2e8f0;
   --accent:#f59e0b;--accent2:#d97706;
@@ -45,7 +47,7 @@ var _db = firebase.database();
   --font-hindi:"Noto Sans Devanagari","Segoe UI",sans-serif;
   --font-english:"Inter","Segoe UI",system-ui,sans-serif;
 }
-body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;min-height:100vh;overflow-x:hidden}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;min-height:100vh;min-height:100dvh;overflow-x:hidden}
 input,select,textarea,button{font-family:inherit}
 
 /* ── LANDING PAGE — GITI Kiloi dark theme ── */
@@ -77,7 +79,7 @@ input,select,textarea,button{font-family:inherit}
 .lp-navbar-links .lp-btn-login-nav{color:#0f172a;background:linear-gradient(135deg,#f59e0b,#d97706);border:none;padding:8px 20px;font-weight:700;border-radius:6px;cursor:pointer;font-size:13px;transition:all .3s;white-space:nowrap;font-family:var(--font-hindi);box-shadow:0 2px 6px rgba(245,158,11,.35)}
 .lp-navbar-links .lp-btn-login-nav:hover{background:linear-gradient(135deg,#fbbf24,#f59e0b)}
 .lp-navbar-toggle{color:#0f172a;background:transparent;padding:4px;font-size:24px;border:none;cursor:pointer;display:none}
-.lp-page{min-height:100vh;animation:lpFade .25s ease}
+.lp-page{min-height:100vh;min-height:100dvh;animation:lpFade .25s ease}
 .lp-page.sub{padding-top:64px;background:linear-gradient(180deg,var(--bg2),var(--bg))}
 .lp-page.sub .section{padding-top:32px}
 .lp-topbar{padding:0 24px;margin-top:24px}
@@ -222,9 +224,53 @@ input,select,textarea,button{font-family:inherit}
   .form-label{margin-bottom:2px;font-size:14px}
   .radio-group{flex-direction:column;gap:8px}
   .radio-label,.checkbox-label{min-height:50px;padding:14px 16px;font-size:15px}
-  .form-submit-area{background:var(--card);border-top:1px solid var(--border);z-index:10;margin:0 -16px;padding:16px;position:sticky;bottom:0}
+  .form-submit-area{background:var(--card);border-top:1px solid var(--border);z-index:10;margin:0 -16px;padding:16px;padding-bottom:calc(16px + env(safe-area-inset-bottom));position:sticky;bottom:0}
   .btn-submit{border-radius:6px;min-height:54px;font-size:17px}
   .form-note{padding:12px 14px;font-size:13px}
+}
+.btn-sm{padding:8px 14px;border-radius:8px;font-size:13px;font-weight:600;display:inline-flex;align-items:center;gap:6px;justify-content:center;border:none;cursor:pointer}
+@media(max-width:480px){
+  .lp-navbar{padding:env(safe-area-inset-top,0px) 12px 0;height:auto;min-height:56px}
+  .lp-navbar-title{font-size:14px}
+  .lp-navbar-links{top:calc(56px + env(safe-area-inset-top,0px));padding:12px 14px}
+  .lp-navbar-links a{min-height:46px;align-items:center;display:flex;font-size:14px}
+  .lp-navbar-links .lp-btn-login-nav,.lp-navbar-links .lp-navbar-cta{min-height:46px;align-items:center;display:flex;justify-content:center;font-size:14px}
+  .lp-page.sub{padding-top:calc(56px + env(safe-area-inset-top,0px))}
+  .hero-section{padding:84px 16px 48px}
+  .hero-title{font-size:27px}
+  .hero-subtitle{font-size:15px;margin-bottom:28px}
+  .btn-primary,.btn-secondary{width:100%;justify-content:center;padding:14px 20px;font-size:14px}
+  .hp-main{padding:40px 14px 32px;gap:28px}
+  .hp-title{font-size:23px}
+  .hp-desc{font-size:14px}
+  .hp-feature{padding:16px}
+  .hp-feature-icon{width:42px;height:42px;font-size:19px}
+  .hp-notice-body{max-height:340px}
+  .hp-ticker-label{font-size:11px;padding:9px 12px}
+  .section{padding:56px 14px}
+  .section-title{font-size:24px}
+  .sub-hero{height:130px}
+  .sub-hero-title{font-size:21px}
+  .lp-topbar{padding:0 14px;margin-top:16px}
+  .lp-back-btn{min-height:44px;padding:10px 14px}
+  .company-card-header{padding:18px}
+  .company-card-body{padding:18px}
+  .company-name{font-size:16px}
+  .company-number{width:40px;height:40px;font-size:15px}
+  .trade-tag{padding:5px 11px;font-size:12px}
+  .salary-display{padding:14px}
+  .salary-amount{font-size:18px}
+  .info-block-value,.detail-value{font-size:13.5px}
+  .form-container{padding:20px 14px 96px}
+  .form-input,.form-select{min-height:50px;padding:13px 14px;font-size:16px}
+  .form-submit-area{margin:0 -14px;padding:14px;padding-bottom:calc(14px + env(safe-area-inset-bottom))}
+  .radio-label,.checkbox-label{min-height:50px;padding:13px 14px;font-size:15px}
+  .benefit-item,.detail-label{font-size:12.5px}
+  .footer{padding:48px 16px calc(28px + env(safe-area-inset-bottom,0px))}
+  .footer-main{gap:28px}
+  .footer-bottom{font-size:11px;letter-spacing:.3px}
+  .success-card{padding:36px 22px}
+  .success-card p{font-size:13.5px}
 }
 
 /* ── HOME (hero banner + ticker + notice board) ── */
@@ -367,7 +413,7 @@ input,select,textarea,button{font-family:inherit}
 
   <nav class="lp-navbar" id="lpNav">
     <div class="lp-navbar-brand" onclick="goToPage('home')">
-      <div class="lp-navbar-logo">GK</div>
+      <div class="lp-navbar-logo" style="overflow:hidden;padding:0"><img src="ITI 3.jpeg" alt="ITI 3" style="width:100%;height:100%;object-fit:cover;display:block"></div>
       <span class="lp-navbar-title">GITI Kiloi</span>
     </div>
     <div class="lp-navbar-links" id="lpNavLinks">
@@ -804,7 +850,7 @@ input,select,textarea,button{font-family:inherit}
   <!-- LOADER -->
   <div class="loader-overlay" id="lpLoader" style="display:none">
     <div class="loader-content">
-      <div class="loader-icon">GK</div>
+      <div class="loader-icon" style="overflow:hidden;padding:0"><img src="ITI 3.jpeg" alt="ITI 3" style="width:100%;height:100%;object-fit:cover;display:block"></div>
       <div class="loader-text">
         <h2>GITI Kiloi</h2>
         <p>Campus Placement Portal</p>
