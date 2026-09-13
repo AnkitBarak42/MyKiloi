@@ -185,11 +185,23 @@ tr:hover td{background:rgba(15,23,42,.03)}
 
 /* ── FILTER ROW ── */
 .filter-row{padding:11px 14px;border-bottom:1px solid var(--border);display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-.jf-mwrap{position:relative;min-width:132px}
-.jf-mbtn{width:100%;text-align:left;padding:8px 11px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;outline:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:6px}
-.jf-mmenu{display:none;position:absolute;z-index:80;top:calc(100% + 4px);left:0;background:var(--bg2);border:1px solid var(--border);border-radius:8px;min-width:max-content;max-width:min(340px,calc(100vw - 24px));padding:6px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
-.jf-mmenu label{display:flex;align-items:center;gap:8px;padding:7px 8px;cursor:pointer;font-size:13px;white-space:nowrap}
-.jf-mmenu label.jf-all{font-weight:700;border-bottom:1px solid var(--border);margin-bottom:4px}
+.jf-mwrap{position:relative;flex:1 1 0;min-width:0}
+.jf-mbtn{width:100%;text-align:left;padding:8px 11px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;outline:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:6px;transition:border .15s,box-shadow .15s}
+.jf-mbtn:hover,.jf-mbtn:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(245,158,11,.12)}
+.jf-mmenu{display:none;position:absolute;z-index:80;top:calc(100% + 4px);left:0;background:var(--bg2);border:1px solid var(--border);border-radius:10px;min-width:max-content;max-width:min(340px,calc(100vw - 24px));box-shadow:0 10px 30px rgba(0,0,0,.35);overflow:hidden}
+.jf-menu-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 11px;border-bottom:1px solid var(--border);background:var(--bg)}
+.jf-menu-title{font-weight:800;font-size:11px;letter-spacing:.5px;text-transform:uppercase;color:var(--muted)}
+.jf-clear{background:none;border:none;padding:0;color:var(--accent);cursor:pointer;font-size:11px;font-weight:700}
+.jf-clear:hover{text-decoration:underline}
+.jf-menu-list{max-height:240px;overflow-y:auto;padding:5px 6px}
+.jf-menu-list label{display:flex;align-items:center;gap:8px;padding:7px 8px;cursor:pointer;font-size:13px;white-space:nowrap;border-radius:6px;transition:background .12s}
+.jf-menu-list label:hover{background:rgba(245,158,11,.08)}
+.jf-menu-list label.jf-checked{background:rgba(245,158,11,.12)}
+.jf-menu-list label.jf-all{font-weight:700;border-bottom:1px solid var(--border);border-radius:0;margin-bottom:3px;padding-bottom:8px}
+.jf-group{padding:6px 8px 4px;font-size:10px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);border-bottom:1px dashed var(--border);margin:3px 0;position:sticky;top:0;background:inherit}
+.jf-menu-foot{display:flex;justify-content:flex-end;padding:6px;border-top:1px solid var(--border);background:var(--bg)}
+.jf-menu-foot button{background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;border-radius:6px;color:#fff;font-size:12px;font-weight:800;padding:7px 16px;cursor:pointer}
+.jf-menu-foot button:hover{opacity:.9}
 .jf-mmenu input{width:15px;height:15px;cursor:pointer;accent-color:var(--red)}
 .filter-row input,.filter-row select{padding:7px 10px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;outline:none}
 .filter-row input{flex:1;min-width:140px}
@@ -826,7 +838,6 @@ tr:hover td{background:rgba(15,23,42,.025)}
       <button class="btn-login" id="btnLogin" onclick="doLogin()">🔐 LOGIN</button>
       <div style="display:flex;justify-content:space-between;margin-top:14px">
         <button onclick="showForgotPassword()" style="background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:12px;text-decoration:underline">Forgot Password?</button>
-        <button id="btnSignUp" onclick="showSignUp()" style="background:transparent;border:none;color:var(--blue);cursor:pointer;font-size:12px;text-decoration:underline">Sign Up</button>
       </div>
     </div>
 
@@ -1381,7 +1392,7 @@ tr:hover td{background:rgba(15,23,42,.025)}
                 <button type="button" class="jf-mbtn" onclick="toggleJFPTradeDropdown()"><span id="jfPrintTradeLabel">All Trades</span><span style="font-size:11px;color:var(--muted)">▾</span></button>
                 <div class="jf-mmenu" id="jfPrintTradeMenu"></div>
               </div>
-              <button class="btn btn-primary" onclick="printJobFairCustom()">🖨️ Print Selected</button>
+              <button class="btn btn-primary" onclick="printJobFairCustom()" style="flex:0 0 auto">🖨️ Print Selected</button>
             </div>
             <div id="jfPrintSelInfo" style="width:100%;font-size:11px;color:var(--muted);line-height:1.5">📆 All Months · 🗓️ All Years · 🎓 All Trades</div>
           </div>
@@ -2107,8 +2118,6 @@ function selectRole(role){
   document.getElementById("roleSelect").style.display = "none";
   document.getElementById("loginForm").style.display = "block";
   document.getElementById("loginRoleLabel").textContent = role === "admin" ? "🔴 Admin Login" : "🔵 Staff Login";
-  // Show/hide signup for admin (admins dont need signup)
-  document.getElementById("btnSignUp").style.display = role === "admin" ? "none" : "inline";
   document.getElementById("lUser").focus();
 }
 
@@ -4765,16 +4774,39 @@ const MONTH_NAMES=["","January","February","March","April","May","June","July","
 let jfPrintMonthSel=[], jfPrintYearSel=[], jfPrintTradeSel=[]; // empty array = "All" for each
 
 const jfMonthItems=MONTH_NAMES.slice(1).map((m,i)=>[String(i+1).padStart(2,"0"),m]);
-function jfYearItems(){ const a=[]; for(let y=2033;y>=2020;y--) a.push([String(y),String(y)]); return a; }
-function jfTradeItems(){ return trades.map(t=>[t,t]); }
+const JF_MONTH_GROUPS=[
+  {label:"Quarter 1 · Jan – Mar",vals:["01","02","03"]},
+  {label:"Quarter 2 · Apr – Jun",vals:["04","05","06"]},
+  {label:"Quarter 3 · Jul – Sep",vals:["07","08","09"]},
+  {label:"Quarter 4 · Oct – Dec",vals:["10","11","12"]}
+];
+function jfMonthGroups(){ return JF_MONTH_GROUPS.map(function(g){ return {label:g.label,items:g.vals.map(v=>[v,MONTH_NAMES[parseInt(v)]])}; }); }
+function jfYearItems(){ const a=[]; for(let y=new Date().getFullYear();y>=2020;y--) a.push([String(y),String(y)]); return a; }
+function jfTradeItems(){ return trades.slice().sort(function(a,b){ return a.localeCompare(b); }).map(t=>[t,t]); }
 function jfSelToggle(sel,v,checked){ if(checked){ if(!sel.includes(v)) sel.push(v); } else { const i=sel.indexOf(v); if(i>-1) sel.splice(i,1); } }
-function jfBuildMenu(menuId,items,sel,allId,allFn,oneFn){
+function jfBuildMenu(menuId,items,sel,allId,allFn,oneFn,title,groups){
   const menu=document.getElementById(menuId);
   if(!menu) return;
   const allChecked=sel.length===0;
-  let h='<label class="jf-all"><input type="checkbox" id="'+allId+'" '+((allChecked)?"checked":"")+' onchange="'+allFn+'()"> All</label>';
-  h+=items.map(it=>'<label><input type="checkbox" value="'+escLP(it[0])+'" '+((sel.includes(it[0]))?"checked":"")+' onchange="'+oneFn+'(this)"> '+it[1]+'</label>').join("");
+  const esc=escLP;
+  let h='<div class="jf-menu-head"><span class="jf-menu-title">'+title+'</span><button type="button" class="jf-clear" onclick="'+allFn+'()">✕ Clear</button></div>';
+  h+='<div class="jf-menu-list">';
+  h+='<label class="jf-all"><input type="checkbox" id="'+allId+'" '+((allChecked)?"checked":"")+' onchange="'+allFn+'()"> All</label>';
+  const row=function(it){
+    const checked=sel.includes(it[0]);
+    return '<label'+(checked?' class="jf-checked"':'')+'><input type="checkbox" value="'+esc(it[0])+'" '+(checked?"checked":"")+' onchange="'+oneFn+'(this)"> '+it[1]+'</label>';
+  };
+  if(groups&&groups.length){
+    groups.forEach(function(g){ h+='<div class="jf-group">'+g.label+'</div>'+g.items.map(row).join(""); });
+  } else {
+    h+=items.map(row).join("");
+  }
+  h+='</div><div class="jf-menu-foot"><button type="button" onclick="jfMenuClose(\''+menuId+'\')">✓ Done</button></div>';
   menu.innerHTML=h||'<div style="padding:8px;color:var(--muted);font-size:12px">Nothing to select</div>';
+}
+function jfMenuClose(menuId){
+  const m=document.getElementById(menuId);
+  if(m) m.style.display="none";
 }
 function jfMenuShow(menuId,buildFn){
   const m=document.getElementById(menuId);
@@ -4789,7 +4821,7 @@ function updateJFPSelInfo(){
     +" · 🎓 "+(jfPrintTradeSel.length?jfPrintTradeSel.join(", "):"All Trades");
 }
 
-function buildJFPrintMonthMenu(){ jfBuildMenu("jfPrintMonthMenu",jfMonthItems,jfPrintMonthSel,"jfAllMonthChk","toggleJFPMonthsAll","toggleJFPMonthOne"); }
+function buildJFPrintMonthMenu(){ jfBuildMenu("jfPrintMonthMenu",jfMonthItems,jfPrintMonthSel,"jfAllMonthChk","toggleJFPMonthsAll","toggleJFPMonthOne","Months",jfMonthGroups()); }
 function toggleJFPrintMonthDropdown(){ jfMenuShow("jfPrintMonthMenu",buildJFPrintMonthMenu); }
 function toggleJFPMonthsAll(){ jfPrintMonthSel=[]; buildJFPrintMonthMenu(); updateJFPMonthLabel(); }
 function toggleJFPMonthOne(cb){ jfSelToggle(jfPrintMonthSel,cb.value,cb.checked); const a=document.getElementById("jfAllMonthChk"); if(a) a.checked=jfPrintMonthSel.length===0; updateJFPMonthLabel(); }
@@ -4802,7 +4834,7 @@ function updateJFPMonthLabel(){
   updateJFPSelInfo();
 }
 
-function buildJFPrintYearMenu(){ jfBuildMenu("jfPrintYearMenu",jfYearItems(),jfPrintYearSel,"jfAllYearChk","toggleJFPYearsAll","toggleJFPYearOne"); }
+function buildJFPrintYearMenu(){ jfBuildMenu("jfPrintYearMenu",jfYearItems(),jfPrintYearSel,"jfAllYearChk","toggleJFPYearsAll","toggleJFPYearOne","Years",null); }
 function toggleJFPrintYearDropdown(){ jfMenuShow("jfPrintYearMenu",buildJFPrintYearMenu); }
 function toggleJFPYearsAll(){ jfPrintYearSel=[]; buildJFPrintYearMenu(); updateJFPYearLabel(); }
 function toggleJFPYearOne(cb){ jfSelToggle(jfPrintYearSel,cb.value,cb.checked); const a=document.getElementById("jfAllYearChk"); if(a) a.checked=jfPrintYearSel.length===0; updateJFPYearLabel(); }
@@ -4815,7 +4847,7 @@ function updateJFPYearLabel(){
   updateJFPSelInfo();
 }
 
-function buildJFPrintTradeMenu(){ jfBuildMenu("jfPrintTradeMenu",jfTradeItems(),jfPrintTradeSel,"jfAllTradeChk","toggleJFPTradesAll","toggleJFPTradeOne"); }
+function buildJFPrintTradeMenu(){ jfBuildMenu("jfPrintTradeMenu",jfTradeItems(),jfPrintTradeSel,"jfAllTradeChk","toggleJFPTradesAll","toggleJFPTradeOne","Trades",null); }
 function toggleJFPTradeDropdown(){ jfMenuShow("jfPrintTradeMenu",buildJFPrintTradeMenu); }
 function toggleJFPTradesAll(){ jfPrintTradeSel=[]; buildJFPrintTradeMenu(); updateJFPTradeLabel(); }
 function toggleJFPTradeOne(cb){ jfSelToggle(jfPrintTradeSel,cb.value,cb.checked); const a=document.getElementById("jfAllTradeChk"); if(a) a.checked=jfPrintTradeSel.length===0; updateJFPTradeLabel(); }
