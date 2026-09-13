@@ -964,7 +964,7 @@ function verifyStudentPortal(){
   var m=((document.getElementById("portMobile")||{}).value||"").trim();
   var d=((document.getElementById("portDob")||{}).value||"").trim();
   if(!/^[6-9]\d{9}$/.test(m)){ portMsg("❌ Please enter a valid 10-digit mobile number."); return; }
-  if(!normalizeDob(d)){ portMsg("❌ Please enter your date of birth."); return; }
+  if(!isValidDob(d)){ portMsg("❌ Date of birth must be in DD-MM-YYYY format."); return; }
   portMsg("⏳ Verifying...",true);
   try{
     _db.ref("iti_kiloi/students").once("value").then(function(snap){
@@ -1110,7 +1110,8 @@ function submitApplyForm(){
   var name=document.getElementById("apName").value.trim();
   var reg=document.getElementById("apReg").value.trim();
   var mob=document.getElementById("apMob").value.trim();
-  var dob=normalizeDob(document.getElementById("apDob").value);
+  var dobRaw=document.getElementById("apDob").value.trim();
+  var dob=normalizeDob(dobRaw);
   var email=document.getElementById("apEmail").value.trim();
   var trade=document.getElementById("apTrade").value;
   var session=document.getElementById("apSession").value;
@@ -1123,7 +1124,7 @@ function submitApplyForm(){
   var remark=document.getElementById("apRemark").value.trim();
   if(!name) return errEl.textContent="❌ Name is required";
   if(!/^[6-9]\d{9}$/.test(mob)) return errEl.textContent="❌ Enter a valid 10-digit mobile number";
-  if(!dob) return errEl.textContent="❌ Date of birth is required";
+  if(!dob) return errEl.textContent=dobRaw?"❌ Date of birth must be in DD-MM-YYYY format.":"❌ Date of birth is required";
   if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return errEl.textContent="❌ Enter a valid email ID";
   if(!trade) return errEl.textContent="❌ Select your trade";
   if(!session) return errEl.textContent="❌ Select session";
@@ -1303,15 +1304,42 @@ function dobCalEsc(e){
 }
 function fDobCalPicked(el,tid){
   var t=document.getElementById(tid);
-  if(t&&el.value) t.value=el.value;
+  if(t&&el.value) t.value=isoToDmy(el.value)||el.value;
+}
+function isValidDob(v){
+  var m=/^(\d{1,2})-(\d{1,2})-(\d{4})$/.exec(String(v||"").trim());
+  if(!m) return false;
+  var d=+m[1],mo=+m[2],y=+m[3];
+  if(y<1900||y>2100||mo<1||mo>12||d<1) return false;
+  return d<=new Date(y,mo,0).getDate();
+}
+function dmyToIso(v){
+  if(!isValidDob(v)) return "";
+  var m=/^(\d{1,2})-(\d{1,2})-(\d{4})$/.exec(String(v).trim());
+  return m[3]+"-"+("0"+m[2]).slice(-2)+"-"+("0"+m[1]).slice(-2);
+}
+function isoToDmy(v){
+  var m=/^(\d{4})-(\d{1,2})-(\d{1,2})$/.exec(String(v||"").trim());
+  if(!m) return "";
+  var y=+m[1],mo=+m[2],d=+m[3];
+  if(y<1900||y>2100||mo<1||mo>12||d<1) return "";
+  return ("0"+m[3]).slice(-2)+"-"+("0"+m[2]).slice(-2)+"-"+m[1];
 }
 function normalizeDob(v){
   v=(v||"").toString().trim(); if(!v) return "";
   var m1=v.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
-  if(m1) return m1[1]+"-"+("0"+m1[2]).slice(-2)+"-"+("0"+m1[3]).slice(-2);
+  if(m1){
+    var y=+m1[1],mo=+m1[2],d=+m1[3];
+    if(y<1900||y>2100||mo<1||mo>12||d<1||d>new Date(y,mo,0).getDate()) return "";
+    return m1[1]+"-"+("0"+m1[2]).slice(-2)+"-"+("0"+m1[3]).slice(-2);
+  }
   var m2=v.match(/^(\d{1,2})-(\d{1,2})-(\d{4})$/);
-  if(m2) return m2[3]+"-"+("0"+m2[2]).slice(-2)+"-"+("0"+m2[1]).slice(-2);
-  return v;
+  if(m2){
+    var y2=+m2[3],mo2=+m2[2],d2=+m2[1];
+    if(y2<1900||y2>2100||mo2<1||mo2>12||d2<1||d2>new Date(y2,mo2,0).getDate()) return "";
+    return m2[3]+"-"+("0"+m2[2]).slice(-2)+"-"+("0"+m2[1]).slice(-2);
+  }
+  return "";
 }
 function runLPLoader(){
   try{
@@ -1547,6 +1575,7 @@ document.addEventListener("DOMContentLoaded",function(){
     if(!f.father) errs.father="Father name is required";
     if(!/^[6-9]\d{9}$/.test(f.mobile)) errs.mobile="Enter a valid 10-digit mobile number";
     if(!f.dob) errs.dob="Date of birth is required";
+    else if(!isValidDob(f.dob)) errs.dob="Date must be in DD-MM-YYYY format";
     if(!f.email) errs.email="Email ID is required";
     if(f.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email)) errs.email="Enter a valid email";
     if(!f.category) errs.category="Category is required";

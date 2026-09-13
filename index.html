@@ -1350,8 +1350,8 @@ tr:hover td{background:rgba(15,23,42,.025)}
             <span class="cnt-label" id="jfEventStatus">Not saved yet</span>
           </div>
           <div class="filter-row" style="flex-wrap:wrap;gap:10px">
-            <input type="date" id="jfEventDate" title="Job Fair Date"
-              style="padding:7px 11px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;outline:none;color-scheme:dark">
+            <input type="text" id="jfEventDate" placeholder="DD-MM-YYYY" maxlength="10" title="Job Fair Date (DD-MM-YYYY)"
+              style="padding:7px 11px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;outline:none">
             <input type="time" id="jfEventTime" title="Job Fair Time"
               style="padding:7px 11px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;outline:none;color-scheme:dark">
             <input id="jfEventVenue" placeholder="Venue — e.g. Main Seminar Hall, GITI Kiloi"
@@ -1719,7 +1719,7 @@ tr:hover td{background:rgba(15,23,42,.025)}
           <div style="font-size:10px;color:var(--muted);margin-top:4px">4 digit year daalo (e.g. 2032)</div>
         </div>
       </div>
-      <div class="fg2"><label>Date</label><input id="jfDate" type="date"></div>
+      <div class="fg2"><label>Date</label><input id="jfDate" type="text" placeholder="DD-MM-YYYY" maxlength="10"></div>
       <div class="fg2"><label>Time</label><input id="jfTime" type="time"></div>
       <div class="fg2" style="grid-column:1/-1"><label>Venue</label><input id="jfVenue" placeholder="e.g. Main Seminar Hall, GITI Kiloi"></div>
     </div>
@@ -2204,7 +2204,8 @@ function registerStudent(){
   const name=document.getElementById("suName").value.trim();
   const father=document.getElementById("suFather").value.trim();
   const mobile=document.getElementById("suMobile").value.trim();
-  const dob=normalizeDob(document.getElementById("suDob").value);
+  const dobRaw=document.getElementById("suDob").value.trim();
+  const dob=normalizeDob(dobRaw);
   const emailId=document.getElementById("suEmail").value.trim();
   const company=document.getElementById("suCompany").value.trim();
   const address=document.getElementById("suAddress").value.trim();
@@ -2215,7 +2216,7 @@ function registerStudent(){
   if(!name) missing.push("Full Name");
   if(!father) missing.push("Father Name");
   if(!mobile) missing.push("Mobile Number");
-  if(!dob) missing.push("Date of Birth");
+  if(!dob) missing.push(dobRaw?"Date of Birth must be in DD-MM-YYYY format":"Date of Birth");
   if(!emailId) missing.push("Email ID");
   if(!company) missing.push("Category");
   if(!address) missing.push("Address");
@@ -2429,6 +2430,7 @@ document.addEventListener("DOMContentLoaded",function(){
     if(!f.father) errs.father="Father name is required";
     if(!/^[6-9]\d{9}$/.test(f.mobile)) errs.mobile="Enter a valid 10-digit mobile number";
     if(!f.dob) errs.dob="Date of birth is required";
+    else if(!isValidDob(f.dob)) errs.dob="Date must be in DD-MM-YYYY format";
     if(!f.email) errs.email="Email ID is required";
     if(f.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email)) errs.email="Enter a valid email";
     if(!f.category) errs.category="Category is required";
@@ -3550,15 +3552,42 @@ function dobCalEsc(e){
 }
 function fDobCalPicked(el,tid){
   const t=document.getElementById(tid);
-  if(t&&el.value) t.value=el.value;
+  if(t&&el.value) t.value=isoToDmy(el.value)||el.value;
+}
+function isValidDob(v){
+  const m=/^(\d{1,2})-(\d{1,2})-(\d{4})$/.exec(String(v||"").trim());
+  if(!m) return false;
+  const d=+m[1],mo=+m[2],y=+m[3];
+  if(y<1900||y>2100||mo<1||mo>12||d<1) return false;
+  return d<=new Date(y,mo,0).getDate();
+}
+function dmyToIso(v){
+  if(!isValidDob(v)) return "";
+  const m=/^(\d{1,2})-(\d{1,2})-(\d{4})$/.exec(String(v).trim());
+  return m[3]+"-"+("0"+m[2]).slice(-2)+"-"+("0"+m[1]).slice(-2);
+}
+function isoToDmy(v){
+  const m=/^(\d{4})-(\d{1,2})-(\d{1,2})$/.exec(String(v||"").trim());
+  if(!m) return "";
+  const y=+m[1],mo=+m[2],d=+m[3];
+  if(y<1900||y>2100||mo<1||mo>12||d<1) return "";
+  return ("0"+m[3]).slice(-2)+"-"+("0"+m[2]).slice(-2)+"-"+m[1];
 }
 function normalizeDob(v){
   v=(v||"").toString().trim(); if(!v) return "";
   const m1=v.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
-  if(m1) return m1[1]+"-"+("0"+m1[2]).slice(-2)+"-"+("0"+m1[3]).slice(-2);
+  if(m1){
+    const y=+m1[1],mo=+m1[2],d=+m1[3];
+    if(y<1900||y>2100||mo<1||mo>12||d<1||d>new Date(y,mo,0).getDate()) return "";
+    return m1[1]+"-"+("0"+m1[2]).slice(-2)+"-"+("0"+m1[3]).slice(-2);
+  }
   const m2=v.match(/^(\d{1,2})-(\d{1,2})-(\d{4})$/);
-  if(m2) return m2[3]+"-"+("0"+m2[2]).slice(-2)+"-"+("0"+m2[1]).slice(-2);
-  return v;
+  if(m2){
+    const y2=+m2[3],mo2=+m2[2],d2=+m2[1];
+    if(y2<1900||y2>2100||mo2<1||mo2>12||d2<1||d2>new Date(y2,mo2,0).getDate()) return "";
+    return m2[3]+"-"+("0"+m2[2]).slice(-2)+"-"+("0"+m2[1]).slice(-2);
+  }
+  return "";
 }
 function migrateDobFromRemarks(){
   if(!Array.isArray(students)) return;
@@ -3588,7 +3617,8 @@ function saveStudent(){
   const name=document.getElementById("fName").value.trim(),roll=document.getElementById("fRoll").value.trim();
   const father=document.getElementById("fFather").value.trim();
   const mobile=document.getElementById("fMobile").value.trim();
-  const dob=normalizeDob(document.getElementById("fDob").value);
+  const dobRaw=document.getElementById("fDob").value.trim();
+  const dob=normalizeDob(dobRaw);
   const emailC=document.getElementById("fCompany").value.trim();
   const address=document.getElementById("fAddress").value.trim();
   const trade=document.getElementById("fTrade2").value;
@@ -3598,7 +3628,7 @@ function saveStudent(){
   if(!roll) missing.push("Registration No.");
   if(!father) missing.push("Father Name");
   if(!mobile) missing.push("Mobile No");
-  if(!dob) missing.push("Date of Birth");
+  if(!dob) missing.push(dobRaw?"Date of Birth must be in DD-MM-YYYY format":"Date of Birth");
   if(!emailC) missing.push("Category");
   if(!address) missing.push("Address");
   if(!trade) missing.push("Trade");
@@ -4811,18 +4841,20 @@ function fillJfEventForm(){
   const t=document.getElementById("jfEventTime");
   const v=document.getElementById("jfEventVenue");
   if(!d) return;
-  d.value=jfEvent?jfEvent.date||"":"";
+  d.value=jfEvent?(isoToDmy(jfEvent.date)||""):"";
   t.value=jfEvent?jfEvent.time||"":"";
   v.value=jfEvent?jfEvent.venue||"":"";
   const st=document.getElementById("jfEventStatus");
   if(st) st.textContent=(jfEvent&&(jfEvent.date||jfEvent.time||jfEvent.venue))?"✅ Live on Landing page":"Not saved yet";
 }
 function saveJfEvent(){
-  const d=document.getElementById("jfEventDate").value;
+  const dRaw=document.getElementById("jfEventDate").value.trim();
   const t=document.getElementById("jfEventTime").value;
   const v=document.getElementById("jfEventVenue").value.trim();
-  if(!d&&!t&&!v){ showToast("Enter date, time or venue first","err"); return; }
-  jfEvent={date:d,time:t,venue:v,updatedAt:new Date().toISOString()};
+  const dIso=dRaw?dmyToIso(dRaw):"";
+  if(dRaw&&!dIso){ showToast("Date format should be DD-MM-YYYY","err"); return; }
+  if(!dIso&&!t&&!v){ showToast("Enter date, time or venue first","err"); return; }
+  jfEvent={date:dIso,time:t,venue:v,updatedAt:new Date().toISOString()};
   try{ localStorage.setItem("iti_kiloi_jobfair_event",JSON.stringify(jfEvent)); }catch(e){}
   if(window._firebaseReady && window._db){
     window._db.ref("iti_kiloi/jobfair_event").set(jfEvent);
@@ -4932,7 +4964,7 @@ function openEditJFModal(id){
   document.getElementById("jfMob").value=j.mob||"";
   document.getElementById("jfEmail").value=j.email||"";
   document.getElementById("jfRemark").value=j.remark||"";
-  document.getElementById("jfDate").value=j.date||"";
+  document.getElementById("jfDate").value=isoToDmy(j.date)||"";
   document.getElementById("jfTime").value=j.time||"";
   document.getElementById("jfVenue").value=j.venue||"";
   document.getElementById("jfSession").value=j.session||"2024-25";
@@ -4953,6 +4985,9 @@ function saveJobFairEntry(){
   const reg=document.getElementById("jfReg").value.trim();
   const company=selectedJFDirCompanies[0]||"";
   if(!name||!reg||!selectedJFDirCompanies.length){showToast("Name, Registration No. and Company are required.","err");return;}
+  const jfDateRaw=document.getElementById("jfDate").value.trim();
+  const jfDateIso=jfDateRaw?dmyToIso(jfDateRaw):"";
+  if(jfDateRaw&&!jfDateIso){showToast("Date format should be DD-MM-YYYY","err");return;}
   const entry={
     id: editingJFId||jfNextId++,
     name, reg,
@@ -4964,7 +4999,7 @@ function saveJobFairEntry(){
     company,
     month:document.getElementById("jfMonthM").value,
     year:document.getElementById("jfYearM").value,
-    date:document.getElementById("jfDate").value||"",
+    date:jfDateIso,
     time:document.getElementById("jfTime").value||"",
     venue:document.getElementById("jfVenue").value.trim(),
     remark:document.getElementById("jfRemark").value.trim(),
