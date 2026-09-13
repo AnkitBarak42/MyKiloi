@@ -71,7 +71,7 @@ input,select,textarea,button{font-family:inherit}
 #offlineBanner.show{display:block}
 
 /* ── LOGIN ── */
-#loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px;background:linear-gradient(180deg,rgba(2,6,16,.78),rgba(2,6,16,.92)),url('ITI.jpeg') center/cover no-repeat fixed}
+#loginScreen{min-height:100vh;min-height:100dvh;display:flex;align-items:center;justify-content:center;padding:16px;background:linear-gradient(180deg,rgba(2,6,16,.78),rgba(2,6,16,.92)),url('ITI.jpeg') center/cover no-repeat}
 .login-box{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:36px 28px;width:380px;max-width:100%;box-shadow:0 0 100px rgba(0,0,0,.8)}
 .login-logo{text-align:center;margin-bottom:28px}
 .logo-circle{width:80px;height:80px;border-radius:20px;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;margin-bottom:12px;box-shadow:0 0 30px rgba(245,158,11,.3);background:rgba(245,158,11,.15);border:2px solid rgba(245,158,11,.3)}
@@ -85,7 +85,7 @@ input,select,textarea,button{font-family:inherit}
 .fg input:focus,.fg select:focus{border-color:var(--accent)}
 .err-box{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:8px;color:var(--red);font-size:13px;padding:9px 12px;margin-bottom:12px;text-align:center;display:none}
 .btn-login{width:100%;padding:13px;background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;border-radius:10px;color:#000;font-weight:900;font-size:16px;cursor:pointer;letter-spacing:1px;margin-top:6px}
-.login-box{max-height:90vh;overflow-y:auto}
+.login-box{max-height:90vh;max-height:calc(100dvh - 32px);overflow-y:auto}
 .demo-box{margin-top:16px;background:var(--bg2);border-radius:10px;padding:13px;font-size:12px;color:var(--muted);line-height:2;border-left:3px solid var(--accent)}
 
 /* ── APP LAYOUT ── */
@@ -263,6 +263,15 @@ tr:hover td{background:rgba(15,23,42,.03)}
   .stats-grid{grid-template-columns:repeat(2,1fr)}
   th,td{padding:8px 10px;font-size:12px}
   .modal{padding:18px}
+  #loginScreen{padding:10px;background-position:center}
+  .login-box{padding:26px 20px;border-radius:18px}
+  .login-logo{margin-bottom:22px}
+  .logo-circle{width:64px;height:64px}
+  .login-logo h1{font-size:21px}
+  .login-logo p{font-size:12px}
+  .fg input,.fg select{font-size:16px;min-height:46px}
+  #roleSelect [style*="grid-template-columns"]{grid-template-columns:1fr 1fr}
+  #roleSelect button{min-height:88px;padding:14px 8px}
 }
 
 /* ── LANDING PAGE — GITI Kiloi dark theme (structure of iti-placement-drive.vercel.app) ── */
