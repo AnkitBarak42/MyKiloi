@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
+<script>try{if(localStorage.getItem("iti_kiloi_theme")==="dark")document.documentElement.setAttribute("data-theme","dark");}catch(e){}</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <meta name="theme-color" content="#f59e0b">
@@ -714,6 +715,38 @@ tr:hover td{background:rgba(15,23,42,.025)}
 .stat-card.grad .sv{color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.18);position:relative;z-index:1}
 .stat-card.grad .ss{color:rgba(255,255,255,.82);position:relative;z-index:1}
 .stat-card.grad:hover{transform:translateY(-2px);box-shadow:0 16px 32px -14px rgba(2,6,23,.55)}
+
+/* ═══════════════════════════════════════════════
+   DARK THEME — toggle from sidebar bottom (🌙/☀️)
+   ═══════════════════════════════════════════════ */
+.theme-toggle{border-color:var(--border)!important;margin-bottom:8px}
+:root[data-theme="dark"]{
+  --bg:#0f172a;--bg2:#1e293b;--card:#1e293b;--border:#334155;
+  --text:#e2e8f0;--muted:#94a3b8;--light:#cbd5e1;
+  --primary-900:#e2e8f0;--primary-800:#cbd5e1;--primary-700:#94a3b8;--primary-600:#94a3b8;--primary-500:#94a3b8;--primary-400:#64748b;--primary-300:#475569;--primary-200:#334155;--primary-100:#1e293b;--primary-50:#0f172a;
+  --accent-600:#f59e0b;--accent-500:#fbbf24;--accent-400:#fcd34d;--accent-300:#fde68a;--accent-100:#3a2a05;
+  --blue-700:#60a5fa;--blue-600:#3b82f6;--blue-500:#3b82f6;--blue-400:#60a5fa;--blue-100:#1e3a8a;
+  --green-600:#4ade80;--green-500:#22c55e;--green-100:#14532d;
+  --red-500:#ef4444;--red-100:#7f1d1d;
+}
+:root[data-theme="dark"] body{background:radial-gradient(1100px 520px at 85% -60px,rgba(245,158,11,.09),transparent 60%),radial-gradient(900px 520px at -8% 0,rgba(59,130,246,.08),transparent 55%),var(--bg)}
+:root[data-theme="dark"] .sidebar{background:#0f172a}
+:root[data-theme="dark"] .filter-row{background:var(--card)}
+:root[data-theme="dark"] .fg input:focus,.fg select:focus,.fg2 input:focus,.fg2 select:focus,.fg2 textarea:focus,.filter-row input:focus,.filter-row select:focus{background:var(--card)}
+:root[data-theme="dark"] .btn-secondary{background:var(--card);color:var(--text)}
+:root[data-theme="dark"] .drop-zone:hover{background:var(--card)}
+:root[data-theme="dark"] .prog-bar{background:var(--bg2)}
+:root[data-theme="dark"] .em-chip{background:var(--card);color:var(--light)}
+:root[data-theme="dark"] .em-chip:hover{background:var(--bg2)}
+:root[data-theme="dark"] .em-chip.on{color:#0f172a}
+:root[data-theme="dark"] .lp-share-btn{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.22);color:var(--text)}
+:root[data-theme="dark"] .lp-share-head{color:var(--text)}
+:root[data-theme="dark"] .lp-share-head button:hover{color:var(--text)}
+:root[data-theme="dark"] .lp-share-copy{background:var(--bg);color:var(--text)}
+:root[data-theme="dark"] ::-webkit-scrollbar-thumb{background:#475569;border-color:var(--bg)}
+:root[data-theme="dark"] ::-webkit-scrollbar-thumb:hover{background:#64748b}
+:root[data-theme="dark"] #appLoader{background:var(--bg)!important}
+:root[data-theme="dark"] #appLoader>div:first-child{border-color:#e2e8f0;border-top-color:#f59e0b}
 </style>
 </head>
 <body class="sb-open">
@@ -864,6 +897,7 @@ tr:hover td{background:rgba(15,23,42,.025)}
       <div class="save-ind" id="saveInd"></div>
       <nav id="sideNav"></nav>
       <div class="sb-bottom">
+        <button class="btn-logout theme-toggle" id="themeBtn" onclick="toggleTheme()">🌙 Dark Mode</button>
         <button class="btn-logout" onclick="doLogout()">🚪 Logout</button>
       </div>
     </div>
@@ -1152,7 +1186,7 @@ tr:hover td{background:rgba(15,23,42,.025)}
           <div class="ph" style="margin-bottom:0"><h1>🕵️ Activity Log</h1><p>Complete record of all actions performed</p></div>
           <div style="display:flex;gap:8px;flex-wrap:wrap" class="no-print">
             <button class="print-btn" onclick="printCurrentPage()">🖨️ Print Page</button>
-            <button class="btn btn-secondary btn-sm" onclick="if(confirm('Clear entire activity log?')){activityLog=[];lsSet('iti_kiloi_log',[]);renderActivity();}">🗑️ Log Clear</button>
+            <button class="btn btn-secondary btn-sm" onclick="clearActivityLog()">🗑️ Log Clear</button>
           </div>
         </div>
 
@@ -1188,6 +1222,9 @@ tr:hover td{background:rgba(15,23,42,.025)}
                 <option value="DELETE_TRADE">Trade Delete</option>
                 <option value="LOGIN">Login</option>
                 <option value="LOGOUT">Logout</option>
+                <option value="REGISTER_LANDING">Web Registration</option>
+                <option value="PORTAL_LOGIN">Portal Sign-in</option>
+                <option value="APPLY_PORTAL">Portal Apply</option>
               </select>
             </div>
           </div>
@@ -1531,9 +1568,14 @@ tr:hover td{background:rgba(15,23,42,.025)}
   <div class="modal">
     <div class="modal-title" id="jfModalTitle">🏢 Add Job Fair Entry</div>
     <div class="form-grid">
+      <div class="fg2" style="grid-column:1/-1"><label>Mobile Number *</label>
+        <input id="jfMob" type="tel" maxlength="10" placeholder="10-digit mobile number"
+          style="font-family:var(--font-english);letter-spacing:.5px"
+          oninput="onJFMobLookup(this.value)" onblur="onJFMobLookup(this.value)">
+        <div id="jfMobStatus" style="margin-top:6px;min-height:18px"></div>
+      </div>
       <div class="fg2"><label>Full Name *</label><input id="jfName" placeholder="Student full name"></div>
       <div class="fg2"><label>Registration No. *</label><input id="jfReg" placeholder="e.g. KLI/2024/001"></div>
-      <div class="fg2"><label>Mobile No</label><input id="jfMob" placeholder="10 digit" maxlength="10"></div>
       <div class="fg2"><label>Email (Gmail)</label><input id="jfEmail" placeholder="student@gmail.com"></div>
       <div class="fg2"><label>Trade</label><select id="jfTrade2"></select></div>
       <div class="fg2"><label>Session</label>
@@ -1553,7 +1595,15 @@ tr:hover td{background:rgba(15,23,42,.025)}
           <div style="font-size:10px;color:var(--muted);margin-top:4px">Format: YYYY-YY (e.g. 2026-27)</div>
         </div>
       </div>
-      <div class="fg2"><label>Company Name *</label><input id="jfCompany" placeholder="Company name"></div>
+      <div class="fg2"><label>Company Name *</label>
+        <select id="jfCompanySel"
+          style="width:100%;padding:8px 10px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;outline:none">
+          <option value="">-- Select company from Placement Drives --</option>
+        </select>
+        <button onclick="addJFSelCompany()" style="width:100%;margin-top:6px;padding:8px 12px;background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;border-radius:8px;color:#000;font-weight:700;font-size:13px;cursor:pointer">➕ Add Company</button>
+        <div style="font-size:10px;color:var(--muted);margin-top:6px">Select multiple companies from the Placement Drives — the first one becomes the main Company Name.</div>
+        <div id="jfCompanyChips" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px"></div>
+      </div>
       <div class="fg2"><label>Month *</label>
         <select id="jfMonthM">
           <option value="01">January</option><option value="02">February</option><option value="03">March</option>
@@ -1618,6 +1668,18 @@ tr:hover td{background:rgba(15,23,42,.025)}
     <div class="modal-title" id="lpDriveModalTitle">🏢 Add Company</div>
     <div class="form-grid">
       <div class="fg2"><label>Company Name *</label><input id="ldName" placeholder="e.g. Godrej Enterprises Group"></div>
+      <div class="fg2" style="grid-column:1/-1">
+        <label>Companies from Employer Directory — select multiple (optional)</label>
+        <div style="display:flex;gap:6px;align-items:center">
+          <select id="ldCompanySel"
+            style="flex:1;padding:8px 10px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;outline:none">
+            <option value="">-- Select company from directory --</option>
+          </select>
+          <button onclick="addLPSelCompany()" style="padding:8px 12px;background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;border-radius:8px;color:#000;font-weight:700;font-size:13px;cursor:pointer">+ Add</button>
+        </div>
+        <div style="font-size:10px;color:var(--muted);margin-top:6px">Pick companies that exist in the Employer Directory — you can add multiple. The Company Name above stays the main title.</div>
+        <div id="ldCompanyChips" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px"></div>
+      </div>
       <div class="fg2"><label>Sub-title</label><input id="ldSub" placeholder="e.g. (Godrej &amp; Boyce Mfg. Co. Ltd.)"></div>
       <div class="fg2"><label>Type *</label>
         <select id="ldType" style="width:100%;padding:8px 10px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;outline:none">
@@ -1710,18 +1772,59 @@ function fillCategoryOptions(selId,selected){
 // ═══════════════════════════════════════════════
 let students=[], nextId=1, users=DEFAULT_USERS, trades=DEFAULT_TRADES, currentUser=null, editingId=null, editingUN=null, activityLog=[];
 
+// ── Theme ──
+function applyTheme(t){
+  var dark=(t==="dark");
+  document.documentElement.setAttribute("data-theme",dark?"dark":"light");
+  try{ localStorage.setItem("iti_kiloi_theme",dark?"dark":"light"); }catch(e){}
+  var b=document.getElementById("themeBtn");
+  if(b) b.textContent=dark?"☀️ Light Mode":"🌙 Dark Mode";
+  var b2=document.getElementById("lpThemeBtn");
+  if(b2) b2.textContent=dark?"☀️":"🌙";
+}
+function toggleTheme(){ applyTheme(document.documentElement.getAttribute("data-theme")==="dark"?"light":"dark"); }
+function initTheme(){
+  var t="light";
+  try{ t=localStorage.getItem("iti_kiloi_theme")||"light"; }catch(e){}
+  applyTheme(t);
+}
+
 // ── Activity Logger ──
-function logActivity(action, details){
-  activityLog.unshift({
+function mergeLogEntries(arr){
+  // Merge new entries into the local log (dedupe by uid), newest first
+  const all = (activityLog||[]).concat(arr||[]);
+  const seen = {}, out = [];
+  all.forEach(function(e){
+    if(!e || e.action===undefined || e.action===null) return;
+    const k = e.uid || (e.id+"_"+e.ts+"_"+e.user+"_"+e.action);
+    if(seen[k]) return;
+    seen[k] = true;
+    out.push(e);
+  });
+  out.sort(function(a,b){ return String(b.ts||"").localeCompare(String(a.ts||"")); });
+  if(out.length > 500) out = out.slice(0,500);
+  activityLog = out;
+  lsSet("iti_kiloi_log", activityLog);
+}
+function pushRemoteLog(entry){
+  try{
+    if(window._firebaseReady && window._db){
+      window._db.ref("iti_kiloi/log_entries").push(entry).catch(function(){});
+    }
+  }catch(e){}
+}
+function logActivity(action, details, uid){
+  const entry = {
+    uid: uid || (Date.now()+"_"+Math.floor(Math.random()*1e6)),
     id: Date.now(),
     ts: new Date().toISOString(),
     user: currentUser ? currentUser.username : "system",
     userName: currentUser ? currentUser.name : "System",
-    action,   // "ADD_STUDENT","EDIT_STUDENT","DELETE_STUDENT","IMPORT_CSV","RESTORE_BACKUP","ADD_USER","DELETE_USER","ADD_TRADE","DELETE_TRADE","LOGIN","LOGOUT"
+    action,   // "ADD_STUDENT",...,"REGISTER_LANDING","PORTAL_LOGIN","APPLY_PORTAL"
     details,  // string description
-  });
-  if(activityLog.length > 500) activityLog = activityLog.slice(0,500); // cap at 500
-  lsSet("iti_kiloi_log", activityLog);
+  };
+  mergeLogEntries([entry]);
+  pushRemoteLog(entry);
 }
 
 // ═══════════════════════════════════════════════
@@ -1846,6 +1949,19 @@ window.addEventListener("load",()=>{
       if(snap.exists()&&snap.val().students){
         students=snap.val().students; nextId=snap.val().nextId||students.length+1;
         try{migrateDobFromRemarks();}catch(e){}
+        try{
+          const sts=snap.val().students||[];
+          sts.forEach(function(s){
+            if(s&&s.source==="landing"){
+              const lk="REG_LANDING_"+(s.id!=null?s.id:("m_"+String(s.mobile)));
+              const already=activityLog.some(function(l){return l&&l.uid===lk;});
+              if(!already){
+                const cat=(s.email&&s.email!==s.emailId)?(" | "+s.email):"";
+                logActivity("REGISTER_LANDING", '"'+(s.name||"")+'" ('+(s.roll||("SR-"+s.id))+' | '+s.mobile+') registered via website — Trade: '+(s.trade||"")+', Session: '+(s.session||"")+cat, lk);
+              }
+            }
+          });
+        }catch(e){}
         if(currentUser){
           const pg=document.querySelector(".page.active");
           if(pg&&pg.id==="page-students"){populateFilters();renderStudents(false);}
@@ -1871,7 +1987,13 @@ window.addEventListener("load",()=>{
       if(snap.exists()){trades=snap.val();if(currentUser)try{renderTrades();}catch(e){}}
     });
     db.ref("iti_kiloi/log").on("value",snap=>{
-      if(snap.exists()){activityLog=snap.val()||[];if(currentUser)try{renderActivity();}catch(e){}}
+      if(snap.exists()){ mergeLogEntries(snap.val()||[]); if(currentUser)try{renderActivity();}catch(e){} }
+    });
+    db.ref("iti_kiloi/log_entries").on("value",snap=>{
+      const obj=snap.exists()?snap.val():{};
+      const arr=Object.keys(obj||{}).map(function(k){ return obj[k]; });
+      mergeLogEntries(arr);
+      if(currentUser)try{renderActivity();}catch(e){}
     });
     db.ref("iti_kiloi/pending_requests").on("value",snap=>{
       if(currentUser&&currentUser.role==="admin"){
@@ -2184,7 +2306,9 @@ let lpDrives=[];
 let lpDriveNextId=1;
 let editingLPDriveId=null;
 let selectedLPDriveChipTrades=[];
+let selectedLPDriveCompanies=[];
 document.addEventListener("DOMContentLoaded",function(){
+  initTheme();
   runLPLoader();
   setupLPDriveUI();
   renderLPHp();
@@ -2371,6 +2495,12 @@ function renderLPHp(){
 
 function lpTypeLabel(t){ return (t||"").toLowerCase()==="combined"?"Apprenticeship + Job":t; }
 function lpTypeClass(t){ var v=(t||"").toLowerCase(); return v==="job"?"badge-job":(v==="combined"?"badge-combined":"badge-apprenticeship"); }
+function lpExtraCompanies(d){
+  var comps=(d.companies||[]).filter(function(c){ return c && c!==d.name; });
+  if(!comps.length) return "";
+  return '<div class="trades-list" style="margin-top:6px"><span style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px">Participating Companies</span><div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:4px">'+
+    comps.map(function(c){ return '<span class="trade-tag">🏢 '+escLP(c)+'</span>'; }).join("")+'</div></div>';
+}
 function renderLPDrivesPage(){
   var list=document.getElementById("lpDrivesList");
   var empty=document.getElementById("lpDrivesEmpty");
@@ -2398,6 +2528,7 @@ function renderLPDrivesPage(){
       +'<div class="company-number">'+(i+1)+'</div><div>'
       +'<h3 class="company-name">'+escLP(d.name||"Company")+sub+'</h3>'
       +'<div class="company-location"><span class="icon">📍</span><span>'+escLP(d.location||"")+'</span></div>'
+      +lpExtraCompanies(d)
       +'</div></div>'
       +'<span class="company-type-badge '+badge+'">'+escLP(lpTypeLabel(d.type))+'</span></div>'
       +'<div class="company-card-body">'
@@ -2438,7 +2569,7 @@ function renderLPAdminList(){
     var lt=(d.type||"").toLowerCase();
     var badge=lt==="job"?'style="background:rgba(74,222,128,.12);color:#4ade80"':(lt==="combined"?'style="background:rgba(192,132,252,.12);color:#c084fc"':'style="background:rgba(96,165,250,.12);color:#60a5fa"');
     var st=d.active!==false?'style="color:#4ade80"':'style="color:var(--red)"';
-    return '<tr><td>'+(i+1)+'</td><td style="min-width:180px">'+escLP(d.name)+'</td>'
+    return '<tr><td>'+(i+1)+'</td><td style="min-width:180px">'+escLP(d.name)+((d.companies||[]).length>1?' <span style="font-size:11px;font-weight:600;color:var(--accent)">+'+(d.companies.length-1)+' more</span>':"")+'</td>'
       +'<td><span style="padding:3px 8px;border-radius:100px;font-size:11px;font-weight:600;'+badge.replace('style="','').replace('"','')+'">'+escLP(lpTypeLabel(d.type))+'</span></td>'
       +'<td>'+(posts||"0")+'</td><td>'+escLP(d.location||"")+'</td>'
       +'<td '+st+'>'+(d.active!==false?"Active":"Hidden")+'</td>'
@@ -2450,6 +2581,7 @@ function renderLPAdminList(){
 function openLPDriveModal(id){
   editingLPDriveId=(id==null)?null:id;
   selectedLPDriveChipTrades=[];
+  selectedLPDriveCompanies=[];
   ["ldName","ldSub","ldLocation","ldRole","ldRoleHighlight","ldSalaryAmount","ldSalaryPeriod","ldSalaryDetails","ldWebsite","ldNote"].forEach(function(n){ document.getElementById(n).value=""; });
   document.getElementById("ldType").value="Apprenticeship";
   document.getElementById("ldBenefits").value="";
@@ -2458,6 +2590,9 @@ function openLPDriveModal(id){
   document.getElementById("ldActive").checked=true;
   renderLPTradeChips();
   fillLPDriveSel();
+  fillLPDriveCompanySel();
+  renderLPDriveCompanyChips();
+  if((employerData||[]).length===0) loadEmployers();
   document.getElementById("lpDriveModalTitle").textContent="🏢 Add Company";
   if(editingLPDriveId!=null){
     var d=lpDrives.find(function(x){return x.id===editingLPDriveId;});
@@ -2481,8 +2616,11 @@ function openLPDriveModal(id){
       document.getElementById("ldWorkValue2").value=d.workValue2||"";
       document.getElementById("ldActive").checked=d.active!==false;
       selectedLPDriveChipTrades=(d.trades||[]).slice();
+      selectedLPDriveCompanies=(d.companies||[]).slice();
       renderLPTradeChips();
       fillLPDriveSel();
+      fillLPDriveCompanySel();
+      renderLPDriveCompanyChips();
     }
   }
   document.getElementById("addDriveModal").classList.add("open");
@@ -2518,14 +2656,44 @@ function renderLPTradeChips(){
   }).join("");
 }
 
+function fillLPDriveCompanySel(){
+  var sel=document.getElementById("ldCompanySel");
+  if(!sel) return;
+  var list=(employerData||[]).map(function(e){ return e&&e.name?String(e.name).trim():""; }).filter(Boolean);
+  if(!list.length){ sel.innerHTML='<option value="">-- Employer Directory empty — add companies there first --</option>'; return; }
+  var opts=['<option value="">-- Select company from directory --</option>'];
+  list.forEach(function(n){ if(selectedLPDriveCompanies.indexOf(n)<0) opts.push('<option>'+escLP(n)+'</option>'); });
+  sel.innerHTML=opts.join("");
+}
+function addLPSelCompany(){
+  var sel=document.getElementById("ldCompanySel");
+  if(!sel||!sel.value){ showToast("Select a company from the Employer Directory"); return; }
+  if(selectedLPDriveCompanies.indexOf(sel.value)>-1){ showToast("Company already added"); return; }
+  selectedLPDriveCompanies.push(sel.value);
+  sel.value="";
+  fillLPDriveCompanySel();
+  renderLPDriveCompanyChips();
+}
+function removeLPSelCompany(i){ selectedLPDriveCompanies.splice(i,1); renderLPDriveCompanyChips(); fillLPDriveCompanySel(); }
+function renderLPDriveCompanyChips(){
+  var box=document.getElementById("ldCompanyChips");
+  if(!box) return;
+  box.innerHTML=selectedLPDriveCompanies.map(function(n,i){
+    return '<span style="display:inline-flex;align-items:center;gap:6px;background:var(--bg2);border:1px solid var(--border);border-radius:100px;padding:5px 6px 5px 12px;font-size:12px;color:var(--text)">🏢 '+escLP(n)
+      +'<button type="button" onclick="removeLPSelCompany('+i+')" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:12px">✕</button></span>';
+  }).join("");
+}
+
 function saveLPDrive(){
   var g=function(n){ var el=document.getElementById(n); return el?el.value.trim():""; };
   var name=g("ldName"), location=g("ldLocation");
+  if(!name && selectedLPDriveCompanies.length) name=selectedLPDriveCompanies[0];
   if(!name){ showToast("Company name is required"); return; }
   if(!location){ showToast("Location is required"); return; }
   var entry={
     id:editingLPDriveId!=null?editingLPDriveId:lpDriveNextId,
     name:name,
+    companies:selectedLPDriveCompanies.slice(),
     sub:g("ldSub"),
     type:document.getElementById("ldType").value,
     location:location,
@@ -3828,7 +3996,24 @@ const ACTION_META = {
   DELETE_TRADE:   {label:"Trade Delete",  icon:"🗑️", color:"var(--red)"},
   LOGIN:          {label:"Login",         icon:"🔐", color:"var(--accent)"},
   LOGOUT:         {label:"Logout",        icon:"🚪", color:"var(--muted)"},
+  REGISTER_LANDING:{label:"Web Registration", icon:"🌐", color:"var(--green)"},
+  PORTAL_LOGIN:   {label:"Portal Sign-in",icon:"🔑", color:"var(--blue)"},
+  APPLY_PORTAL:   {label:"Portal Apply",  icon:"📝", color:"var(--accent)"},
 };
+
+function clearActivityLog(){
+  if(!confirm("Clear entire activity log?")) return;
+  activityLog=[];
+  lsSet("iti_kiloi_log",[]);
+  try{
+    if(window._firebaseReady && window._db){
+      window._db.ref("iti_kiloi/log").remove().catch(function(){});
+      window._db.ref("iti_kiloi/log_entries").remove().catch(function(){});
+    }
+  }catch(e){}
+  renderActivity();
+  showToast("Activity log cleared");
+}
 
 function renderActivity(){
   // Populate user filter dropdown
@@ -3867,7 +4052,7 @@ function renderActivity(){
   // ── User-wise summary ──
   const userStats = {};
   activityLog.forEach(l=>{
-    if(!userStats[l.user]) userStats[l.user]={name:l.userName,role:users[l.user]?.role||"—",logins:0,adds:0,edits:0,deletes:0,imports:0,total:0};
+    if(!userStats[l.user]) userStats[l.user]={name:l.userName,role:l.user==="landing"?"Portal":(users[l.user]?users[l.user].role:"—"),logins:0,adds:0,edits:0,deletes:0,imports:0,total:0};
     const u=userStats[l.user];
     u.total++;
     if(l.action==="LOGIN") u.logins++;
@@ -3880,7 +4065,7 @@ function renderActivity(){
     Object.entries(userStats).sort((a,b)=>b[1].total-a[1].total).map(([un,u])=>`
       <tr>
         <td><b style="color:var(--accent)">${un}</b></td>
-        <td><span class="badge ${u.role==="admin"?"b-admin":"b-staff"}">${u.role==="admin"?"Admin":"Staff"}</span></td>
+<td><span class="badge ${u.role==="admin"?"b-admin":(u.role==="Portal"?"b-staff":"b-staff")}">${u.role==="admin"?"Admin":(u.role==="Portal"?"Portal":u.role==="—"?"—":"Staff")}</span></td>
         <td style="color:var(--accent)">${u.logins}</td>
         <td style="color:var(--green)">${u.adds}</td>
         <td style="color:var(--blue)">${u.edits}</td>
@@ -4182,6 +4367,7 @@ function togglePw(){
 // ═══════════════════════════════════════════════
 let jobFairData = [];
 let editingJFId = null;
+let selectedJFDirCompanies = [];
 let jfNextId = 1;
 
 function lsGetJF(){ try{ return JSON.parse(localStorage.getItem("iti_kiloi_jobfair")||"[]"); }catch(e){ return []; } }
@@ -4329,15 +4515,92 @@ function persistJF(){
 
 function openAddJobFairModal(){
   editingJFId=null;
+  selectedJFDirCompanies=[];
   document.getElementById("jfModalTitle").textContent="🏢 Add Job Fair Entry";
-  ["jfName","jfReg","jfMob","jfEmail","jfCompany","jfRemark"].forEach(id=>document.getElementById(id).value="");
+  ["jfName","jfReg","jfMob","jfEmail","jfRemark"].forEach(id=>document.getElementById(id).value="");
   document.getElementById("jfSession").value="2024-25";
   const sel=document.getElementById("jfTrade2");
   sel.innerHTML=trades.map(t=>`<option>${t}</option>`).join("");
   const now=new Date();
   document.getElementById("jfMonthM").value=String(now.getMonth()+1).padStart(2,"0");
   buildYearOptions("jfYearM", now.getFullYear(), false);
+  const ms=document.getElementById("jfMobStatus"); if(ms) ms.innerHTML="";
+  fillJFCompanySel();
+  renderJFCompanyChips();
   document.getElementById("jobFairModal").classList.add("open");
+}
+
+function fillJFCompanySel(){
+  const sel=document.getElementById("jfCompanySel");
+  if(!sel) return;
+  const set=selectedJFDirCompanies.slice();
+  (lpDrives||[]).forEach(function(d){
+    if(d&&d.name) set.push(String(d.name).trim());
+    (d.companies||[]).forEach(function(c){ if(c) set.push(String(c).trim()); });
+  });
+  const list=set.filter(function(v,i,a){ return v && a.indexOf(v)===i; });
+  const current=selectedJFDirCompanies[0]||"";
+  if(!list.length){ sel.innerHTML='<option value="">-- No companies yet — add a Placement Drive first --</option>'; return; }
+  const opts=['<option value="">-- Select company from Placement Drives --</option>'];
+  list.forEach(function(n){ opts.push('<option'+(n===current?' selected':'')+'>'+escLP(n)+'</option>'); });
+  sel.innerHTML=opts.join("");
+}
+function addJFSelCompany(){
+  const sel=document.getElementById("jfCompanySel");
+  if(!sel||!sel.value){ showToast("Select a company from the Placement Drives"); return; }
+  if(selectedJFDirCompanies.indexOf(sel.value)>-1){ showToast("Company already added"); return; }
+  selectedJFDirCompanies.push(sel.value);
+  sel.value="";
+  fillJFCompanySel();
+  renderJFCompanyChips();
+}
+function removeJFSelCompany(i){ selectedJFDirCompanies.splice(i,1); renderJFCompanyChips(); fillJFCompanySel(); }
+function renderJFCompanyChips(){
+  const box=document.getElementById("jfCompanyChips");
+  if(!box) return;
+  box.innerHTML=selectedJFDirCompanies.map((n,i)=>{
+    return '<span style="display:inline-flex;align-items:center;gap:6px;background:var(--bg2);border:1px solid var(--border);border-radius:100px;padding:5px 6px 5px 12px;font-size:12px;color:var(--text)">🏢 '+escLP(n)
+      +'<button type="button" onclick="removeJFSelCompany('+i+')" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:12px">✕</button></span>';
+  }).join("");
+}
+
+function jfMobClean(v){ return String(v||"").replace(/\D/g,"").slice(0,10); }
+function jfSetMobStatus(html,ok){ const el=document.getElementById("jfMobStatus"); if(!el) return; el.innerHTML=html||""; el.style.color=ok?"var(--green)":"var(--red)"; }
+function onJFMobLookup(v){
+  const mob=jfMobClean(v);
+  const inp=document.getElementById("jfMob");
+  if(inp && inp.value!==mob) inp.value=mob;
+  if(mob.length<10){ jfSetMobStatus("",true); return; }
+  let s=null;
+  (students||[]).forEach(function(x){ if(s) return; if(String(x.mobile||"")===mob) s=x; });
+  if(s){
+    document.getElementById("jfName").value=s.name||"";
+    document.getElementById("jfReg").value=s.roll||"";
+    document.getElementById("jfEmail").value=s.emailId||"";
+    setJFTradeValue(s.trade||"");
+    setJFSessionValue(s.session||"");
+    jfSetMobStatus("✅ Student found — name, reg no, email, trade &amp; session fetched automatically.",true);
+  } else {
+    jfSetMobStatus("❌ Student not registered. <button type=\"button\" class=\"btn btn-secondary btn-sm\" onclick=\"closeModal('jobFairModal');showPage('students');openAddModal();\">➕ Register this student</button>",false);
+  }
+}
+function setJFTradeValue(t){
+  if(!t) return;
+  const sel=document.getElementById("jfTrade2");
+  if(!sel) return;
+  let present=false;
+  for(let i=0;i<sel.options.length;i++){ if(sel.options[i].text===t){ present=true; break; } }
+  if(!present){ const opt=document.createElement("option"); opt.value=t; opt.text=t; sel.appendChild(opt); }
+  sel.value=t;
+}
+function setJFSessionValue(v){
+  if(!v) return;
+  const sel=document.getElementById("jfSession");
+  if(!sel) return;
+  let found=false;
+  for(let i=0;i<sel.options.length;i++){ if(sel.options[i].value===v||sel.options[i].text===v){ found=true; break; } }
+  if(!found){ const opt=document.createElement("option"); opt.value=v; opt.text=v; sel.appendChild(opt); }
+  sel.value=v;
 }
 
 function openEditJFModal(id){
@@ -4349,12 +4612,15 @@ function openEditJFModal(id){
   document.getElementById("jfReg").value=j.reg||"";
   document.getElementById("jfMob").value=j.mob||"";
   document.getElementById("jfEmail").value=j.email||"";
-  document.getElementById("jfCompany").value=j.company||"";
   document.getElementById("jfRemark").value=j.remark||"";
+  document.getElementById("jfSession").value=j.session||"2024-25";
   document.getElementById("jfSession").value=j.session||"2024-25";
   const sel=document.getElementById("jfTrade2");
   sel.innerHTML=trades.map(t=>`<option>${t}</option>`).join("");
   sel.value=j.trade||"";
+  selectedJFDirCompanies=(j.companies&&j.companies.length)?j.companies.slice():(j.company?[j.company]:[]);
+  fillJFCompanySel();
+  renderJFCompanyChips();
   document.getElementById("jfMonthM").value=j.month||"01";
   buildYearOptions("jfYearM", j.year||new Date().getFullYear(), false);
   document.getElementById("jobFairModal").classList.add("open");
@@ -4363,11 +4629,12 @@ function openEditJFModal(id){
 function saveJobFairEntry(){
   const name=document.getElementById("jfName").value.trim();
   const reg=document.getElementById("jfReg").value.trim();
-  const company=document.getElementById("jfCompany").value.trim();
-  if(!name||!reg||!company){showToast("Name, Registration No. and Company are required.","err");return;}
+  const company=selectedJFDirCompanies[0]||"";
+  if(!name||!reg||!selectedJFDirCompanies.length){showToast("Name, Registration No. and Company are required.","err");return;}
   const entry={
     id: editingJFId||jfNextId++,
     name, reg,
+    companies:selectedJFDirCompanies.slice(),
     mob:document.getElementById("jfMob").value.trim(),
     email:document.getElementById("jfEmail").value.trim(),
     trade:document.getElementById("jfTrade2").value,
@@ -4432,7 +4699,7 @@ function renderJobFair(){
       <td style="font-size:12px">${j.email||"—"}</td>
       <td>${j.trade||"—"}</td>
       <td>${j.session||"—"}</td>
-      <td style="color:var(--accent);font-weight:600">${j.company||"—"}</td>
+      <td style="color:var(--accent);font-weight:600">${j.company||"—"}${(j.companies&&j.companies.length>1)?` <span style="font-size:11px;font-weight:600">+${j.companies.length-1} more</span>`:""}</td>
       <td style="white-space:nowrap">${MONTH_NAMES[parseInt(j.month)]||j.month} ${j.year}</td>
       <td style="color:var(--muted);font-size:12px">${j.remark||"—"}</td>
       <td class="no-print"><div style="display:flex;gap:5px">
@@ -4596,6 +4863,7 @@ function deleteEmployer(id){
 }
 
 function renderEmployers(){
+  fillLPDriveCompanySel();
   const emTradeF=document.getElementById("emTrade");
   if(emTradeF){
     const cur=emTradeF.value;

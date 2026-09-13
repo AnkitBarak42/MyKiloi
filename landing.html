@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
+<script>try{if(localStorage.getItem("iti_kiloi_theme")==="dark")document.documentElement.setAttribute("data-theme","dark");}catch(e){}</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <meta name="theme-color" content="#f59e0b">
@@ -315,6 +316,48 @@ input,select,textarea,button{font-family:inherit}
   .footer-main{grid-template-columns:1fr;gap:32px}
   .footer-bottom{text-align:center;flex-direction:column;gap:8px}
 }
+
+/* ═══════════════════════════════════════════════
+   DARK THEME — toggle from navbar (🌙/☀️)
+   ═══════════════════════════════════════════════ */
+:root[data-theme="dark"]{
+  --bg:#0f172a;--bg2:#1e293b;--card:#1e293b;--border:#334155;
+  --text:#e2e8f0;--muted:#94a3b8;--light:#cbd5e1;
+  --primary-900:#e2e8f0;--primary-800:#cbd5e1;--primary-700:#94a3b8;--primary-600:#94a3b8;--primary-500:#94a3b8;--primary-400:#64748b;--primary-300:#475569;--primary-200:#334155;--primary-100:#1e293b;--primary-50:#0f172a;
+  --accent-600:#f59e0b;--accent-500:#fbbf24;--accent-400:#fcd34d;--accent-300:#fde68a;--accent-100:#3a2a05;
+  --blue-700:#60a5fa;--blue-600:#3b82f6;--blue-500:#3b82f6;--blue-400:#60a5fa;--blue-100:#1e3a8a;
+  --green-600:#4ade80;--green-500:#22c55e;--green-100:#14532d;
+  --red-500:#ef4444;--red-100:#7f1d1d;
+}
+:root[data-theme="dark"] .lp-navbar{background:rgba(2,6,23,.85)}
+:root[data-theme="dark"] .lp-navbar.scrolled{background:rgba(2,6,23,.92)}
+:root[data-theme="dark"] .lp-navbar-title{color:var(--text)}
+:root[data-theme="dark"] .lp-navbar-toggle{color:var(--text)}
+:root[data-theme="dark"] .lp-navbar-links a{color:var(--muted)}
+:root[data-theme="dark"] .lp-navbar-links a:hover{color:var(--text);background:rgba(255,255,255,.08)}
+:root[data-theme="dark"] .lp-navbar-links .lp-navbar-cta{color:var(--text)!important;background:rgba(255,255,255,.06)!important;border-color:rgba(255,255,255,.28)!important}
+:root[data-theme="dark"] .lp-navbar-links .lp-navbar-cta:hover{background:rgba(255,255,255,.14)!important}
+:root[data-theme="dark"] .lp-navbar-links .lp-btn-login-nav{color:#0f172a}
+:root[data-theme="dark"] .lp-back-btn:hover{color:var(--text)}
+:root[data-theme="dark"] .loader-text h2{color:var(--text)}
+:root[data-theme="dark"] .stat-number{color:var(--text)}
+:root[data-theme="dark"] .stat-number .accent{color:#fbbf24}
+:root[data-theme="dark"] .section-title{color:var(--text)}
+:root[data-theme="dark"] .company-name{color:var(--text)}
+:root[data-theme="dark"] .detail-value{color:var(--text)}
+:root[data-theme="dark"] .info-block-value .highlight{color:#fbbf24}
+:root[data-theme="dark"] .hp-notice-head{color:var(--text)}
+:root[data-theme="dark"] .hp-title{color:var(--text)}
+:root[data-theme="dark"] .hp-feature h4{color:var(--text)}
+:root[data-theme="dark"] .hp-notice-item h5{color:var(--text)}
+:root[data-theme="dark"] .success-card h3{color:var(--text)}
+:root[data-theme="dark"] .footer-officer-card{background:rgba(255,255,255,.04)}
+:root[data-theme="dark"] .badge-apprenticeship{background:rgba(96,165,250,.15);color:#93c5fd;border-color:rgba(96,165,250,.4)}
+:root[data-theme="dark"] .badge-job{background:rgba(74,222,128,.15);color:#86efac;border-color:rgba(74,222,128,.4)}
+:root[data-theme="dark"] .badge-combined{background:rgba(192,132,252,.15);color:#d8b4fe;border-color:rgba(192,132,252,.4)}
+@media(max-width:768px){
+  :root[data-theme="dark"] .lp-navbar-links{background:rgba(9,14,26,.98)}
+}
 </style>
 </head>
 <body class="sb-open">
@@ -331,6 +374,7 @@ input,select,textarea,button{font-family:inherit}
       <a onclick="goToPage('drives')">Placement Drives</a>
       <a onclick="goToPage('portal')">Student Portal</a>
       <a onclick="goToPage('contact')">Contact</a>
+      <a id="lpThemeBtn" onclick="toggleTheme()" title="Dark / Light mode" style="cursor:pointer">🌙</a>
     </div>
     <button class="lp-navbar-toggle" onclick="toggleLPNav()" aria-label="Toggle menu">☰</button>
   </nav>
@@ -387,16 +431,6 @@ input,select,textarea,button{font-family:inherit}
       <div class="hp-notice-body" id="lpNoticeBoard"></div>
       <div class="hp-notice-more" onclick="goToPage('drives')">View All Drives →</div>
     </aside>
-  </section>
-
-  <!-- STATS -->
-  <section class="stats-bar">
-    <div class="stats-container">
-      <div class="stat-item"><div class="stat-number">500<span class="accent">+</span></div><div class="stat-label">Total Posts</div></div>
-      <div class="stat-item"><div class="stat-number">3</div><div class="stat-label">Companies</div></div>
-      <div class="stat-item"><div class="stat-number">₹24,300</div><div class="stat-label">Max Salary/Month</div></div>
-      <div class="stat-item"><div class="stat-number">₹18,000</div><div class="stat-label">Stipend/Month</div></div>
-    </div>
   </section>
   </div>
 
@@ -471,6 +505,7 @@ input,select,textarea,button{font-family:inherit}
       <p class="section-desc">Fill the form below correctly. All required fields (<span style="color:var(--red-500)">*</span>) are mandatory.</p>
     </div>
     <div class="form-container">
+      <div class="form-note" id="lpApplyBanner" style="display:none;margin-bottom:16px;border-left-color:var(--green)"></div>
       <form id="lpRegForm" novalidate>
         <div class="form-grid">
           <div class="form-group">
@@ -627,6 +662,107 @@ input,select,textarea,button{font-family:inherit}
   </section>
   </div>
 
+  <!-- PAGE: APPLY -->
+  <div class="lp-page sub" id="lpPage-apply" style="display:none">
+    <div class="sub-hero" style="background-image:url('ITI.jpeg')">
+      <div class="sub-hero-overlay"></div>
+      <h2 class="sub-hero-title">Apply for Placement</h2>
+    </div>
+    <div class="lp-topbar"><button type="button" class="lp-back-btn" onclick="goToPage('portal')">← Back to Portal</button></div>
+    <section class="section form-section" id="lp-apply">
+      <div class="section-header">
+        <div class="section-label">Apply Now</div>
+        <h2 class="section-title">Placement Application Form</h2>
+        <p class="section-desc">Your application will be saved in the Job Fair section.</p>
+      </div>
+      <div class="form-container">
+        <div class="form-note" id="lpApplyTargetBanner" style="display:none;margin-bottom:16px;border-left-color:var(--green)"></div>
+        <form id="lpApplyForm" novalidate>
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Name <span class="required">*</span></label>
+              <input class="form-input" type="text" id="apName" placeholder="Full name">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Registration No.</label>
+              <input class="form-input" type="text" id="apReg" placeholder="e.g. REG/2024/001">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Mobile Number <span class="required">*</span></label>
+              <input class="form-input" type="tel" id="apMob" maxlength="10" placeholder="10-digit mobile number">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Date of Birth <span class="required">*</span></label>
+              <div style="display:flex;gap:8px;align-items:center">
+                <input class="form-input" type="text" id="apDob" placeholder="DD-MM-YYYY" maxlength="10" style="flex:1;min-width:0">
+                <button type="button" title="Pick from calendar" style="padding:10px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:9px;cursor:pointer;font-size:15px;flex:0 0 auto" onclick="openDobCal('apDobCal')">📅</button>
+                <input class="form-input" type="date" id="apDobCal" onchange="fDobCalPicked(this,'apDob')" style="width:1px;height:1px;opacity:0;border:0;padding:0;position:absolute;pointer-events:none">
+              </div>
+              <span class="form-error" data-err="apDob"></span>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email ID <span class="required">*</span></label>
+              <input class="form-input" type="email" id="apEmail" placeholder="example@email.com">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Trade <span class="required">*</span></label>
+              <select class="form-select" id="apTrade"></select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Session <span class="required">*</span></label>
+              <select class="form-select" id="apSession" onchange="handleAPSessionSel(this)">
+                <option>2020-21</option><option>2021-22</option><option>2022-23</option><option>2023-24</option><option>2024-25</option><option>2025-26</option><option>2026-27</option>
+                <option value="__custom__">➕ Custom Session...</option>
+              </select>
+              <div id="apSessionCustomBox" style="display:none;margin-top:8px">
+                <input class="form-input" id="apSessionInput" placeholder="e.g. 2026-27" maxlength="7" onkeydown="if(event.key==='Enter')confirmAPSession()">
+                <div style="display:flex;gap:8px;margin-top:6px">
+                  <button type="button" class="btn btn-primary btn-sm" onclick="confirmAPSession()">✅ Add</button>
+                  <button type="button" class="btn btn-secondary btn-sm" onclick="cancelAPSession()">Cancel</button>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Company / Drive <span class="required">*</span></label>
+              <select class="form-select" id="apCompany"></select>
+              <span class="form-error" data-err="apCompany"></span>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Month <span class="required">*</span></label>
+              <select class="form-select" id="apMonth"></select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Year <span class="required">*</span></label>
+              <select class="form-select" id="apYear"></select>
+            </div>
+            <div class="form-group full-width">
+              <label class="form-label">Remarks</label>
+              <input class="form-input" type="text" id="apRemark" placeholder="Any notes...">
+            </div>
+            <div class="form-note"><span class="note-icon">ℹ️</span><span>You must be a registered student. Your mobile number and date of birth are verified before saving. The entry appears in the Job Fair section.</span></div>
+            <div class="form-submit-area">
+              <span class="form-error" id="lpApplyErr" style="text-align:center"></span>
+              <button type="submit" class="btn-submit" id="lpApplySubmitBtn">Submit Application</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </section>
+  </div>
+
+  <!-- APPLY SUCCESS OVERLAY -->
+  <div class="success-overlay" id="lpApplySuccess" style="display:none">
+    <div class="success-card">
+      <div class="success-icon">✓</div>
+      <h3>Application Submitted!</h3>
+      <p>Your application has been saved in the Job Fair section. Please join the WhatsApp group below for updates.</p>
+      <div class="success-actions">
+        <a class="btn-success-wa" href="https://chat.whatsapp.com/LipB0iromkA8nI2oFi3JQy?s=cl&p=i&mlu=0&ilr=4" target="_blank" rel="noopener noreferrer"><span>💬</span>Join WhatsApp Group</a>
+        <button class="btn-success-close" onclick="document.getElementById('lpApplySuccess').style.display='none';goToPage('home')">Close</button>
+      </div>
+    </div>
+  </div>
+
   <!-- FOOTER -->
   <footer class="footer">
     <div class="footer-content">
@@ -680,8 +816,26 @@ input,select,textarea,button{font-family:inherit}
 
 <script>
 var lpDrives=[], lpDriveNextId=1;
+var lpApplyDriveId=null;
 var trades=["Electrician","Fitter","Welder","COPA","Mechanic (MV)","Plumber","Carpenter","Draughtsman Civil","Turner","Machinist","Surveyor"];
 var CATEGORIES=["Gen","BCA","BCB","SC","ST","DSC","EWS","Others"];
+
+function lpLog(action, details, uid){
+  try{
+    var entry={
+      uid: uid || (Date.now()+"_"+Math.floor(Math.random()*1e6)),
+      id: Date.now(),
+      ts: new Date().toISOString(),
+      user: "landing",
+      userName: "Student Portal",
+      action: action,
+      details: details
+    };
+    if(window._db){
+      window._db.ref("iti_kiloi/log_entries").push(entry).catch(function(){});
+    }
+  }catch(e){}
+}
 
 function escLP(s){
   return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
@@ -724,13 +878,190 @@ function verifyStudentPortal(){
       var students=(snap.exists()&&snap.val()&&snap.val().students)||[];
       var found=null,i;
       for(i=0;i<students.length;i++){ if(String(students[i].mobile)===m){ found=students[i]; break; } }
-      if(!found){ goToPage("form"); return; }
+      if(!found){
+        var mEl=document.querySelector('#lpRegForm [name="mobile"]');
+        if(mEl) mEl.value=m;
+        var dEl=document.getElementById("lpRegDob");
+        if(dEl) dEl.value=d;
+        portMsg("⚠️ Mobile number not found — please register using the form below (mobile & DOB already filled).",false);
+        goToPage("form");
+        return;
+      }
       if(normalizeDob(found.dob)!==normalizeDob(d)){ portMsg("❌ Details do not match. Please check your date of birth."); return; }
-      goToPage("drives");
+      lpLog("PORTAL_LOGIN", '"'+found.name+'" ('+m+') verified and signed in to the Student Portal');
+      lpVerifiedStudent=found;
+      openApplyForm();
+      return;
     }).catch(function(){ portMsg("❌ Could not verify — check your internet connection and try again."); });
   }catch(e){ portMsg("❌ Student Portal is unavailable. Please try again later."); }
 }
-function applyToDrive(id){ goToPage("form"); }
+function applyToDrive(id){
+  lpApplyDriveId=id;
+  var dv=null;
+  for(var i=0;i<lpDrives.length;i++){ if(lpDrives[i]&&lpDrives[i].id===id){ dv=lpDrives[i]; break; } }
+  var b=document.getElementById("lpApplyTargetBanner");
+  if(b){
+    if(dv){
+      b.style.display="flex";
+      b.innerHTML="✅ You are applying to: <b>"+escLP(dv.name)+"</b> — complete the form below to submit your application.";
+    } else {
+      b.style.display="none";
+    }
+  }
+  openApplyForm(dv?dv.name:"");
+  goToPage("apply");
+}
+
+var lpVerifiedStudent=null;
+const AP_MONTHS=["","January","February","March","April","May","June","July","August","September","October","November","December"];
+function fillApMonthYear(){
+  var now=new Date();
+  var mo=document.getElementById("apMonth");
+  var opts=['<option value="01">January</option><option value="02">February</option><option value="03">March</option><option value="04">April</option><option value="05">May</option><option value="06">June</option><option value="07">July</option><option value="08">August</option><option value="09">September</option><option value="10">October</option><option value="11">November</option><option value="12">December</option>'];
+  opts=opts.map(function(o,i){ var v=(i+1)<10?("0"+(i+1)):String(i+1); if(v===String(now.getMonth()+1).padStart(2,"0")) o=o.replace(">",' selected="selected">'); return o; });
+  mo.innerHTML=opts.join("");
+  var yr=document.getElementById("apYear");
+  var curY=now.getFullYear();
+  var yHTML="";
+  for(var y=curY+1;y>=2020;y--) yHTML+='<option'+(y===curY?' selected="selected"':'')+'>'+y+'</option>';
+  yr.innerHTML=yHTML;
+}
+function buildApCompanyOptions(selName){
+  var sel=document.getElementById("apCompany");
+  if(!sel) return;
+  var drvs=(lpDrives||[]).filter(function(d){ return d&&d.active!==false; });
+  var set=[];
+  drvs.forEach(function(d){
+    if(d.name) set.push(String(d.name).trim());
+    (d.companies||[]).forEach(function(c){ if(c) set.push(String(c).trim()); });
+  });
+  var list=set.filter(function(v,i,a){ return v && a.indexOf(v)===i; });
+  if(!list.length){ sel.innerHTML='<option value="">-- No companies available yet --</option>'; return; }
+  var opts=['<option value="">-- Select company / drive --</option>'];
+  list.forEach(function(n){ opts.push('<option'+(n===selName?' selected="selected"':'')+'>'+escLP(n)+'</option>'); });
+  sel.innerHTML=opts.join("");
+}
+function handleAPSessionSel(sel){
+  var box=document.getElementById("apSessionCustomBox");
+  if(box) box.style.display=(sel&&sel.value==="__custom__")?"block":"none";
+  if(sel&&sel.value==="__custom__"){ var inp=document.getElementById("apSessionInput"); if(inp) inp.focus(); }
+}
+function confirmAPSession(){
+  var v=((document.getElementById("apSessionInput")||{}).value||"").trim();
+  if(!v){ alert("Please enter the session (e.g. 2026-27)"); return; }
+  var sel=document.getElementById("apSession");
+  if(sel){
+    var found=false;
+    for(var i=0;i<sel.options.length;i++){ if(sel.options[i].value===v||sel.options[i].text===v){ found=true; break; } }
+    if(!found){ var opt=document.createElement("option"); opt.value=v; opt.text=v; sel.appendChild(opt); }
+    sel.value=v;
+  }
+  var box=document.getElementById("apSessionCustomBox");
+  if(box) box.style.display="none";
+}
+function cancelAPSession(){
+  var sel=document.getElementById("apSession");
+  if(sel&&sel.value==="__custom__") sel.value="2025-26";
+  var box=document.getElementById("apSessionCustomBox");
+  if(box) box.style.display="none";
+}
+function setApSessionValue(v){
+  var sel=document.getElementById("apSession");
+  if(!sel) return;
+  var years=["2020-21","2021-22","2022-23","2023-24","2024-25","2025-26","2026-27"];
+  if(!v) v="2025-26";
+  var html=years.map(function(y){ return "<option"+(y===v?' selected="selected"':'')+">"+y+"</option>"; }).join("");
+  var inList=years.indexOf(v)>-1;
+  if(!inList) html+='<option selected="selected">'+escLP(v)+'</option>';
+  html+='<option value="__custom__">➕ Custom Session...</option>';
+  sel.innerHTML=html;
+  sel.value=v;
+  var box=document.getElementById("apSessionCustomBox");
+  if(box) box.style.display="none";
+}
+function openApplyForm(selCompany){
+  fillApMonthYear();
+  buildApCompanyOptions(selCompany||"");
+  var trade=document.getElementById("apTrade");
+  trade.innerHTML=trades.map(function(t){ return "<option>"+t+"</option>"; }).join("");
+  trade.value=lpVerifiedStudent?lpVerifiedStudent.trade:"";
+  setApSessionValue(lpVerifiedStudent?lpVerifiedStudent.session:"2025-26");
+  if(lpVerifiedStudent){
+    document.getElementById("apName").value=lpVerifiedStudent.name||"";
+    document.getElementById("apReg").value=lpVerifiedStudent.roll||"";
+    document.getElementById("apMob").value=lpVerifiedStudent.mobile||"";
+    document.getElementById("apDob").value=lpVerifiedStudent.dob||"";
+    document.getElementById("apEmail").value=lpVerifiedStudent.emailId||"";
+    document.getElementById("apMob").readOnly=true;
+    document.getElementById("apDob").readOnly=true;
+  } else {
+    document.getElementById("apName").value="";
+    document.getElementById("apReg").value="";
+    document.getElementById("apDob").value="";
+    document.getElementById("apEmail").value="";
+    document.getElementById("apMob").value="";
+    document.getElementById("apMob").readOnly=false;
+    document.getElementById("apDob").readOnly=false;
+  }
+  document.getElementById("apRemark").value="";
+  document.getElementById("lpApplyErr").textContent="";
+  goToPage("apply");
+}
+function submitApplyForm(){
+  var errEl=document.getElementById("lpApplyErr");
+  var name=document.getElementById("apName").value.trim();
+  var reg=document.getElementById("apReg").value.trim();
+  var mob=document.getElementById("apMob").value.trim();
+  var dob=normalizeDob(document.getElementById("apDob").value);
+  var email=document.getElementById("apEmail").value.trim();
+  var trade=document.getElementById("apTrade").value;
+  var session=document.getElementById("apSession").value;
+  var company=document.getElementById("apCompany").value;
+  var month=document.getElementById("apMonth").value;
+  var year=document.getElementById("apYear").value;
+  var remark=document.getElementById("apRemark").value.trim();
+  if(!name) return errEl.textContent="❌ Name is required";
+  if(!/^[6-9]\d{9}$/.test(mob)) return errEl.textContent="❌ Enter a valid 10-digit mobile number";
+  if(!dob) return errEl.textContent="❌ Date of birth is required";
+  if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return errEl.textContent="❌ Enter a valid email ID";
+  if(!trade) return errEl.textContent="❌ Select your trade";
+  if(!session) return errEl.textContent="❌ Select session";
+  if(!company) return errEl.textContent="❌ Select a company / drive";
+  errEl.textContent="⏳ Submitting application...";
+  try{
+    _db.ref("iti_kiloi/students").once("value").then(function(snap){
+      var sts=(snap.exists()&&snap.val()&&snap.val().students)||[];
+      var found=null,i;
+      for(i=0;i<sts.length;i++){ if(String(sts[i].mobile)===mob){ found=sts[i]; break; } }
+      if(!found){ errEl.textContent="❌ You are not registered yet — please Register first from the Student section."; return; }
+      if(normalizeDob(found.dob)!==normalizeDob(dob)){ errEl.textContent="❌ Date of birth does not match the registered student."; return; }
+      var ee=email;
+      saveApplyToJF({id:found.id,name:(found.name||name),reg:(found.roll||reg),mob:mob,email:ee,trade:trade,session:session,company:company,month:month,year:year,remark:remark},errEl,function(appliedId){
+        lpLog("APPLY_PORTAL", '"'+(found.name||name)+'" ('+mob+') applied for "'+company+'" via the Student Portal', "APPLY_"+appliedId);
+        document.getElementById("lpApplySuccess").style.display="flex";
+        errEl.textContent="";
+      });
+    }).catch(function(){ errEl.textContent="❌ Could not connect — check your internet connection and try again."; });
+  }catch(e){ errEl.textContent="❌ Application failed — try again later."; }
+  return;
+}
+function saveApplyToJF(data,errEl,done){
+  var newId=0, committedEntry=null;
+  _db.ref("iti_kiloi/jobfair").transaction(function(cur){
+    var obj=cur||{};
+    var maxId=0;
+    Object.keys(obj).forEach(function(k){ var m=parseInt(String(k).replace(/^jf_/,""),10); if(!isNaN(m)&&m>maxId) maxId=m; });
+    var nid=maxId+1;
+    var entry={ id:nid, name:data.name, reg:data.reg||("SR-"+nid), companies:[data.company], mob:data.mob, email:data.email, trade:data.trade, session:data.session, company:data.company, month:data.month, year:data.year, remark:data.remark, source:"landing", appliedAt:new Date().toISOString() };
+    obj["jf_"+nid]=entry;
+    newId=nid;
+    committedEntry=entry;
+    return obj;
+  },function(err,committed){
+    if(err||!committed){ if(errEl) errEl.textContent="❌ Submission failed — check your internet connection and try again."; return; }
+    if(done&&committedEntry) done(newId);
+  },false);
+}
 function openDobCal(calId){
   var c=document.getElementById(calId);
   if(!c) return;
@@ -833,6 +1164,12 @@ function renderLPHp(){
   }
 }
 function lpTypeLabel(t){ return (t||"").toLowerCase()==="combined"?"Apprenticeship + Job":t; }
+function lpExtraCompanies(d){
+  var comps=(d.companies||[]).filter(function(c){ return c && c!==d.name; });
+  if(!comps.length) return "";
+  return '<div class="trades-list" style="margin-top:6px"><span style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px">Participating Companies</span><div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:4px">'+
+    comps.map(function(c){ return '<span class="trade-tag">🏢 '+escLP(c)+'</span>'; }).join("")+'</div></div>';
+}
 function renderLPDrivesPage(){
   var list=document.getElementById("lpDrivesList");
   var empty=document.getElementById("lpDrivesEmpty");
@@ -860,6 +1197,7 @@ function renderLPDrivesPage(){
       +'<div class="company-number">'+(i+1)+'</div><div>'
       +'<h3 class="company-name">'+escLP(d.name||"Company")+sub+'</h3>'
       +'<div class="company-location"><span class="icon">📍</span><span>'+escLP(d.location||"")+'</span></div>'
+      +lpExtraCompanies(d)
       +'</div></div>'
       +'<span class="company-type-badge '+badge+'">'+escLP(lpTypeLabel(d.type))+'</span></div>'
       +'<div class="company-card-body">'
@@ -877,7 +1215,25 @@ function renderLPDrivesPage(){
   }).join("");
 }
 
+// ── Theme ──
+function applyTheme(t){
+  var dark=(t==="dark");
+  document.documentElement.setAttribute("data-theme",dark?"dark":"light");
+  try{ localStorage.setItem("iti_kiloi_theme",dark?"dark":"light"); }catch(e){}
+  var b=document.getElementById("themeBtn");
+  if(b) b.textContent=dark?"☀️ Light Mode":"🌙 Dark Mode";
+  var b2=document.getElementById("lpThemeBtn");
+  if(b2) b2.textContent=dark?"☀️":"🌙";
+}
+function toggleTheme(){ applyTheme(document.documentElement.getAttribute("data-theme")==="dark"?"light":"dark"); }
+function initTheme(){
+  var t="light";
+  try{ t=localStorage.getItem("iti_kiloi_theme")||"light"; }catch(e){}
+  applyTheme(t);
+}
+
 document.addEventListener("DOMContentLoaded",function(){
+  initTheme();
   runLPLoader();
   try{ fillTradeOptions("lpTradeSel","",true); fillCategoryOptions("lpCategory",""); }catch(e){}
   try{ _db.ref("iti_kiloi/trades").once("value").then(function(s){ if(s.exists()){ trades=s.val(); try{ fillTradeOptions("lpTradeSel","",true); }catch(e){} } }); }catch(e){}
@@ -946,10 +1302,30 @@ document.addEventListener("DOMContentLoaded",function(){
         if(errBar) errBar.textContent="❌ Submission failed — check your internet connection and try again.";
         return;
       }
+      try{
+        var dvn="";
+        if(lpApplyDriveId!=null){
+          for(var di=0;di<lpDrives.length;di++){ if(lpDrives[di]&&lpDrives[di].id===lpApplyDriveId){ dvn=lpDrives[di].name||""; break; } }
+        }
+        var applyBit=dvn?', applied for "'+dvn+'"':"";
+        lpLog("REGISTER_LANDING", '"'+st.name+'" ('+st.roll+' | '+st.mobile+') registered via website — Trade: '+st.trade+', Category: '+st.category+', Session: '+st.session+applyBit, "REG_LANDING_"+st.id);
+        if(dvn && lpApplyDriveId!=null) lpLog("APPLY_PORTAL", '"'+st.name+'" ('+st.mobile+') applied for "'+dvn+'" via the Student Portal', "APPLY_"+st.id+"_"+lpApplyDriveId);
+      }catch(e){}
+      lpApplyDriveId=null;
+      var bn=document.getElementById("lpApplyBanner");
+      if(bn) bn.style.display="none";
       form.reset();
       document.getElementById("lpRegSuccess").style.display="flex";
     },false);
   });
+
+  var apForm=document.getElementById("lpApplyForm");
+  if(apForm){
+    apForm.addEventListener("submit",function(e){
+      e.preventDefault();
+      submitApplyForm();
+    });
+  }
 });
 </script>
 </body>
