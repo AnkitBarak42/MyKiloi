@@ -1558,26 +1558,26 @@ tr:hover td{background:rgba(15,23,42,.025)}
   <div class="modal">
     <div class="modal-title" id="modalTitle">➕ Add Student</div>
     <div class="form-grid">
-      <div class="fg2"><label>Full Name *</label><input id="fName" required placeholder="Student full name"></div>
-      <div class="fg2"><label>Registration No. *</label><input id="fRoll" required placeholder="e.g. REG/2024/001"></div>
-      <div class="fg2"><label>Mobile No *</label><input id="fMobile" required maxlength="10" placeholder="10 digit"></div>
+      <div class="fg2"><label>Full Name</label><input id="fName" placeholder="Student full name"></div>
+      <div class="fg2"><label>Registration No.</label><input id="fRoll" placeholder="e.g. REG/2024/001"></div>
+      <div class="fg2"><label>Mobile No</label><input id="fMobile" maxlength="10" placeholder="10 digit"></div>
       <div class="fg2"><label>ID Number</label><input id="fAadhaar" placeholder="ID / Roll Number" maxlength="14"></div>
     </div>
-    <div class="fg2"><label>Address *</label><input id="fAddress" required placeholder="Village/City, District"></div>
-    <div class="fg2"><label>Father Name *</label><input id="fFather" required placeholder="Father's full name"></div>
-    <div class="fg2"><label>Date of Birth *</label>
+    <div class="fg2"><label>Address</label><input id="fAddress" placeholder="Village/City, District"></div>
+    <div class="fg2"><label>Father Name</label><input id="fFather" placeholder="Father's full name"></div>
+    <div class="fg2"><label>Date of Birth</label>
       <div style="display:flex;gap:6px">
-        <input id="fDob" type="text" required placeholder="DD-MM-YYYY" maxlength="10" style="flex:1;min-width:0">
+        <input id="fDob" type="text" placeholder="DD-MM-YYYY" maxlength="10" style="flex:1;min-width:0">
         <button type="button" title="Pick from calendar" class="btn btn-secondary" style="padding:0 12px" onclick="openDobCal('fDobCal')">📅</button>
         <input id="fDobCal" type="date" onchange="fDobCalPicked(this,'fDob')" style="width:1px;height:1px;opacity:0;border:0;padding:0;position:absolute;pointer-events:none">
       </div>
     </div>
     <div class="form-grid">
-      <div class="fg2"><label>Trade *</label>
-        <select id="fTrade2" required></select>
+      <div class="fg2"><label>Trade</label>
+        <select id="fTrade2"></select>
       </div>
-      <div class="fg2"><label>Session *</label>
-        <select id="fSession2" required onchange="handleStudentSessionChange(this)">
+      <div class="fg2"><label>Session</label>
+        <select id="fSession2" onchange="handleStudentSessionChange(this)">
           <option>2020-21</option><option>2021-22</option><option>2022-23</option><option>2023-24</option><option selected>2024-25</option><option>2025-26</option>
           <option value="__custom__">➕ Custom Session...</option>
         </select>
@@ -1606,13 +1606,13 @@ tr:hover td{background:rgba(15,23,42,.025)}
           </div>
         </div>
       </div>
-      <div class="fg2"><label>Category *</label><select id="fCompany" required></select></div>
+      <div class="fg2"><label>Category</label><select id="fCompany"></select></div>
       <div class="fg2"><label>Email ID</label><input id="fEmail" type="email" placeholder="student@example.com"></div>
     </div>
     <div class="fg2"><label>Remarks</label><input id="fRemarks" placeholder="Any notes..."></div>
     <div class="modal-foot">
       <button class="btn btn-secondary" onclick="closeModal('stuModal')">Cancel</button>
-      <button class="btn btn-primary" onclick="saveStudent()">💾 Save</button>
+      <button class="btn btn-primary" id="stuSaveBtn" onclick="saveStudent()">💾 Save</button>
     </div>
   </div>
 </div>
@@ -3296,6 +3296,7 @@ function filterByStatus(status){
 function openAddModal(){
   editingId=null;
   document.getElementById("modalTitle").textContent="➕ Add Student";
+  document.getElementById("stuSaveBtn").textContent="💾 Save";
   ["fName","fRoll","fMobile","fAadhaar","fAddress","fFather","fDob","fCompany","fEmail","fRemarks"].forEach(id=>document.getElementById(id).value="");
   fillCategoryOptions("fCompany","");
   rebuildStudentTradeSelect(trades[0]||"");
@@ -3380,6 +3381,7 @@ function editStudent(id){
   const s=students.find(x=>x.id===id);if(!s)return;
   editingId=id;
   document.getElementById("modalTitle").textContent="✏️ Edit Student";
+  document.getElementById("stuSaveBtn").textContent="🔁 Update";
   document.getElementById("fName").value=s.name;document.getElementById("fRoll").value=s.roll;
   document.getElementById("fMobile").value=s.mobile;document.getElementById("fAadhaar").value=s.aadhaar;
   document.getElementById("fAddress").value=s.address;
@@ -3623,19 +3625,8 @@ function saveStudent(){
   const address=document.getElementById("fAddress").value.trim();
   const trade=document.getElementById("fTrade2").value;
   const session=document.getElementById("fSession2").value;
-  const missing=[];
-  if(!name) missing.push("Full Name");
-  if(!roll) missing.push("Registration No.");
-  if(!father) missing.push("Father Name");
-  if(!mobile) missing.push("Mobile No");
-  if(!dob) missing.push(dobRaw?"Date of Birth must be in DD-MM-YYYY format":"Date of Birth");
-  if(!emailC) missing.push("Category");
-  if(!address) missing.push("Address");
-  if(!trade) missing.push("Trade");
-  if(!session) missing.push("Session");
-  if(missing.length){showToast("❌ Required: "+missing.join(", "),"err");return;}
-  if(mobile.length!==10||isNaN(mobile)){showToast("❌ Enter valid 10-digit mobile number!","err");return;}
-  if(students.some(s=>String(s.mobile)===String(mobile)&&(editingId===null||s.id!==editingId))){showToast("❌ A student with mobile "+mobile+" already exists!","err");return;}
+  if(mobile && (mobile.length!==10||isNaN(mobile))){showToast("❌ Enter valid 10-digit mobile number!","err");return;}
+  if(mobile && students.some(s=>String(s.mobile)===String(mobile)&&(editingId===null||s.id!==editingId))){showToast("❌ A student with mobile "+mobile+" already exists!","err");return;}
   const data={name,roll,
     mobile,
     aadhaar:document.getElementById("fAadhaar").value.trim(),
