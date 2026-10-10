@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="hi">
-<head>
-
-  
+<head>  
 <script>try{if(localStorage.getItem("iti_kiloi_theme")==="dark")document.documentElement.setAttribute("data-theme","dark");}catch(e){}</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -1893,7 +1891,7 @@ function initTheme(){
 function mergeLogEntries(arr){
   // Merge new entries into the local log (dedupe by uid), newest first
   const all = (activityLog||[]).concat(arr||[]);
-  const seen = {}, out = [];
+  const seen = {}, let out = [];
   all.forEach(function(e){
     if(!e || e.action===undefined || e.action===null) return;
     const k = e.uid || (e.id+"_"+e.ts+"_"+e.user+"_"+e.action);
@@ -2278,7 +2276,7 @@ function doLogin(){
     document.getElementById("sbName").textContent=users[u].name;
     document.getElementById("sbRole").textContent=users[u].role==="admin"?"Administrator":"Staff Member";
     window.currentUser = currentUser;
-    logActivity("LOGIN", `${users[u].name} logged in`);
+    try{ logActivity("LOGIN", `${users[u].name} logged in`); }catch(e){ console.error(e); }
     buildNav();showPage("dashboard");
     document.getElementById("lErr").style.display="none";
     document.getElementById("lErr").textContent="❌ Invalid username or password!";
@@ -2302,7 +2300,7 @@ function forceLogout(msg){
 
 function doLogout(){
   if(!currentUser) return;
-  logActivity("LOGOUT", `${currentUser.name} logged out`);
+  try{ logActivity("LOGOUT", `${currentUser.name} logged out`); }catch(e){ console.error(e); }
   try{localStorage.removeItem("iti_kiloi_session");}catch(e){}
   currentUser=null; window.currentUser=null; selectedRole=null;
   document.getElementById("app").style.display="none";
