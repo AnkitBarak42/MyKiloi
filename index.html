@@ -1891,7 +1891,7 @@ function initTheme(){
 function mergeLogEntries(arr){
   // Merge new entries into the local log (dedupe by uid), newest first
   const all = (activityLog||[]).concat(arr||[]);
-  const seen = {}, let out = [];
+  const seen = {}, out = [];
   all.forEach(function(e){
     if(!e || e.action===undefined || e.action===null) return;
     const k = e.uid || (e.id+"_"+e.ts+"_"+e.user+"_"+e.action);
@@ -2276,7 +2276,7 @@ function doLogin(){
     document.getElementById("sbName").textContent=users[u].name;
     document.getElementById("sbRole").textContent=users[u].role==="admin"?"Administrator":"Staff Member";
     window.currentUser = currentUser;
-    try{ logActivity("LOGIN", `${users[u].name} logged in`); }catch(e){ console.error(e); }
+    logActivity("LOGIN", `${users[u].name} logged in`);
     buildNav();showPage("dashboard");
     document.getElementById("lErr").style.display="none";
     document.getElementById("lErr").textContent="❌ Invalid username or password!";
@@ -2300,7 +2300,7 @@ function forceLogout(msg){
 
 function doLogout(){
   if(!currentUser) return;
-  try{ logActivity("LOGOUT", `${currentUser.name} logged out`); }catch(e){ console.error(e); }
+  logActivity("LOGOUT", `${currentUser.name} logged out`);
   try{localStorage.removeItem("iti_kiloi_session");}catch(e){}
   currentUser=null; window.currentUser=null; selectedRole=null;
   document.getElementById("app").style.display="none";
