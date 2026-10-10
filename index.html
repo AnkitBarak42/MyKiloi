@@ -1900,7 +1900,7 @@ function mergeLogEntries(arr){
     out.push(e);
   });
   out.sort(function(a,b){ return String(b.ts||"").localeCompare(String(a.ts||"")); });
-  if(out.length > 500) out = out.slice(0,500);
+  if(out.length > 500) out.length = 500;
   activityLog = out;
   lsSet("iti_kiloi_log", activityLog);
 }
